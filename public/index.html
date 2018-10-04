@@ -1,0 +1,56 @@
+<!-- This is a static file -->
+<!-- served from your routes in server.js -->
+
+<!-- You might want to try something fancier: -->
+<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
+<!-- pug: https://pugjs.org/ -->
+<!-- haml: http://haml.info/ -->
+<!-- hbs(handlebars): http://handlebarsjs.com/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CK:\\WEB</title>
+    <meta name="description" content="CK:\\WEB">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- import the webpage's stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/preflight.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/utilities.min.css" rel="stylesheet">
+
+    <!-- import the webpage's client-side javascript file -->
+    <script src="./bundle.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <canvas id="hydra">
+      </canvas>
+      <div id="whiteout"></div>
+      <div id="logo">
+      </div>
+    </main>
+    <section id="bottom-bar">
+      <div id="scroll-text">
+        <div id="inner-scroll">
+          EMISIÓN DE PRUEBAS  EMISIÓN DE PRUEBAS  EMISIÓN DE PRUEBAS  EMISIÓN DE PRUEBAS  EMISIÓN DE PRUEBAS  EMISIÓN DE PRUEBAS  EMISIÓN DE PRUEBAS
+        </div>
+      </div>
+      <div id="player">
+
+      </div>
+      <!--audio preload="auto">
+        <source src="http://radiolibre.co:8000/streamvivo.ogg" type="application/ogg"></source>
+       Your browser does not support the audio element.
+      </audio-->
+    </section>
+
+
+    <!-- include the Glitch button to show what the webpage is about and
+          to make it easier for folks to view source and remix -->
+
+  </body>
+</html>
