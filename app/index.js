@@ -8,7 +8,7 @@ canvas.height = window.innerHeight
 
 var hydra = new HydraBackground({
   canvas: canvas,
-  initialAnimationDuration: 1000
+  initialAnimationDuration: 300
 })
 
 var player = new AudioPlayer({
