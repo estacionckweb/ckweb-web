@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "gulp build",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "npm run build && gh-pages -d public"
   },
   "dependencies": {
     "browserify-middleware": "^8.1.1",
