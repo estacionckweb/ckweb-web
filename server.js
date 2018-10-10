@@ -7,7 +7,7 @@ var app = express()
 const browserify = require('browserify-middleware')
 const path = require('path')
 
-// we've started you off with Express, 
+// we've started you off with Express,
 // but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
 // http://expressjs.com/en/starter/static-files.html
@@ -21,6 +21,6 @@ app.get('/', function(request, response) {
 });
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function() {
+var listener = app.listen(process.env.PORT || 3000, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });

@@ -14,5 +14,5 @@ To run:
 To build:
 ```npm run build```
 
-To delpoy to github pages:
+To deploy to github pages:
 ```npm run deploy```
