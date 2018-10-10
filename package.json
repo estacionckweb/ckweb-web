@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "gulp build",
-    "publish": "npm run build && git subtree push --prefix build origin gh-pages"
+    "deploy": "npm run build && gh-pages -d build"
   },
   "dependencies": {
     "browserify-middleware": "^8.1.1",
@@ -30,6 +30,7 @@
     "express"
   ],
   "devDependencies": {
+    "gh-pages": "^2.0.1",
     "gulp": "^3.9.1"
   }
 }
