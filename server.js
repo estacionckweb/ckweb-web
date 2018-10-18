@@ -13,7 +13,7 @@ const path = require('path')
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
 
-app.get('/bundle.js', browserify(path.join(__dirname, '/app/index.js')))
+//app.get('/bundle.js', browserify(path.join(__dirname, '/app/index.js')))
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
@@ -21,6 +21,6 @@ app.get('/', function(request, response) {
 });
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT || 3000, function() {
+var listener = app.listen(process.env.PORT || 5000, function() {
   console.log('Your app is listening on port ' + listener.address().port);
 });

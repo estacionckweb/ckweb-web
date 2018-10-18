@@ -6,8 +6,10 @@ function hydraBackground({ canvas, initialAnimationDuration }) {
   var self = this
   this.hydra = new Hydra({
     canvas: canvas,
-    autoLoop: false
+    autoLoop: false,
+    detectAudio: false
   })
+  console.log("hydra is", this.hydra)
   this.engine = loop(function(dt) {
       // delta time in milliseconds
       self.hydra.tick(dt)

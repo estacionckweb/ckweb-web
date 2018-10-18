@@ -1,10 +1,10 @@
 const AudioPlayer = require('./audioPlayer.js')
 const HydraBackground = require('./hydraBackground.js')
 
-
 var canvas = document.getElementById("hydra")
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
+ //alert("hi")
 
 var hydra = new HydraBackground({
   canvas: canvas,
