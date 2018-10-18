@@ -118,61 +118,6 @@ player.onPlay = () => { hydra.play() }
 player.onPause = () => { hydra.pause() }
 
 },{"./audioPlayer.js":1,"./hydraBackground.js":2}],4:[function(require,module,exports){
-module.exports = function (cb) {
-    if (typeof Promise !== 'function') {
-      var err = new Error('Device enumeration not supported.');
-      err.kind = 'METHOD_NOT_AVAILABLE';
-      if (cb) {
-          console.warn('module now uses promise based api - callback is deprecated');
-          return cb(err);
-      }
-      throw err;
-    }
-
-    return new Promise(function(resolve, reject) {
-        var processDevices = function (devices) {
-            var normalizedDevices = [];
-            for (var i = 0; i < devices.length; i++) {
-                var device = devices[i];
-                //make chrome values match spec
-                var kind = device.kind || null;
-                if (kind && kind.toLowerCase() === 'audio') {
-                    kind = 'audioinput';
-                } else if (kind && kind.toLowerCase() === 'video') {
-                    kind = 'videoinput';
-                }
-                normalizedDevices.push({
-                    facing: device.facing || null,
-                    deviceId: device.id || device.deviceId || null,
-                    label: device.label || null,
-                    kind: kind,
-                    groupId: device.groupId || null
-                });
-            }
-            resolve(normalizedDevices);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(null, normalizedDevices);
-            }
-        };
-
-        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
-            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
-        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
-            window.MediaStreamTrack.getSources(processDevices);
-        } else {
-            var err = new Error('Device enumeration not supported.');
-            err.kind = 'METHOD_NOT_AVAILABLE';
-            reject(err);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(err);
-            }
-        }
-    });
-};
-
-},{}],5:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -697,6 +642,61 @@ function functionBindPolyfill(context) {
   };
 }
 
+},{}],5:[function(require,module,exports){
+module.exports = function (cb) {
+    if (typeof Promise !== 'function') {
+      var err = new Error('Device enumeration not supported.');
+      err.kind = 'METHOD_NOT_AVAILABLE';
+      if (cb) {
+          console.warn('module now uses promise based api - callback is deprecated');
+          return cb(err);
+      }
+      throw err;
+    }
+
+    return new Promise(function(resolve, reject) {
+        var processDevices = function (devices) {
+            var normalizedDevices = [];
+            for (var i = 0; i < devices.length; i++) {
+                var device = devices[i];
+                //make chrome values match spec
+                var kind = device.kind || null;
+                if (kind && kind.toLowerCase() === 'audio') {
+                    kind = 'audioinput';
+                } else if (kind && kind.toLowerCase() === 'video') {
+                    kind = 'videoinput';
+                }
+                normalizedDevices.push({
+                    facing: device.facing || null,
+                    deviceId: device.id || device.deviceId || null,
+                    label: device.label || null,
+                    kind: kind,
+                    groupId: device.groupId || null
+                });
+            }
+            resolve(normalizedDevices);
+            if (cb) {
+                console.warn('module now uses promise based api - callback is deprecated');
+                cb(null, normalizedDevices);
+            }
+        };
+
+        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
+            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
+        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
+            window.MediaStreamTrack.getSources(processDevices);
+        } else {
+            var err = new Error('Device enumeration not supported.');
+            err.kind = 'METHOD_NOT_AVAILABLE';
+            reject(err);
+            if (cb) {
+                console.warn('module now uses promise based api - callback is deprecated');
+                cb(err);
+            }
+        }
+    });
+};
+
 },{}],6:[function(require,module,exports){
 // getUserMedia helper by @HenrikJoreteg used for navigator.getUserMedia shim
 var adapter = require('webrtc-adapter');
@@ -799,7 +799,7 @@ class HydraSynth {
     enableStreamCapture = true,
     canvas
   } = {}) {
-    console.log("STARTING HYDRA SYNTH", detectAudio)
+
     this.bpm = 60
     this.pb = pb
     this.width = width
@@ -873,7 +873,6 @@ class HydraSynth {
   }
 
   _initAudio () {
-    console.log("INITING AUDIO")
     this.audio = new Audio({
       numBins: 4
     })
@@ -3937,7 +3936,7 @@ module.exports = function (deviceId) {
   })
 }
 
-},{"enumerate-devices":4,"getusermedia":6}],22:[function(require,module,exports){
+},{"enumerate-devices":5,"getusermedia":6}],22:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -4511,7 +4510,7 @@ Engine.prototype.tick = function() {
     this.emit('tick', dt)
     this.last = time
 }
-},{"events":5,"inherits":22,"raf":29,"right-now":31}],29:[function(require,module,exports){
+},{"events":4,"inherits":22,"raf":29,"right-now":31}],29:[function(require,module,exports){
 (function (global){
 var now = require('performance-now')
   , root = typeof window === 'undefined' ? global : window

@@ -4,7 +4,6 @@
 // init project
 var express = require('express')
 var app = express()
-const browserify = require('browserify-middleware')
 const path = require('path')
 
 // we've started you off with Express,
@@ -12,8 +11,6 @@ const path = require('path')
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
-
-//app.get('/bundle.js', browserify(path.join(__dirname, '/app/index.js')))
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get('/', function(request, response) {
