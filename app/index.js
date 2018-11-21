@@ -1,4 +1,5 @@
 const AudioPlayer = require('./audioPlayer.js')
+const VideoPlayer = require('./videoPlayer.js')
 const HydraBackground = require('./hydraBackground.js')
 
 var canvas = document.getElementById("hydra")
@@ -11,12 +12,18 @@ var hydra = new HydraBackground({
   initialAnimationDuration: 300
 })
 
-var player = new AudioPlayer({
+var audio = new AudioPlayer({
   stream: "http://radiolibre.co:8000/streamvivo.ogg",
   type: "application/ogg",
   container: document.getElementById("player")
 })
 
-player.onPlay = () => { hydra.play() }
+var videoPlayer = new VideoPlayer({
+  stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
+  type: "video/ogg",
+  container: document.getElementsByClassName("container")[0]
+})
 
-player.onPause = () => { hydra.pause() }
+audio.onPlay = () => { hydra.play() }
+
+audio.onPause = () => { hydra.pause() }
