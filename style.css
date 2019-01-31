@@ -138,22 +138,22 @@ body, html {
  /* Apply animation to this element */
  -moz-animation: scroll-right 24s linear infinite;
  -webkit-animation: scroll-right 24s linear infinite;
- animation: scroll-right 24s linear infinite;
+ animation: scroll-right 35s linear infinite;
 }
 /* Move it (define the animation) */
 @-moz-keyframes scroll-right {
- 0%   { -moz-transform: translateX(500%); }
+ 0%   { -moz-transform: translateX(300%); }
  100% { -moz-transform: translateX(0%); }
 }
 @-webkit-keyframes scroll-right {
- 0%   { -webkit-transform: translateX(500%); }
+ 0%   { -webkit-transform: translateX(300%); }
  100% { -webkit-transform: translateX(0%); }
 }
 @keyframes scroll-right {
  0%   {
- -moz-transform: translateX(500%); /* Browser bug fix */
- -webkit-transform: translateX(500%); /* Browser bug fix */
- transform: translateX(500%);
+ -moz-transform: translateX(300%); /* Browser bug fix */
+ -webkit-transform: translateX(300%); /* Browser bug fix */
+ transform: translateX(300%);
  }
  100% {
  -moz-transform: translateX(-50%); /* Browser bug fix */
