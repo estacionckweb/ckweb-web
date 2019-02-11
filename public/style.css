@@ -21,7 +21,7 @@ body, html {
   bottom: 100px;
   /* width: 100%;
   max-width: 300px; */
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(200, 200, 200, 0.8);
   padding: 20px;
   color: #000;
   text-align: center;
@@ -36,7 +36,7 @@ body, html {
 #bottom-bar {
   position: fixed;
   height: 80px;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(200, 200, 200, 1.0);
   bottom: 0px;
   width: 100%;
   border-top: solid black 2px;
@@ -48,6 +48,31 @@ body, html {
   right: 15px;
   height: 50px;
 }
+#Beca1 {
+  position: fixed;
+  top: 460px;
+  right: 10px;
+  height: 200px;
+}
+#Beca2 {
+  position: fixed;
+  top: 640px;
+  right: 10px;
+  height: 120px;
+}
+#Beca3 {
+  position: fixed;
+  top: 780px;
+  right: 10px;
+  height: 120px;
+}
+#Residencia {
+  position: fixed;
+  top: 920px;
+  right: 10px;
+  height: 120px;
+}
+
 .button-holder {
   width: 60px;
   height: 60px;
@@ -97,6 +122,7 @@ body, html {
   margin-right: auto;
 }
 
+
 /* styles for hydra canvas */
 
 #hydra {
@@ -125,9 +151,9 @@ body, html {
  line-height: 20px;
  text-align: center;
  /* Starting position */
- -moz-transform:translateX(-100%);
- -webkit-transform:translateX(-100%);
- transform:translateX(-100%);
+ -moz-transform:translateX(0%);
+ -webkit-transform:translateX(0%);
+ transform:translateX(0%);
  /* Apply animation to this element */
  -moz-animation: scroll-right 24s linear infinite;
  -webkit-animation: scroll-right 24s linear infinite;
@@ -135,22 +161,22 @@ body, html {
 }
 /* Move it (define the animation) */
 @-moz-keyframes scroll-right {
- 0%   { -moz-transform: translateX(100%); }
- 100% { -moz-transform: translateX(-100%); }
+ 0%   { -moz-transform: translateX(500%); }
+ 100% { -moz-transform: translateX(0%); }
 }
 @-webkit-keyframes scroll-right {
- 0%   { -webkit-transform: translateX(100%); }
- 100% { -webkit-transform: translateX(-100%); }
+ 0%   { -webkit-transform: translateX(500%); }
+ 100% { -webkit-transform: translateX(0%); }
 }
 @keyframes scroll-right {
  0%   {
- -moz-transform: translateX(100%); /* Browser bug fix */
- -webkit-transform: translateX(100%); /* Browser bug fix */
- transform: translateX(100%);
+ -moz-transform: translateX(500%); /* Browser bug fix */
+ -webkit-transform: translateX(500%); /* Browser bug fix */
+ transform: translateX(500%);
  }
  100% {
- -moz-transform: translateX(-100%); /* Browser bug fix */
- -webkit-transform: translateX(-100%); /* Browser bug fix */
- transform: translateX(-100%);
+ -moz-transform: translateX(-50%); /* Browser bug fix */
+ -webkit-transform: translateX(-50%); /* Browser bug fix */
+ transform: translateX(-50%);
  }
 }
