@@ -109,7 +109,8 @@ var hydra = new HydraBackground({
 })
 
 var audio = new AudioPlayer({
-  stream: "http://domolleno2018.out.airtime.pro:8000/domolleno2018_a",
+  stream: "http://domolleno2018.out.airtime.pro:8001/domolleno2018_master",
+  //stream: "http://domolleno2018.out.airtime.pro:8000/domolleno2018_a",
   type: "application/ogg",
   container: document.getElementById("player")
 })
