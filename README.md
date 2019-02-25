@@ -16,3 +16,6 @@ To build:
 
 To deploy to github pages:
 ```npm run deploy```
+
+To merge gh-pages branch to master:
+```git merge origin/gh-pages master --allow-unrelated-histories```
