@@ -49,28 +49,28 @@ body, html {
   height: 50px;
 }
 #Beca1 {
-  position: absolute;
-  bottom: 0px;
-  right: 0px;
-  height: 177px;
+  position: fixed;
+  top: 460px;
+  right: 10px;
+  height: 200px;
 }
 #Beca2 {
-  position: absolute;
-  bottom: 180px;
+  position: fixed;
+  top: 640px;
   right: 10px;
-  height: 100px;
+  height: 120px;
 }
 #Beca3 {
-  position: absolute;
-  bottom: 288px;
+  position: fixed;
+  top: 780px;
   right: 10px;
-  height: 100px;
+  height: 120px;
 }
 #Residencia {
-  position: absolute;
-  bottom: 390px;
+  position: fixed;
+  top: 920px;
   right: 10px;
-  height: 100px;
+  height: 120px;
 }
 
 .button-holder {
