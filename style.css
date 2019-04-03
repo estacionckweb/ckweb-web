@@ -49,25 +49,25 @@ body, html {
   height: 50px;
 }
 #Beca1 {
-  position: relative;
+  position: fixed;
   top: 460px;
   right: 10px;
-  height: auto;
+  height: 200px;
 }
 #Beca2 {
-  position: relative;
+  position: fixed;
   top: 640px;
   right: 10px;
-  height: auto;
+  height: 120px;
 }
 #Beca3 {
-  position: relative;
+  position: fixed;
   top: 780px;
   right: 10px;
-  height: auto;
+  height: 120px;
 }
 #Residencia {
-  position: relative;
+  position: fixed;
   top: 920px;
   right: 10px;
   height: 120px;
