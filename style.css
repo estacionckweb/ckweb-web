@@ -49,25 +49,25 @@ body, html {
   height: 50px;
 }
 #Beca1 {
-  position: fixed;
+  position: relative;
   top: 460px;
   right: 10px;
-  height: 200px;
+  height: auto;
 }
 #Beca2 {
-  position: fixed;
+  position: relative;
   top: 640px;
   right: 10px;
-  height: 120px;
+  height: auto;
 }
 #Beca3 {
-  position: fixed;
+  position: relative;
   top: 780px;
   right: 10px;
-  height: 120px;
+  height: auto;
 }
 #Residencia {
-  position: fixed;
+  position: relative;
   top: 920px;
   right: 10px;
   height: 120px;
@@ -132,8 +132,6 @@ body, html {
   top: 0px;
   left: 0px;
 }
-
-
 
 /* Styles for scrolling text */
 
