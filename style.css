@@ -101,29 +101,29 @@ body, html {
 
 #Beca1 {
   position: absolute;
-  top: 0px;
-  right: 10px;
+  top: 100px;
+
   height:30%;
   width:auto;
 }
 #Beca2 {
   position: absolute;
-  top: 150px;
-  right: 10px;
-  height:30%;
+  top: 200px;
+
+  height:20%;
   width:auto;
 }
 #Beca3 {
   position: absolute;
   top: 300px;
-  right: 10px;
-  width: 30%;
+  height:20%;
+  width:auto;
 }
 #Residencia {
   position: absolute
-  top: 450px;
-  right: 10px;
-  width: 30%;
+  top: 350px;
+  height:20%;
+  width:auto;
 }
 
 
