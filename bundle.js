@@ -114,11 +114,11 @@ var audio = new AudioPlayer({
   container: document.getElementById("player")
 })
 
-var videoPlayer = new VideoPlayer({
-  stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
-  type: "video/ogg",
-  container: document.getElementsByClassName("container")[0]
-})
+// var videoPlayer = new VideoPlayer({
+//   stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
+//   type: "video/ogg",
+//   container: document.getElementsByClassName("container")[0]
+// })
 
 audio.onPlay = () => { hydra.play() }
 
