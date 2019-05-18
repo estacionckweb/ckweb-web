@@ -3241,7 +3241,7 @@ module.exports = function (constraints, cb) {
     }
 
     if (window.navigator.userAgent.match('Chrome')) {
-
+      
         var chromever = parseInt(window.navigator.userAgent.match(/Chrome\/(.*) /)[1], 10);
         var maxver = 33;
 
@@ -3881,7 +3881,7 @@ class VideoRecorder {
    console.log('MediaRecorder started', this.mediaRecorder)
  }
 
-
+  
    stop(){
      this.mediaRecorder.stop()
    }
@@ -7784,7 +7784,7 @@ var raf = require('raf')
 
 module.exports = Engine
 function Engine(fn) {
-    if (!(this instanceof Engine))
+    if (!(this instanceof Engine)) 
         return new Engine(fn)
     this.running = false
     this.last = now()
@@ -7798,7 +7798,7 @@ function Engine(fn) {
 inherits(Engine, EventEmitter)
 
 Engine.prototype.start = function() {
-    if (this.running)
+    if (this.running) 
         return
     this.running = true
     this.last = now()
