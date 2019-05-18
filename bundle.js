@@ -93,9 +93,9 @@ hydraBackground.prototype.pause = function() {
 
 module.exports = hydraBackground
 
-},{"hydra-synth":7,"raf-loop":28}],3:[function(require,module,exports){
+},{"hydra-synth":8,"raf-loop":29}],3:[function(require,module,exports){
 const AudioPlayer = require('./audioPlayer.js')
-//const VideoPlayer = require('./videoPlayer.js')
+const VideoPlayer = require('./videoPlayer.js')
 const HydraBackground = require('./hydraBackground.js')
 
 var canvas = document.getElementById("hydra")
@@ -114,70 +114,61 @@ var audio = new AudioPlayer({
   container: document.getElementById("player")
 })
 
-//var videoPlayer = new VideoPlayer({
-  //stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
-  //type: "video/ogg",
-  //container: document.getElementsByClassName("container")[0]
-//})
+// var videoPlayer = new VideoPlayer({
+//   stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
+//   type: "video/ogg",
+//   container: document.getElementsByClassName("container")[0]
+// })
 
 audio.onPlay = () => { hydra.play() }
 
 audio.onPause = () => { hydra.pause() }
 
-},{"./audioPlayer.js":1,"./hydraBackground.js":2}],4:[function(require,module,exports){
-module.exports = function (cb) {
-    if (typeof Promise !== 'function') {
-      var err = new Error('Device enumeration not supported.');
-      err.kind = 'METHOD_NOT_AVAILABLE';
-      if (cb) {
-          console.warn('module now uses promise based api - callback is deprecated');
-          return cb(err);
-      }
-      throw err;
-    }
+},{"./audioPlayer.js":1,"./hydraBackground.js":2,"./videoPlayer.js":4}],4:[function(require,module,exports){
+function videoPlayer(opts) {
+  console.log('stream', opts)
+  this.stream = opts.stream
+  this.container = opts.container
+  this.isPlaying = false
 
-    return new Promise(function(resolve, reject) {
-        var processDevices = function (devices) {
-            var normalizedDevices = [];
-            for (var i = 0; i < devices.length; i++) {
-                var device = devices[i];
-                //make chrome values match spec
-                var kind = device.kind || null;
-                if (kind && kind.toLowerCase() === 'audio') {
-                    kind = 'audioinput';
-                } else if (kind && kind.toLowerCase() === 'video') {
-                    kind = 'videoinput';
-                }
-                normalizedDevices.push({
-                    facing: device.facing || null,
-                    deviceId: device.id || device.deviceId || null,
-                    label: device.label || null,
-                    kind: kind,
-                    groupId: device.groupId || null
-                });
-            }
-            resolve(normalizedDevices);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(null, normalizedDevices);
-            }
-        };
+  this.player = document.createElement('video')
+  this.player.src = this.stream
+  this.player.controls = true
+  this.player.width = window.innerWidth
+  this.player.height = window.innerHeight
 
-        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
-            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
-        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
-            window.MediaStreamTrack.getSources(processDevices);
-        } else {
-            var err = new Error('Device enumeration not supported.');
-            err.kind = 'METHOD_NOT_AVAILABLE';
-            reject(err);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(err);
-            }
-        }
-    });
-};
+
+  this.player.onplay = () => {
+    console.log("play!")
+    this.player.style.position = 'absolute'
+    this.player.style.zIndex = 100
+  }
+  this.player.onpause = () => {
+    console.log("pause!")
+    this.player.style.position = 'static'
+  }
+  this.container.appendChild(this.player)
+}
+
+// audioPlayer.prototype.play = function () {
+//   this.pauseButton.style.display = 'block'
+//   this.playButton.style.display = 'none'
+//   this.audio.play()
+//   this.onPlay()
+// }
+//
+// audioPlayer.prototype.pause = function() {
+//   this.playButton.style.display = 'block'
+//   this.pauseButton.style.display = 'none'
+//   this.audio.pause()
+//   this.onPause()
+// }
+//
+// audioPlayer.prototype.onPlay = () => {}
+//
+// audioPlayer.prototype.onPause = () => {}
+
+module.exports = videoPlayer
 
 },{}],5:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
@@ -705,6 +696,61 @@ function functionBindPolyfill(context) {
 }
 
 },{}],6:[function(require,module,exports){
+module.exports = function (cb) {
+    if (typeof Promise !== 'function') {
+      var err = new Error('Device enumeration not supported.');
+      err.kind = 'METHOD_NOT_AVAILABLE';
+      if (cb) {
+          console.warn('module now uses promise based api - callback is deprecated');
+          return cb(err);
+      }
+      throw err;
+    }
+
+    return new Promise(function(resolve, reject) {
+        var processDevices = function (devices) {
+            var normalizedDevices = [];
+            for (var i = 0; i < devices.length; i++) {
+                var device = devices[i];
+                //make chrome values match spec
+                var kind = device.kind || null;
+                if (kind && kind.toLowerCase() === 'audio') {
+                    kind = 'audioinput';
+                } else if (kind && kind.toLowerCase() === 'video') {
+                    kind = 'videoinput';
+                }
+                normalizedDevices.push({
+                    facing: device.facing || null,
+                    deviceId: device.id || device.deviceId || null,
+                    label: device.label || null,
+                    kind: kind,
+                    groupId: device.groupId || null
+                });
+            }
+            resolve(normalizedDevices);
+            if (cb) {
+                console.warn('module now uses promise based api - callback is deprecated');
+                cb(null, normalizedDevices);
+            }
+        };
+
+        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
+            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
+        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
+            window.MediaStreamTrack.getSources(processDevices);
+        } else {
+            var err = new Error('Device enumeration not supported.');
+            err.kind = 'METHOD_NOT_AVAILABLE';
+            reject(err);
+            if (cb) {
+                console.warn('module now uses promise based api - callback is deprecated');
+                cb(err);
+            }
+        }
+    });
+};
+
+},{}],7:[function(require,module,exports){
 // getUserMedia helper by @HenrikJoreteg used for navigator.getUserMedia shim
 var adapter = require('webrtc-adapter');
 
@@ -781,7 +827,7 @@ module.exports = function (constraints, cb) {
     });
 };
 
-},{"webrtc-adapter":33}],7:[function(require,module,exports){
+},{"webrtc-adapter":34}],8:[function(require,module,exports){
 const Output = require('./src/output.js')
 const loop = require('raf-loop')
 const Source = require('./src/hydra-source.js')
@@ -1119,7 +1165,7 @@ class HydraSynth {
 
 module.exports = HydraSynth
 
-},{"./src/GeneratorFactory.js":8,"./src/audio.js":9,"./src/hydra-source.js":13,"./src/output.js":16,"./src/video-recorder.js":20,"getusermedia":6,"mouse-change":24,"raf-loop":28,"regl":30}],8:[function(require,module,exports){
+},{"./src/GeneratorFactory.js":9,"./src/audio.js":10,"./src/hydra-source.js":14,"./src/output.js":17,"./src/video-recorder.js":21,"getusermedia":7,"mouse-change":25,"raf-loop":29,"regl":31}],9:[function(require,module,exports){
 /* globals tex */
 const { seq, sin, ramp, createFades } = require('./timingUtils.js')
 const glslTransforms = require('./composable-glsl-functions.js')
@@ -1389,65 +1435,9 @@ Generator.prototype.compileRenderPass = function (pass) {
   return frag
 }
 
-Generator.prototype.glsl = function () {
-//  console.log(this.compile())
-}
-
-// functions for testing multiple render passes
-// Generator.prototype.fragPass = function () {
-// return `
-//   precision mediump float;
-//   uniform float time;
-//   uniform vec2 resolution;
-//   uniform sampler2D prevBuffer;
-//   varying vec2 uv;
-//
-//   void main () {
-//     vec4 c = vec4(1, 0, 0, 1);
-//     //vec2 st = uv;
-//     vec2 st = gl_FragCoord.xy/resolution;
-//     vec4 col = texture2D(prevBuffer, fract(st));
-//     gl_FragColor = vec4(col.r, 1.0, col.b, col.a);
-//   }
-//   `
-// }
-//
-// Generator.prototype.fragPass2 = function () {
-// return `
-//   precision mediump float;
-//   uniform float time;
-//   uniform vec2 resolution;
-//   uniform sampler2D prevBuffer;
-//   varying vec2 uv;
-//
-//   void main () {
-//     vec4 c = vec4(1, 0, 0, 1);
-//     //vec2 st = uv;
-//     vec2 st = gl_FragCoord.xy/resolution;
-//     vec4 col = texture2D(prevBuffer, fract(st));
-//     gl_FragColor = vec4(col.r - 1.0, col.g, col.b, col.a);
-//   }
-//   `
-// }
-
-Generator.prototype.out = function (_output) {
-//  console.log('UNIFORMS', this.uniforms, output)
+Generator.prototype.glsl = function (_output) {
   var output = _output || this.defaultOutput
-  // var pass = {
-  //   glsl: renderPassFunctions['edges'].glsl,
-  //   uniforms: []
-  // }
-  // var frag = this.compileRenderPass(pass)
-  // console.log('shader', frag)
-  //
-  // this.passes.push({
-  //   frag: frag,
-  //   uniforms: pass.uniforms
-  // })
-  // this.passes.push({
-  //   frag: this.fragPass2(),
-  //   uniforms: []
-  // })
+
   var passes = this.passes.map((pass) => {
     var uniforms = {}
     pass.uniforms.forEach((uniform) => { uniforms[uniform.name] = uniform.value })
@@ -1466,20 +1456,22 @@ Generator.prototype.out = function (_output) {
       }
     }
   })
+  return passes
+}
 
-  // console.log("FRAG", frag)
-  output.renderPasses(passes)
-  //var frag = this.compile(this.passes[this.passes.length-1])
-  //output.frag = frag
-/*  var uniformObj = {}
-  this.uniforms.forEach((uniform) => { uniformObj[uniform.name] = uniform.value })
-  output.uniforms = Object.assign(output.uniforms, uniformObj)*/
-//  output.render()
+
+
+Generator.prototype.out = function (_output) {
+//  console.log('UNIFORMS', this.uniforms, output)
+  var output = _output || this.defaultOutput
+
+  output.renderPasses(this.glsl(output))
+
 }
 
 module.exports = GeneratorFactory
 
-},{"./composable-glsl-functions.js":10,"./counter.js":11,"./renderpass-functions.js":17,"./shaderManager.js":18,"./timingUtils.js":19}],9:[function(require,module,exports){
+},{"./composable-glsl-functions.js":11,"./counter.js":12,"./renderpass-functions.js":18,"./shaderManager.js":19,"./timingUtils.js":20}],10:[function(require,module,exports){
 const Meyda = require('meyda')
 const getUserMedia = require('getusermedia')
 
@@ -1702,7 +1694,7 @@ class Audio {
 
 module.exports = Audio
 
-},{"getusermedia":6,"meyda":23}],10:[function(require,module,exports){
+},{"getusermedia":7,"meyda":24}],11:[function(require,module,exports){
 // to add: ripple: https://www.shadertoy.com/view/4djGzz
 // mask
 // convolution
@@ -2012,12 +2004,22 @@ float _noise(vec3 v){
         name: 'yMult',
         type: 'float',
         default: 1.0
+      },
+      {
+        name: 'offsetX',
+        type: 'float',
+        default: 0.5
+      },
+      {
+        name: 'offsetY',
+        type: 'float',
+        default: 0.5
       }
     ],
-    glsl: `vec2 scale(vec2 st, float amount, float xMult, float yMult){
-      vec2 xy = st - vec2(0.5);
+    glsl: `vec2 scale(vec2 st, float amount, float xMult, float yMult, float offsetX, float offsetY){
+      vec2 xy = st - vec2(offsetX, offsetY);
       xy*=(1.0/vec2(amount*xMult, amount*yMult));
-      xy+=vec2(0.5);
+      xy+=vec2(offsetX, offsetY);
       return xy;
     }
     `
@@ -2686,16 +2688,21 @@ float _noise(vec3 v){
         name: 'b',
         type: 'float',
         default: 1.0
+      },
+      {
+        name: 'a',
+        type: 'float',
+        default: 1.0
       }
     ],
     notes: 'https://www.youtube.com/watch?v=FpOEtm9aX0M',
-    glsl: `vec4 color(vec4 c0, float _r, float _g, float _b){
-      vec3 c = vec3(_r, _g, _b);
-      vec3 pos = step(0.0, c); // detect whether negative
+    glsl: `vec4 color(vec4 c0, float _r, float _g, float _b, float _a){
+      vec4 c = vec4(_r, _g, _b, _a);
+      vec4 pos = step(0.0, c); // detect whether negative
 
       // if > 0, return r * c0
       // if < 0 return (1.0-r) * c0
-      return vec4(mix((1.0-c0.rgb)*abs(c), c*c0.rgb, pos), c0.a);
+      return vec4(mix((1.0-c0)*abs(c), c*c0, pos));
     }`
   },
   _rgbToHsv: {
@@ -2768,7 +2775,7 @@ float _noise(vec3 v){
   }
 }
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 // singleton class that generates ids to use has unique variable names for variables
 // counter.js
 
@@ -2779,7 +2786,7 @@ module.exports = {
   get: () => value
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 module.exports = {
   src: {
     transformType: 'color',
@@ -3136,7 +3143,7 @@ module.exports = {
   }
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 const Webcam = require('./webcam.js')
 const Screen = require('./lib/screenmedia.js')
 
@@ -3220,7 +3227,7 @@ class HydraSource  {
 
 module.exports = HydraSource
 
-},{"./lib/screenmedia.js":15,"./webcam.js":21}],14:[function(require,module,exports){
+},{"./lib/screenmedia.js":16,"./webcam.js":22}],15:[function(require,module,exports){
 var adapter = require('webrtc-adapter');
 // to do: clean up this code
 // cache for constraints and callback
@@ -3430,7 +3437,7 @@ typeof window !== 'undefined' && window.addEventListener('message', function (ev
     }
 });
 
-},{"webrtc-adapter":33}],15:[function(require,module,exports){
+},{"webrtc-adapter":34}],16:[function(require,module,exports){
 const getScreenMedia = require('./getscreenmedia.js')
 
 module.exports = function (options) {
@@ -3469,7 +3476,7 @@ module.exports = function (options) {
 
 }
 
-},{"./getscreenmedia.js":14}],16:[function(require,module,exports){
+},{"./getscreenmedia.js":15}],17:[function(require,module,exports){
 const transforms = require('./glsl-transforms.js')
 
 var Output = function (opts) {
@@ -3632,7 +3639,7 @@ Output.prototype.tick = function (props) {
 
 module.exports = Output
 
-},{"./glsl-transforms.js":12}],17:[function(require,module,exports){
+},{"./glsl-transforms.js":13}],18:[function(require,module,exports){
 // to add: ripple: https://www.shadertoy.com/view/4djGzz
 // mask
 // convolution
@@ -3709,7 +3716,7 @@ module.exports = {
   }
 }
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // to do:
 // 1. how to handle multi-pass renders
 // 2. how to handle vertex shaders
@@ -3761,7 +3768,7 @@ module.exports = function (defaultOutput) {
   return Frag
 }
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // some utility functions for managing time within hydra
 // to do: add easing functions: https://github.com/bameyrick/js-easing-functions
 
@@ -3824,7 +3831,7 @@ module.exports = {
   createFades: createFades
 }
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 class VideoRecorder {
   constructor(stream) {
     this.mediaSource = new MediaSource()
@@ -3912,7 +3919,7 @@ class VideoRecorder {
 
 module.exports = VideoRecorder
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 const getUserMedia = require('getusermedia')
 const enumerateDevices = require('enumerate-devices')
 
@@ -3948,7 +3955,7 @@ module.exports = function (deviceId) {
   })
 }
 
-},{"enumerate-devices":4,"getusermedia":6}],22:[function(require,module,exports){
+},{"enumerate-devices":6,"getusermedia":7}],23:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -3973,7 +3980,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -7278,7 +7285,7 @@ function hamming(size) {
 /******/ });
 });
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict'
 
 module.exports = mouseListen
@@ -7485,7 +7492,7 @@ function mouseListen (element, callback) {
   return result
 }
 
-},{"mouse-event":25}],25:[function(require,module,exports){
+},{"mouse-event":26}],26:[function(require,module,exports){
 'use strict'
 
 function mouseButtons(ev) {
@@ -7547,7 +7554,7 @@ function mouseRelativeY(ev) {
 }
 exports.y = mouseRelativeY
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (process){
 // Generated by CoffeeScript 1.12.2
 (function() {
@@ -7587,7 +7594,7 @@ exports.y = mouseRelativeY
 
 
 }).call(this,require('_process'))
-},{"_process":27}],27:[function(require,module,exports){
+},{"_process":28}],28:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -7773,7 +7780,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var inherits = require('inherits')
 var EventEmitter = require('events').EventEmitter
 var now = require('right-now')
@@ -7818,7 +7825,7 @@ Engine.prototype.tick = function() {
     this.emit('tick', dt)
     this.last = time
 }
-},{"events":5,"inherits":22,"raf":29,"right-now":31}],29:[function(require,module,exports){
+},{"events":5,"inherits":23,"raf":30,"right-now":32}],30:[function(require,module,exports){
 (function (global){
 var now = require('performance-now')
   , root = typeof window === 'undefined' ? global : window
@@ -7897,7 +7904,7 @@ module.exports.polyfill = function(object) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"performance-now":26}],30:[function(require,module,exports){
+},{"performance-now":27}],31:[function(require,module,exports){
 (function(aa,ia){"object"===typeof exports&&"undefined"!==typeof module?module.exports=ia():"function"===typeof define&&define.amd?define(ia):aa.createREGL=ia()})(this,function(){function aa(a,b){this.id=Ab++;this.type=a;this.data=b}function ia(a){if(0===a.length)return[];var b=a.charAt(0),c=a.charAt(a.length-1);if(1<a.length&&b===c&&('"'===b||"'"===b))return['"'+a.substr(1,a.length-2).replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"'];if(b=/\[(false|true|null|\d+|'[^']*'|"[^"]*")\]/.exec(a))return ia(a.substr(0,
 b.index)).concat(ia(b[1])).concat(ia(a.substr(b.index+b[0].length)));b=a.split(".");if(1===b.length)return['"'+a.replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"'];a=[];for(c=0;c<b.length;++c)a=a.concat(ia(b[c]));return a}function Za(a){return"["+ia(a).join("][")+"]"}function Bb(){var a={"":0},b=[""];return{id:function(c){var e=a[c];if(e)return e;e=a[c]=b.length;b.push(c);return e},str:function(a){return b[a]}}}function Cb(a,b,c){function e(){var b=window.innerWidth,e=window.innerHeight;a!==document.body&&
 (e=a.getBoundingClientRect(),b=e.right-e.left,e=e.bottom-e.top);g.width=c*b;g.height=c*e;E(g.style,{width:b+"px",height:e+"px"})}var g=document.createElement("canvas");E(g.style,{border:0,margin:0,padding:0,top:0,left:0});a.appendChild(g);a===document.body&&(g.style.position="absolute",E(a.style,{margin:0,padding:0}));window.addEventListener("resize",e,!1);e();return{canvas:g,onDestroy:function(){window.removeEventListener("resize",e);a.removeChild(g)}}}function Db(a,b){function c(c){try{return a.getContext(c,
@@ -8049,7 +8056,7 @@ instances:-1},O,B,a),u=Rb(k,K,V.procs.poll,O,h,x,R),S=V.next,L=k.canvas,G=[],U=[
 1),context:la.define.bind(null,2),"this":la.define.bind(null,3),draw:n({}),buffer:function(a){return F.create(a,34962,!1,!1)},elements:function(a){return T.create(a,!1)},texture:A.create2D,cube:A.createCube,renderbuffer:M.create,framebuffer:K.create,framebufferCube:K.createCube,attributes:h,frame:r,on:function(a,b){var c;switch(a){case "frame":return r(b);case "lost":c=U;break;case "restore":c=W;break;case "destroy":c=Z}c.push(b);return{cancel:function(){for(var a=0;a<c.length;++a)if(c[a]===b){c[a]=
 c[c.length-1];c.pop();break}}}},limits:R,hasExtension:function(a){return 0<=R.extensions.indexOf(a.toLowerCase())},read:u,destroy:function(){G.length=0;e();L&&(L.removeEventListener("webglcontextlost",g),L.removeEventListener("webglcontextrestored",d));Q.clear();K.clear();M.clear();A.clear();T.clear();F.clear();B&&B.clear();Z.forEach(function(a){a()})},_gl:k,_refresh:m,poll:function(){t();B&&B.update()},now:y,stats:v});a.onDone(null,h);return h}});
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (global){
 module.exports =
   global.performance &&
@@ -8060,7 +8067,7 @@ module.exports =
   }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
  /* eslint-env node */
 'use strict';
 
@@ -8668,7 +8675,7 @@ SDPUtils.isRejected = function(mediaSection) {
 // Expose public methods.
 module.exports = SDPUtils;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -8762,7 +8769,7 @@ module.exports = SDPUtils;
   }
 })();
 
-},{"./chrome/chrome_shim":34,"./edge/edge_shim":36,"./firefox/firefox_shim":38,"./safari/safari_shim":40,"./utils":41}],34:[function(require,module,exports){
+},{"./chrome/chrome_shim":35,"./edge/edge_shim":37,"./firefox/firefox_shim":39,"./safari/safari_shim":41,"./utils":42}],35:[function(require,module,exports){
 
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
@@ -9029,7 +9036,7 @@ module.exports = {
   shimGetUserMedia: require('./getusermedia')
 };
 
-},{"../utils.js":41,"./getusermedia":35}],35:[function(require,module,exports){
+},{"../utils.js":42,"./getusermedia":36}],36:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -9229,7 +9236,7 @@ module.exports = function() {
   }
 };
 
-},{"../utils.js":41}],36:[function(require,module,exports){
+},{"../utils.js":42}],37:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -10358,7 +10365,7 @@ module.exports = {
   shimGetUserMedia: require('./getusermedia')
 };
 
-},{"../utils":41,"./getusermedia":37,"sdp":32}],37:[function(require,module,exports){
+},{"../utils":42,"./getusermedia":38,"sdp":33}],38:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -10392,7 +10399,7 @@ module.exports = function() {
   };
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -10556,7 +10563,7 @@ module.exports = {
   shimGetUserMedia: require('./getusermedia')
 };
 
-},{"../utils":41,"./getusermedia":39}],39:[function(require,module,exports){
+},{"../utils":42,"./getusermedia":40}],40:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -10719,7 +10726,7 @@ module.exports = function() {
   };
 };
 
-},{"../utils":41}],40:[function(require,module,exports){
+},{"../utils":42}],41:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
@@ -10749,7 +10756,7 @@ module.exports = {
   // shimPeerConnection: safariShim.shimPeerConnection
 };
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 /*
  *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
  *
