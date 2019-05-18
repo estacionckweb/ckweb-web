@@ -114,11 +114,11 @@ var audio = new AudioPlayer({
   container: document.getElementById("player")
 })
 
-// var videoPlayer = new VideoPlayer({
-//   stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
-//   type: "video/ogg",
-//   container: document.getElementsByClassName("container")[0]
-// })
+var videoPlayer = new VideoPlayer({
+  stream: "https://ia902909.us.archive.org/4/items/Lab.DatanaturaMSTRMay7/Lab.%20Datanatura-MSTR-May7.ogv",
+  type: "video/ogg",
+  container: document.getElementsByClassName("container")[0]
+})
 
 audio.onPlay = () => { hydra.play() }
 
@@ -171,6 +171,61 @@ function videoPlayer(opts) {
 module.exports = videoPlayer
 
 },{}],5:[function(require,module,exports){
+module.exports = function (cb) {
+    if (typeof Promise !== 'function') {
+      var err = new Error('Device enumeration not supported.');
+      err.kind = 'METHOD_NOT_AVAILABLE';
+      if (cb) {
+          console.warn('module now uses promise based api - callback is deprecated');
+          return cb(err);
+      }
+      throw err;
+    }
+
+    return new Promise(function(resolve, reject) {
+        var processDevices = function (devices) {
+            var normalizedDevices = [];
+            for (var i = 0; i < devices.length; i++) {
+                var device = devices[i];
+                //make chrome values match spec
+                var kind = device.kind || null;
+                if (kind && kind.toLowerCase() === 'audio') {
+                    kind = 'audioinput';
+                } else if (kind && kind.toLowerCase() === 'video') {
+                    kind = 'videoinput';
+                }
+                normalizedDevices.push({
+                    facing: device.facing || null,
+                    deviceId: device.id || device.deviceId || null,
+                    label: device.label || null,
+                    kind: kind,
+                    groupId: device.groupId || null
+                });
+            }
+            resolve(normalizedDevices);
+            if (cb) {
+                console.warn('module now uses promise based api - callback is deprecated');
+                cb(null, normalizedDevices);
+            }
+        };
+
+        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
+            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
+        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
+            window.MediaStreamTrack.getSources(processDevices);
+        } else {
+            var err = new Error('Device enumeration not supported.');
+            err.kind = 'METHOD_NOT_AVAILABLE';
+            reject(err);
+            if (cb) {
+                console.warn('module now uses promise based api - callback is deprecated');
+                cb(err);
+            }
+        }
+    });
+};
+
+},{}],6:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -694,61 +749,6 @@ function functionBindPolyfill(context) {
     return fn.apply(context, arguments);
   };
 }
-
-},{}],6:[function(require,module,exports){
-module.exports = function (cb) {
-    if (typeof Promise !== 'function') {
-      var err = new Error('Device enumeration not supported.');
-      err.kind = 'METHOD_NOT_AVAILABLE';
-      if (cb) {
-          console.warn('module now uses promise based api - callback is deprecated');
-          return cb(err);
-      }
-      throw err;
-    }
-
-    return new Promise(function(resolve, reject) {
-        var processDevices = function (devices) {
-            var normalizedDevices = [];
-            for (var i = 0; i < devices.length; i++) {
-                var device = devices[i];
-                //make chrome values match spec
-                var kind = device.kind || null;
-                if (kind && kind.toLowerCase() === 'audio') {
-                    kind = 'audioinput';
-                } else if (kind && kind.toLowerCase() === 'video') {
-                    kind = 'videoinput';
-                }
-                normalizedDevices.push({
-                    facing: device.facing || null,
-                    deviceId: device.id || device.deviceId || null,
-                    label: device.label || null,
-                    kind: kind,
-                    groupId: device.groupId || null
-                });
-            }
-            resolve(normalizedDevices);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(null, normalizedDevices);
-            }
-        };
-
-        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
-            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
-        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
-            window.MediaStreamTrack.getSources(processDevices);
-        } else {
-            var err = new Error('Device enumeration not supported.');
-            err.kind = 'METHOD_NOT_AVAILABLE';
-            reject(err);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(err);
-            }
-        }
-    });
-};
 
 },{}],7:[function(require,module,exports){
 // getUserMedia helper by @HenrikJoreteg used for navigator.getUserMedia shim
@@ -3955,7 +3955,7 @@ module.exports = function (deviceId) {
   })
 }
 
-},{"enumerate-devices":6,"getusermedia":7}],23:[function(require,module,exports){
+},{"enumerate-devices":5,"getusermedia":7}],23:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -7825,7 +7825,7 @@ Engine.prototype.tick = function() {
     this.emit('tick', dt)
     this.last = time
 }
-},{"events":5,"inherits":23,"raf":30,"right-now":32}],30:[function(require,module,exports){
+},{"events":6,"inherits":23,"raf":30,"right-now":32}],30:[function(require,module,exports){
 (function (global){
 var now = require('performance-now')
   , root = typeof window === 'undefined' ? global : window

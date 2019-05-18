@@ -118,10 +118,10 @@ body, html {
 }
 
 
-/*#videoPlayer {
+#videoPlayer {
   position: absolute;
   z-index: 2;
-  display: none;
+
 }
 
 #videoPlayer.isready {
