@@ -85,6 +85,12 @@ body, html {
   left: 250px;
   height: 40px;
 }
+#archive{
+  position: fixed;
+  bottom: 85px;
+  left: 305px;
+  height: 40px;
+}
 #playData{
   position: fixed;
   bottom: 85px;
