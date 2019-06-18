@@ -54,41 +54,41 @@ body, html {
   right: 15px;
   height: 40px;
 }
-
+#myData{
+  position: absolute;
+  z-index: 2;
+  bottom: 10px;
+  left: 80px;
+  height: 30px;
+}
 #facebook {
   position: fixed;
   bottom: 85px;
-  left: 30px;
+  left: 50px;
   height: 40px;
 }
 #youtube {
   position: fixed;
   bottom: 85px;
-  left: 85px;
+  left: 105px;
   height: 40px;
 }
 #instagram{
   position: fixed;
   bottom: 85px;
-  left: 140px;
+  left: 160px;
   height: 40px;
 }
 #twitter{
   position: fixed;
   bottom: 85px;
-  left: 195px;
+  left: 215px;
   height: 40px;
 }
 #airtime{
   position: fixed;
   bottom: 85px;
-  left: 250px;
-  height: 40px;
-}
-#archive{
-  position: fixed;
-  bottom: 85px;
-  left: 305px;
+  left: 270px;
   height: 40px;
 }
 #playData{
