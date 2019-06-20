@@ -62,7 +62,7 @@ body, html {
   height: 30px;
 }
 #facebook {
-  position: fixed;
+  position: absolute;
   bottom: 85px;
   left: 50px;
   height: 40px;
