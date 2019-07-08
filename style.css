@@ -1,6 +1,18 @@
 /* styles */
 /* called by your view template */
 
+/* Estilo general de la página */
+
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
+
+html {
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inconsolata', monospace;
+}
+
 .anuncios {
   height: 100%;
   width: auto;
@@ -50,45 +62,39 @@ body, html {
 
 #logo-alcaldia {
   position: fixed;
-  bottom: 2px;
+  bottom: 8px;
   right: 15px;
   height: 40px;
 }
-#myData{
-  position: absolute;
-  z-index: 2;
-  bottom: 10px;
-  left: 80px;
-  height: 30px;
-}
+
 #facebook {
-  position: absolute;
+  position: fixed;
   bottom: 85px;
-  left: 50px;
+  left: 30px;
   height: 40px;
 }
 #youtube {
   position: fixed;
   bottom: 85px;
-  left: 105px;
+  left: 85px;
   height: 40px;
 }
 #instagram{
   position: fixed;
   bottom: 85px;
-  left: 160px;
+  left: 140px;
   height: 40px;
 }
 #twitter{
   position: fixed;
   bottom: 85px;
-  left: 215px;
+  left: 195px;
   height: 40px;
 }
 #airtime{
   position: fixed;
   bottom: 85px;
-  left: 270px;
+  left: 250px;
   height: 40px;
 }
 #playData{
@@ -200,6 +206,8 @@ iframe {
  -moz-animation: scroll-right 24s linear infinite;
  -webkit-animation: scroll-right 24s linear infinite;
  animation: scroll-right 24s linear infinite;
+
+ font-family: 'Inconsolata', monospace;
 }
 /* Move it (define the animation) */
 @-moz-keyframes scroll-right {
