@@ -69,6 +69,7 @@
       <a class="menu-item" href="./archivos"> Archivos </a>
     </section>-->
     <section id="bottom-bar">
+
       <div id="player">
         <div id="myData"class="myData" title="myData" alt="myData" style= "font=impact"></div>
       </div>
@@ -79,7 +80,29 @@
       <img id="Beca2" src="./images/Beca2.png" />
       <img id="Beca3" src="./images/Beca3.png" />
       <img id="Residencia" src="./images/Residencia.png" /> --->
+
+
     </section>
+    <script>
+    var mainContainer = document.getElementById("myData");
+    //alert("hola");
+    fetch('https://domolleno2018.airtime.pro/api/live-info-v2')
+    .then(res => res.json())
+    .then((out) => {
+      var currentName= out.tracks.current.metadata.track_title;
+      var currentArtist= out.tracks.current.metadata.artist_name;
+      var nextName= out.tracks.current.metadata.track_title;
+      var nextArtist= out.tracks.current.metadata.artist_name;
+    console.log('Output: ', currentName + " - "+ currentArtist);
+
+   var div = document.createElement("div");
+   div.innerHTML = currentName+ ' - ' + currentArtist;
+   mainContainer.appendChild(div);
+
+}).catch(err => console.error(err));
+
+     </script>
+
 
 
     <!-- Bootstrap -->
