@@ -1,6 +1,16 @@
 /* styles */
 /* called by your view template */
 
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
+
+html {
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Inconsolata', monospace;
+}
+
 .anuncios {
   height: 100%;
   width: auto;
@@ -50,7 +60,7 @@ body, html {
 
 #logo-alcaldia {
   position: fixed;
-  bottom: 2px;
+  bottom: 8px;
   right: 15px;
   height: 40px;
 }
@@ -60,6 +70,7 @@ body, html {
   bottom: 10px;
   left: 80px;
   height: 30px;
+  font-family: 'Inconsolata', monospace;
 }
 #facebook {
   position: absolute;
@@ -183,6 +194,7 @@ iframe {
   font-size: 12px;
   color: ite;
   background-color: black;
+  font-family: 'Inconsolata', monospace;
 }
 
 #inner-scroll {
