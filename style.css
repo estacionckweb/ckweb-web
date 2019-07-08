@@ -1,8 +1,11 @@
 /* styles */
 /* called by your view template */
 
+<<<<<<< HEAD
 /* Estilo general de la página */
 
+=======
+>>>>>>> 1cd97ec15d7ab6ff7104d64c7a1f54fbd70c7d8c
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 html {
@@ -66,7 +69,18 @@ body, html {
   right: 15px;
   height: 40px;
 }
+<<<<<<< HEAD
 
+=======
+#myData{
+  position: absolute;
+  z-index: 2;
+  bottom: 10px;
+  left: 80px;
+  height: 30px;
+  font-family: 'Inconsolata', monospace;
+}
+>>>>>>> 1cd97ec15d7ab6ff7104d64c7a1f54fbd70c7d8c
 #facebook {
   position: fixed;
   bottom: 85px;
@@ -189,6 +203,7 @@ iframe {
   font-size: 12px;
   color: ite;
   background-color: black;
+  font-family: 'Inconsolata', monospace;
 }
 
 #inner-scroll {
