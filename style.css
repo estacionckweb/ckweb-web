@@ -227,6 +227,7 @@ iframe {
   font-family: 'fontello';
   position: relative;
   cursor: pointer;
+  color: black;
 }
 
 .sociales .item:before {
