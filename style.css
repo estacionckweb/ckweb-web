@@ -1,7 +1,6 @@
 /* styles */
 /* called by your view template */
 
-
 @font-face {
   font-family: 'fontello';
   src: url('font/fontello.eot?31485008');
@@ -13,6 +12,8 @@
   font-weight: normal;
   font-style: normal;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 html {
   overflow: hidden;
@@ -75,9 +76,6 @@ body, html {
   right: 15px;
   height: 40px;
 }
-<<<<<<< HEAD
-
-=======
 #myData{
   position: absolute;
   z-index: 2;
@@ -87,35 +85,34 @@ body, html {
   font-family: 'Inconsolata', monospace;
   transform: translateY(-50%);
 }
->>>>>>> 1cd97ec15d7ab6ff7104d64c7a1f54fbd70c7d8c
 #facebook {
-  position: fixed;
+  position: absolute;
   bottom: 85px;
-  left: 30px;
+  left: 50px;
   height: 40px;
 }
 #youtube {
   position: fixed;
   bottom: 85px;
-  left: 85px;
+  left: 105px;
   height: 40px;
 }
 #instagram{
   position: fixed;
   bottom: 85px;
-  left: 140px;
+  left: 160px;
   height: 40px;
 }
 #twitter{
   position: fixed;
   bottom: 85px;
-  left: 195px;
+  left: 215px;
   height: 40px;
 }
 #airtime{
   position: fixed;
   bottom: 85px;
-  left: 250px;
+  left: 270px;
   height: 40px;
 }
 #playData{
@@ -359,8 +356,6 @@ iframe {
  -moz-animation: scroll-right 24s linear infinite;
  -webkit-animation: scroll-right 24s linear infinite;
  animation: scroll-right 24s linear infinite;
-
- font-family: 'Inconsolata', monospace;
 }
 /* Move it (define the animation) */
 @-moz-keyframes scroll-right {
