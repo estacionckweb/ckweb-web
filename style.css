@@ -1,12 +1,18 @@
 /* styles */
 /* called by your view template */
 
-<<<<<<< HEAD
-/* Estilo general de la página */
 
-=======
->>>>>>> 1cd97ec15d7ab6ff7104d64c7a1f54fbd70c7d8c
-@import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
+@font-face {
+  font-family: 'fontello';
+  src: url('font/fontello.eot?31485008');
+  src: url('font/fontello.eot?31485008#iefix') format('embedded-opentype'),
+       url('font/fontello.woff2?31485008') format('woff2'),
+       url('font/fontello.woff?31485008') format('woff'),
+       url('font/fontello.ttf?31485008') format('truetype'),
+       url('font/fontello.svg?31485008#fontello') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 
 html {
   overflow: hidden;
@@ -57,15 +63,15 @@ body, html {
 #bottom-bar {
   position: fixed;
   height: 80px;
-  background-color: rgba(200, 200, 200, 1.0);
+  background-color: rgba(255,255,255,0.9);
   bottom: 0px;
   width: 100%;
-  border-top: solid black 2px;
+  bottom: 10px;
 }
 
 #logo-alcaldia {
   position: fixed;
-  bottom: 8px;
+  bottom: 28px;
   right: 15px;
   height: 40px;
 }
@@ -75,10 +81,11 @@ body, html {
 #myData{
   position: absolute;
   z-index: 2;
-  bottom: 10px;
-  left: 80px;
-  height: 30px;
+  top: 50%;
+  left: 130px;
+  text-transform: lowercase;
   font-family: 'Inconsolata', monospace;
+  transform: translateY(-50%);
 }
 >>>>>>> 1cd97ec15d7ab6ff7104d64c7a1f54fbd70c7d8c
 #facebook {
@@ -124,11 +131,15 @@ iframe {
 }
 
 .button-holder {
-  width: 60px;
-  height: 60px;
+  width: 100px;
+  height: 100px;
   cursor: pointer;
-  margin-left: 20px;
-  padding: 8px;
+  margin-left: 10px;
+  margin-top: -10px;
+  border: 5px solid white;
+  border-radius: 50px;
+  background: black;
+  position: relative;
 }
 
 .audio-player-button {
@@ -137,18 +148,42 @@ iframe {
 
 }
 
-.play-button {
-  background: url(./images/play.png);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+.play-button, .pause-button {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+}
+
+.play-button:before {
+  font-family: 'fontello';
+  content: '\E800';
+  color: white;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  line-height: 90px;
+  font-size: 2em;
+}
+
+.pause-button:before {
+  font-family: 'fontello';
+  content: '\E801';
+  color: white;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  line-height: 90px;
+  font-size: 2em;
 }
 
 .pause-button {
-  background: url(./images/pause.png);
+  /* background: url(./images/pause.png);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
+  background-size: contain; */
 }
 
 
@@ -159,7 +194,7 @@ iframe {
 
 #logo {
   width: 100%;
-  height: calc(100% - 80px);
+  height: 100vh;
 /*   height: 100%; */
   background: url(./images/ckweb_negro_part.svg);
   background-size: auto 100%;
@@ -172,13 +207,116 @@ iframe {
   margin-right: auto;
 }
 
+.sociales {
+  position: fixed;
+  display: flex;
+  top: 10px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sociales .inside {
+  background: white;
+  display: flex;
+  align-content: flex-start;
+  border-radius: 5px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.sociales .item{
+  width: 40px;
+  height: 40px;
+  font-family: 'fontello';
+  position: relative;
+  cursor: pointer;
+}
+
+.sociales .item:before {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 1em;
+}
+
+.sociales .item.facebook:before {
+  content: '\F09A';
+}
+
+.sociales .item.twitter:before {
+  content: '\F099';
+}
+
+.sociales .item.ytube:before {
+  content: '\F167';
+}
+
+.sociales .item.instagram:before {
+  content: '\F16D';
+}
+
+.sociales .item.podcast:before {
+  content: '\F2CE';
+}
+
+
+.aviso {
+  background: white;
+  max-width: 300px;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.75em;
+  padding-left: 50px;
+  position: relative;
+  cursor: pointer;
+}
+
+.aviso:hover {
+  background: black;
+  color: white;
+}
+
+.aviso:hover:before {
+  border-left-color: white;
+  border-right-color: white;
+}
+
+.aviso:before {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50px;
+  content: '';
+  margin-top: -10px;
+  border: .2em solid transparent;
+	border-left-color: #dc5353;
+	border-right-color: #dc5353;
+	border-radius: 50%;
+	animation: 1s loader-02 linear infinite;
+}
+
+@keyframes loader-02 {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 
 
 /* styles for hydra canvas */
 
 #hydra {
   width: 100%;
-  height: calc(100vh - 80px);
+  height: calc(100vh);
   position: absolute;
   top: 0px;
   left: 0px;
