@@ -86,20 +86,25 @@
     <script>
     var mainContainer = document.getElementById("myData");
     //alert("hola");
-    fetch('https://domolleno2018.airtime.pro/api/live-info-v2')
-    .then(res => res.json())
-    .then((out) => {
-      var currentName= out.tracks.current.metadata.track_title;
-      var currentArtist= out.tracks.current.metadata.artist_name;
-      var nextName= out.tracks.current.metadata.track_title;
-      var nextArtist= out.tracks.current.metadata.artist_name;
-    console.log('Output: ', currentName + " - "+ currentArtist);
 
-   var div = document.createElement("div");
-   div.innerHTML = currentName+ ' - ' + currentArtist;
-   mainContainer.appendChild(div);
+    setInterval(function(){
+      fetch('https://domolleno2018.airtime.pro/api/live-info-v2')
+      .then(res => res.json())
+      .then((out) => {
+        var currentName= out.tracks.current.metadata.track_title;
+        var currentArtist= out.tracks.current.metadata.artist_name;
+        var nextName= out.tracks.current.metadata.track_title;
+        var nextArtist= out.tracks.current.metadata.artist_name;
+        console.log('Output: ', currentName + " - "+ currentArtist);
 
-}).catch(err => console.error(err));
+        var div = document.createElement("div");
+        div.innerHTML = currentName+ ' - ' + currentArtist;
+        mainContainer.appendChild(div);
+
+      }).catch(err => console.error(err));
+    }, 500);
+
+      
 
      </script>
 
