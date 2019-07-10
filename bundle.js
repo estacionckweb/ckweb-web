@@ -3,7 +3,7 @@ function audioPlayer(opts) {
   this.file = opts.file
   this.container = opts.container
   this.isPlaying = false
-
+  // console.log(opts)
   var audio = new Audio(opts.stream)
   console.log('audio is', audio)
   this.audio = audio
@@ -15,6 +15,8 @@ function audioPlayer(opts) {
   buttonHolder.onclick = () => {
     console.log(audio.paused)
     if(audio.paused){
+      // self.audio = new Audio(opts.stream);
+      $(audio).attr('src', opts.stream)
       self.play()
     } else {
       self.pause()
@@ -104,7 +106,7 @@ canvas.height = window.innerHeight
  //alert("hi")
 
 var hydra = new HydraBackground({
-  canvas: canvas,
+  canvas: canvas,AudioPlayer,
   initialAnimationDuration: 300
 })
 
@@ -114,15 +116,16 @@ var audio = new AudioPlayer({
   container: document.getElementById("player")
 })
 
+console.log(audio)
 
-
-audio.onPlay = () => { hydra.play() }
+audio.onPlay = () => { hydra.play(); audio.currentTime = 0; }
 
 audio.onPause = () => { hydra.pause() }
 
 },{"./audioPlayer.js":1,"./hydraBackground.js":2,"./videoPlayer.js":4}],4:[function(require,module,exports){
 function videoPlayer(opts) {
   console.log('stream', opts)
+  console.log('hola mundo')
   this.stream = opts.stream
   this.container = opts.container
   this.isPlaying = false
