@@ -5,10 +5,10 @@
   font-family: 'fontello';
   src: url('font/fontello.eot?31485008');
   src: url('font/fontello.eot?31485008#iefix') format('embedded-opentype'),
-       url('font/fontello.woff2?31485008') format('woff2'),
-       url('font/fontello.woff?31485008') format('woff'),
-       url('font/fontello.ttf?31485008') format('truetype'),
-       url('font/fontello.svg?31485008#fontello') format('svg');
+    url('font/fontello.woff2?31485008') format('woff2'),
+    url('font/fontello.woff?31485008') format('woff'),
+    url('font/fontello.ttf?31485008') format('truetype'),
+    url('font/fontello.svg?31485008#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -29,7 +29,8 @@ body {
   padding: 10px;
 }
 
-body, html {
+body,
+html {
   width: 100%;
   height: 100%;
 }
@@ -38,7 +39,7 @@ body, html {
   position: fixed;
   width: 100%;
   height: calc(100vh - 80px);
-/*   background-color: rgba(255, 255, 255, 0.6); */
+  /*   background-color: rgba(255, 255, 255, 0.6); */
 }
 
 
@@ -59,12 +60,13 @@ body, html {
   color: #000;
   /* background-color: #fff; */
 }
+
 /* Styles for bottom bar */
 
 #bottom-bar {
   position: fixed;
   height: 80px;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255, 255, 255, 0.9);
   bottom: 0px;
   width: 100%;
   bottom: 10px;
@@ -77,7 +79,8 @@ body, html {
   height: 40px;
   width: 230px;
 }
-#myData{
+
+#myData {
   position: absolute;
   z-index: 2;
   top: 50%;
@@ -86,45 +89,52 @@ body, html {
   font-family: 'Inconsolata', monospace;
   transform: translateY(-50%);
 }
+
 #facebook {
   position: absolute;
   bottom: 85px;
   left: 50px;
   height: 40px;
 }
+
 #youtube {
   position: fixed;
   bottom: 85px;
   left: 105px;
   height: 40px;
 }
-#instagram{
+
+#instagram {
   position: fixed;
   bottom: 85px;
   left: 160px;
   height: 40px;
 }
-#twitter{
+
+#twitter {
   position: fixed;
   bottom: 85px;
   left: 215px;
   height: 40px;
 }
-#airtime{
+
+#airtime {
   position: fixed;
   bottom: 85px;
   left: 270px;
   height: 40px;
 }
-#playData{
+
+#playData {
   position: fixed;
   bottom: 85px;
   left: 200px;
   height: 140px;
 }
+
 iframe {
-    border: 1px solid black;
-    width: 100%;
+  border: 1px solid black;
+  width: 100%;
 
 }
 
@@ -146,7 +156,8 @@ iframe {
 
 }
 
-.play-button, .pause-button {
+.play-button,
+.pause-button {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -193,7 +204,7 @@ iframe {
 #logo {
   width: 100%;
   height: calc(100vh - 90px);
-/*   height: 100%; */
+  /*   height: 100%; */
   background: url(./images/ckweb_negro_part.svg);
   background-size: auto 100%;
   background-position: left center;
@@ -222,7 +233,7 @@ iframe {
   margin-right: 10px;
 }
 
-.sociales .item{
+.sociales .item {
   width: 40px;
   height: 40px;
   font-family: 'fontello';
@@ -268,10 +279,12 @@ iframe {
   margin: 5px;
   border-radius: 5px;
   font-family: 'Inconsolata', monospace;
-  font-size: 0.75em;
+  font-size: 0.9em;
   padding-left: 50px;
   position: relative;
   cursor: pointer;
+  color: black;
+  text-decoration: none;
 }
 
 .aviso:hover {
@@ -294,19 +307,20 @@ iframe {
   content: '';
   margin-top: -10px;
   border: .2em solid transparent;
-	border-left-color: #dc5353;
-	border-right-color: #dc5353;
-	border-radius: 50%;
-	animation: 1s loader-02 linear infinite;
+  border-left-color: #dc5353;
+  border-right-color: #dc5353;
+  border-radius: 50%;
+  animation: 1s loader-02 linear infinite;
 }
 
 @keyframes loader-02 {
-	0% {
-		transform: rotate(0deg);
-	}
-	100% {
-		transform: rotate(360deg);
-	}
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -344,39 +358,57 @@ iframe {
 }
 
 #inner-scroll {
- position: absolute;
-/*  width: 100%; */
-/*  height: 100%; */
- margin: 0;
- line-height: 20px;
- text-align: center;
- /* Starting position */
- -moz-transform:translateX(0%);
- -webkit-transform:translateX(0%);
- transform:translateX(0%);
- /* Apply animation to this element */
- -moz-animation: scroll-right 24s linear infinite;
- -webkit-animation: scroll-right 24s linear infinite;
- animation: scroll-right 24s linear infinite;
+  position: absolute;
+  /*  width: 100%; */
+  /*  height: 100%; */
+  margin: 0;
+  line-height: 20px;
+  text-align: center;
+  /* Starting position */
+  -moz-transform: translateX(0%);
+  -webkit-transform: translateX(0%);
+  transform: translateX(0%);
+  /* Apply animation to this element */
+  -moz-animation: scroll-right 24s linear infinite;
+  -webkit-animation: scroll-right 24s linear infinite;
+  animation: scroll-right 24s linear infinite;
 }
+
 /* Move it (define the animation) */
 @-moz-keyframes scroll-right {
- 0%   { -moz-transform: translateX(500%); }
- 100% { -moz-transform: translateX(0%); }
+  0% {
+    -moz-transform: translateX(500%);
+  }
+
+  100% {
+    -moz-transform: translateX(0%);
+  }
 }
+
 @-webkit-keyframes scroll-right {
- 0%   { -webkit-transform: translateX(500%); }
- 100% { -webkit-transform: translateX(0%); }
+  0% {
+    -webkit-transform: translateX(500%);
+  }
+
+  100% {
+    -webkit-transform: translateX(0%);
+  }
 }
+
 @keyframes scroll-right {
- 0%   {
- -moz-transform: translateX(500%); /* Browser bug fix */
- -webkit-transform: translateX(500%); /* Browser bug fix */
- transform: translateX(500%);
- }
- 100% {
- -moz-transform: translateX(-50%); /* Browser bug fix */
- -webkit-transform: translateX(-50%); /* Browser bug fix */
- transform: translateX(-50%);
- }
+  0% {
+    -moz-transform: translateX(500%);
+    /* Browser bug fix */
+    -webkit-transform: translateX(500%);
+    /* Browser bug fix */
+    transform: translateX(500%);
+  }
+
+  100% {
+    -moz-transform: translateX(-50%);
+    /* Browser bug fix */
+    -webkit-transform: translateX(-50%);
+    /* Browser bug fix */
+    transform: translateX(-50%);
+  }
 }
