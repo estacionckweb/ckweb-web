@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/taller-depp/static/css/main.9943b369.chunk.css",
+    "main.js": "/taller-depp/static/js/main.e193cacd.chunk.js",
+    "main.js.map": "/taller-depp/static/js/main.e193cacd.chunk.js.map",
+    "runtime~main.js": "/taller-depp/static/js/runtime~main.b6925929.js",
+    "runtime~main.js.map": "/taller-depp/static/js/runtime~main.b6925929.js.map",
+    "static/js/2.6be4f4d0.chunk.js": "/taller-depp/static/js/2.6be4f4d0.chunk.js",
+    "static/js/2.6be4f4d0.chunk.js.map": "/taller-depp/static/js/2.6be4f4d0.chunk.js.map",
+    "index.html": "/taller-depp/index.html",
+    "precache-manifest.b921e07401b5b4b8e2dd3f91cd47b9c3.js": "/taller-depp/precache-manifest.b921e07401b5b4b8e2dd3f91cd47b9c3.js",
+    "service-worker.js": "/taller-depp/service-worker.js",
+    "static/css/main.9943b369.chunk.css.map": "/taller-depp/static/css/main.9943b369.chunk.css.map"
+  }
+}
