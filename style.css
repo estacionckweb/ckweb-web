@@ -233,6 +233,10 @@ iframe {
   margin-right: 10px;
 }
 
+.sociales .enlaces {
+  width: 300px;
+}
+
 .sociales .item {
   width: 40px;
   height: 40px;
