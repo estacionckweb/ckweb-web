@@ -1,0 +1,14 @@
+[
+    {
+        "contenido": "blablablabala",
+        "tiempo": 60
+    },
+    {
+        "contenido": "mas blablabla",
+        "tiempo": 125
+    },
+    {
+        "contenido": "prueba de subtitulos. <a href='#'>esto es un link</a>",
+        "tiempo": 4000
+    }
+]
