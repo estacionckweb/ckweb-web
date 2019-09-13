@@ -7,8 +7,7 @@ var s = ( sketch ) => {
     sketch.setup = () => {
         sketch.createCanvas(0, 0);
         audio = sketch.select('#audioPlayer');
-        analyzer = new p5.FFT();
-        analyzer.setInput(audio);
+        
     };
 
     sketch.draw = () => {
@@ -33,6 +32,8 @@ var s = ( sketch ) => {
 
     sketch.resize = (w,h) => {
         sketch.resizeCanvas(w,h);
+        analyzer = new p5.FFT();
+        analyzer.setInput(audio);
     }
 };
 var audio = document.getElementById('audioPlayer');
