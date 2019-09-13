@@ -2,7 +2,7 @@ var s = ( sketch ) => {
 
     let x = 100;
     let y = 100;
-    let audio, analyzer;
+    let audioCanvas, analyzer;
 
     sketch.setup = () => {
         sketch.createCanvas(0, 0);
@@ -31,8 +31,8 @@ var s = ( sketch ) => {
 
     sketch.resize = (w,h) => {
         sketch.resizeCanvas(w,h);
-        audio = sketch.select('#audioPlayer');
-        analyzer.setInput(audio);
+        audioCanvas = sketch.select('#audioPlayer');
+        analyzer.setInput(audioCanvas);
     }
 };
 var audio = document.getElementById('audioPlayer');
@@ -41,7 +41,7 @@ var timeCurrent = 0;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 } else {
-    // var canvas_player = new p5(s, 'canvas_player');
+    var canvas_player = new p5(s, 'canvas_player');
 }
 
 $('.left .item .icon').on('click', (e) => {
@@ -78,7 +78,7 @@ audio.oncanplaythrough = () => {
     var height = document.getElementById('canvas_player').offsetHeight;
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     } else {
-        // canvas_player.resize(width, height);
+        canvas_player.resize(width, height);
     }
 }
 
@@ -87,6 +87,16 @@ audio.ontimeupdate = () => {
     timeTotal = audio.duration;
     updateTimeText(timeCurrent, timeTotal);
 }
+
+$('.line').on('click', function(e){
+    var parentOffset = $(e.target).offset(); 
+    var relX = e.pageX - parentOffset.left;
+    var total = $(e.target).width();
+
+    var resp = (relX * audio.duration) / total
+
+    audio.currentTime = resp;
+})
 
 function updateTimeText(current, total) {
     var timeTxt = document.getElementsByClassName("time")[0];

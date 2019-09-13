@@ -73,6 +73,7 @@ font-size: 0.75em;
 .right .playerContainer .line {
 height: 50px;
 position: relative;
+cursor: pointer;
 }
 .right .playerContainer .line .total {
 height: 1px;
