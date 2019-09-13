@@ -48,31 +48,43 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 
 $('.left .item .icon').on('click', (e) => {
-    var url = $(e.target).attr('data-url');
-    $('.left .item.active').removeClass('active');
     var $parent = $(e.target).parent().parent();
-    $parent.addClass('active');
-    $('.playerContainer').hide();
-    audio.src = url;
-    
-    audio.oncanplaythrough = () => {
+    if(!$(e.target).hasClass('playing') && !$parent.hasClass('active')){
+        $('.left .item.active').removeClass('active');
+        $parent.addClass('active');
+        $(e.target).addClass('playing');
+        var url = $(e.target).attr('data-url');
+        $('.playerContainer').hide();
+        audio.src = url;
         audio.play();
-        $('.playerContainer').show();
-        timeTotal = audio.duration;
-        var width = document.getElementById('canvas_player').offsetWidth;
-        var height = document.getElementById('canvas_player').offsetHeight;
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-        } else {
-            canvas_player.resize(width, height);
-        }
     }
-
-    audio.ontimeupdate = () => {
-        timeCurrent = audio.currentTime;
-        timeTotal = audio.duration;
-        updateTimeText(timeCurrent, timeTotal);
+    else if(!$(e.target).hasClass('playing')){
+        $(e.target).addClass('playing');
+        audio.play();
+    }
+    else{
+        $(e.target).removeClass('playing');
+        audio.pause();
     }
 })
+
+audio.oncanplaythrough = () => {
+    audio.play();
+    $('.playerContainer').show();
+    timeTotal = audio.duration;
+    var width = document.getElementById('canvas_player').offsetWidth;
+    var height = document.getElementById('canvas_player').offsetHeight;
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    } else {
+        canvas_player.resize(width, height);
+    }
+}
+
+audio.ontimeupdate = () => {
+    timeCurrent = audio.currentTime;
+    timeTotal = audio.duration;
+    updateTimeText(timeCurrent, timeTotal);
+}
 
 function updateTimeText(current, total) {
     var timeTxt = document.getElementsByClassName("time")[0];

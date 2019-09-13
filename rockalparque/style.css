@@ -207,4 +207,8 @@ font-size: 0.7em;
 .left .item.active .top .icon::before {
 content: '\e801';
 }
+
+.left .item.active .top .icon:not(.playing)::before {
+    content: '\E800';
+    }
   
