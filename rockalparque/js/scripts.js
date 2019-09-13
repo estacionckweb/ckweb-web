@@ -56,7 +56,12 @@ $('.left .item .icon').on('click', (e) => {
         var url = $(e.target).attr('data-url');
         $('.playerContainer').hide();
         audio.src = url;
-        audio.play();
+        var promise = audio.play();
+        promise.then(() => {
+            console.log('play');
+        }).catch(err => {
+            console.log(err);
+        })
     }
     else if(!$(e.target).hasClass('playing')){
         $(e.target).addClass('playing');
