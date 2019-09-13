@@ -6,8 +6,8 @@ var s = ( sketch ) => {
 
     sketch.setup = () => {
         sketch.createCanvas(0, 0);
-        audio = null;
-        analyzer = new p5.FFT();
+        audio = sketch.select('#audioPlayer');
+        analyzer.setInput(audio);
     };
 
     sketch.draw = () => {
@@ -32,10 +32,6 @@ var s = ( sketch ) => {
 
     sketch.resize = (w,h) => {
         sketch.resizeCanvas(w,h);
-        if(audio == null){
-            audio = sketch.select('#audioPlayer');
-            analyzer.setInput(audio);
-        }
     }
 };
 var audio = document.getElementById('audioPlayer');
@@ -81,7 +77,7 @@ audio.oncanplaythrough = () => {
     var height = document.getElementById('canvas_player').offsetHeight;
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     } else {
-        // canvas_player.resize(width, height);
+        canvas_player.resize(width, height);
     }
 }
 
