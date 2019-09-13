@@ -41,7 +41,7 @@ var timeCurrent = 0;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 } else {
-    var canvas_player = new p5(s, 'canvas_player');
+    // var canvas_player = new p5(s, 'canvas_player');
 }
 
 $('.left .item .icon').on('click', (e) => {
@@ -78,7 +78,7 @@ audio.oncanplaythrough = () => {
     var height = document.getElementById('canvas_player').offsetHeight;
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     } else {
-        canvas_player.resize(width, height);
+        // canvas_player.resize(width, height);
     }
 }
 
