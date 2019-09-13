@@ -1,0 +1,90 @@
+var audio = document.getElementById('audioPlayer');
+var timeTotal = 0;
+var timeCurrent = 0;
+
+
+$('.left .item .icon').on('click', (e) => {
+    var url = $(e.target).attr('data-url');
+    $('.left .item.active').removeClass('active');
+    var $parent = $(e.target).parent().parent();
+    $parent.addClass('active');
+    $('.playerContainer').hide();
+    audio.src = url;
+    
+    audio.play();
+    audio.oncanplaythrough = () => {
+        $('.playerContainer').show();
+        timeTotal = audio.duration;
+        var width = document.getElementById('canvas_player').offsetWidth;
+        var height = document.getElementById('canvas_player').offsetHeight;
+        canvas_player.resize(width, height);
+    }
+
+    audio.ontimeupdate = () => {
+        timeCurrent = audio.currentTime;
+        timeTotal = audio.duration;
+        updateTimeText(timeCurrent, timeTotal);
+    }
+})
+
+function updateTimeText(current, total) {
+    var timeTxt = document.getElementsByClassName("time")[0];
+    var line = document.getElementsByClassName("current")[0];
+
+    var porcentaje = ((current * 100)/total);
+
+    line.setAttribute('style', 'width: '+porcentaje+'%');
+    timeTxt.innerHTML = this.secondsTimeSpanToHMS(current) + "/" + this.secondsTimeSpanToHMS(total);
+}
+
+function secondsTimeSpanToHMS(s) {
+    var h = Math.floor(s/3600);
+    s -= h*3600;
+    var m = Math.floor(s/60);
+    s -= m*60;
+
+    s = Math.floor(s);
+    return (h < 10 ? '0'+h : h)+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s);
+}
+
+const s = ( sketch ) => {
+
+    let x = 100;
+    let y = 100;
+    let audio, analyzer;
+
+    sketch.setup = () => {
+        sketch.createCanvas(0, 0);
+        
+        analyzer = new p5.FFT();
+        
+    };
+
+    sketch.draw = () => {
+        sketch.clear();
+        sketch.stroke(150);
+        sketch.noFill();
+
+        let spectrum = analyzer.analyze();
+
+        sketch.beginShape();
+        for (let i = 0; i < spectrum.length; i+=6) {
+            sketch.vertex(sketch.map(i,0,spectrum.length,0,sketch.width), sketch.map(spectrum[i], 0, 255, 0, sketch.height/2));
+        }
+        sketch.endShape();
+
+        sketch.beginShape();
+        for (let i = spectrum.length; i > 0 ; i-=6) {
+            sketch.vertex(sketch.map(i,0,spectrum.length,sketch.width,0), sketch.map(spectrum[i], 0, 255, sketch.height, sketch.height/2));
+        }
+        sketch.endShape();
+    };
+
+    sketch.resize = (w,h) => {
+        sketch.resizeCanvas(w,h);
+        audio = sketch.select('#audioPlayer');
+        analyzer.setInput(audio);
+    }
+};
+
+var canvas_player = new p5(s, 'canvas_player');
