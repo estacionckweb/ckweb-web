@@ -1,7 +1,51 @@
+var s = ( sketch ) => {
+
+    let x = 100;
+    let y = 100;
+    let audio, analyzer;
+
+    sketch.setup = () => {
+        sketch.createCanvas(0, 0);
+        audio = null;
+        analyzer = new p5.FFT();
+    };
+
+    sketch.draw = () => {
+        sketch.clear();
+        sketch.stroke(150);
+        sketch.noFill();
+
+        let spectrum = analyzer.analyze();
+
+        sketch.beginShape();
+        for (let i = 0; i < spectrum.length; i+=6) {
+            sketch.vertex(sketch.map(i,0,spectrum.length,0,sketch.width), sketch.map(spectrum[i], 0, 255, 0, sketch.height/2));
+        }
+        sketch.endShape();
+
+        sketch.beginShape();
+        for (let i = spectrum.length; i > 0 ; i-=6) {
+            sketch.vertex(sketch.map(i,0,spectrum.length,sketch.width,0), sketch.map(spectrum[i], 0, 255, sketch.height, sketch.height/2));
+        }
+        sketch.endShape();
+    };
+
+    sketch.resize = (w,h) => {
+        sketch.resizeCanvas(w,h);
+        if(audio == null){
+            audio = sketch.select('#audioPlayer');
+            analyzer.setInput(audio);
+        }
+    }
+};
 var audio = document.getElementById('audioPlayer');
 var timeTotal = 0;
 var timeCurrent = 0;
 
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+} else {
+    var canvas_player = new p5(s, 'canvas_player');
+}
 
 $('.left .item .icon').on('click', (e) => {
     var url = $(e.target).attr('data-url');
@@ -11,13 +55,16 @@ $('.left .item .icon').on('click', (e) => {
     $('.playerContainer').hide();
     audio.src = url;
     
-    audio.play();
     audio.oncanplaythrough = () => {
+        audio.play();
         $('.playerContainer').show();
         timeTotal = audio.duration;
         var width = document.getElementById('canvas_player').offsetWidth;
         var height = document.getElementById('canvas_player').offsetHeight;
-        canvas_player.resize(width, height);
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        } else {
+            canvas_player.resize(width, height);
+        }
     }
 
     audio.ontimeupdate = () => {
@@ -47,44 +94,4 @@ function secondsTimeSpanToHMS(s) {
     return (h < 10 ? '0'+h : h)+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s);
 }
 
-const s = ( sketch ) => {
 
-    let x = 100;
-    let y = 100;
-    let audio, analyzer;
-
-    sketch.setup = () => {
-        sketch.createCanvas(0, 0);
-        
-        analyzer = new p5.FFT();
-        
-    };
-
-    sketch.draw = () => {
-        sketch.clear();
-        sketch.stroke(150);
-        sketch.noFill();
-
-        let spectrum = analyzer.analyze();
-
-        sketch.beginShape();
-        for (let i = 0; i < spectrum.length; i+=6) {
-            sketch.vertex(sketch.map(i,0,spectrum.length,0,sketch.width), sketch.map(spectrum[i], 0, 255, 0, sketch.height/2));
-        }
-        sketch.endShape();
-
-        sketch.beginShape();
-        for (let i = spectrum.length; i > 0 ; i-=6) {
-            sketch.vertex(sketch.map(i,0,spectrum.length,sketch.width,0), sketch.map(spectrum[i], 0, 255, sketch.height, sketch.height/2));
-        }
-        sketch.endShape();
-    };
-
-    sketch.resize = (w,h) => {
-        sketch.resizeCanvas(w,h);
-        audio = sketch.select('#audioPlayer');
-        analyzer.setInput(audio);
-    }
-};
-
-var canvas_player = new p5(s, 'canvas_player');
