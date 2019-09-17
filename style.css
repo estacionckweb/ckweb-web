@@ -234,7 +234,7 @@ iframe {
 }
 
 .sociales .enlaces {
-  width: 300px;
+  width: 400px;
 }
 
 .sociales .item {
@@ -277,8 +277,8 @@ iframe {
 
 
 .aviso {
-  background: white;
-  max-width: 300px;
+  background: rgb(255, 255, 255);
+  max-width: 400px;
   padding: 5px;
   margin: 5px;
   border-radius: 5px;
@@ -294,6 +294,7 @@ iframe {
 
 .aviso:hover {
   background: black;
+  max-width: 500px;
   color: white;
 }
 
