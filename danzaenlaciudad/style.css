@@ -139,7 +139,7 @@ display: block;
 
 .left {
 /*color: rgb(255, 255, 255);*/
-display: flex;
+display: block;
 width: 300px;
 flex-wrap: wrap;
 align-items: center;
@@ -149,11 +149,11 @@ top: 0;
 right: 0;
 height: 100%;
 border-left: 1px solid #999;
-overflow: scroll;
+overflow: auto;
 }
 
 .left .link {
-    padding: 10px;
+    padding: 0px;
     color: rgb(202, 110, 214);
     }
   
@@ -164,7 +164,7 @@ color: rgb(76, 226, 206);
 .left .top img {
 max-width: 80px;
 display: block;
-margin: 0 auto;
+margin: 0;
 margin-bottom: 10px;
 }
 .left > .top {

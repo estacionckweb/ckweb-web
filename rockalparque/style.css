@@ -10,12 +10,11 @@ src: url('./font/fontello.eot?70542444#iefix') format('embedded-opentype'),
         url('./font/fontello.svg?70542444#fontello') format('svg');
 font-weight: normal;
 font-style: normal;
-color: #fff;
 }
 
 body {
     background: #171717;
-    position: relative;
+    position: fixed;
     font-family: 'Roboto Condensed', sans-serif;
     margin: 0;
     padding: 0;
