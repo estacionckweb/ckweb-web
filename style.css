@@ -58,6 +58,7 @@ html {
 
 .menu-item {
   color: #000;
+  position: fixed;
   /* background-color: #fff; */
 }
 
