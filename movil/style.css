@@ -139,7 +139,7 @@ display: block;
 
 .left {
 /*color: rgb(255, 255, 255);*/
-display: block; /*esto funcionó para el scroll y mostrar completo*/
+display: flex;
 width: 300px;
 flex-wrap: wrap;
 align-items: center;
@@ -221,10 +221,4 @@ content: '\e801';
 .left .item.active .top .icon:not(.playing)::before {
     content: '\E800';
     }
-
-.left .bottom {
-        padding: 3px;
-        color: rgb(216, 216, 216);
-        vertical-align: 90%
-        }
   
