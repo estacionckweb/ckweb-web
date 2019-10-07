@@ -13,7 +13,7 @@ font-style: normal;
 }
 
 body {
-    background: #171717;
+    background: #000000;
     position: relative;
     font-family: 'Roboto Condensed', sans-serif;
     margin: 0;
@@ -154,12 +154,12 @@ overflow: auto;
 
 .left .link {
     padding: 0px;
-    color: rgb(202, 110, 214);
+    color: rgb(255, 255, 255);
     }
   
 .left .top {
 padding: 3px;
-color: rgb(76, 226, 206);
+color: rgb(216, 216, 216);
 }
 .left .top img {
 max-width: 80px;
@@ -221,4 +221,10 @@ content: '\e801';
 .left .item.active .top .icon:not(.playing)::before {
     content: '\E800';
     }
+
+.left .bottom {
+        padding: 3px;
+        color: rgb(216, 216, 216);
+        vertical-align: 90%
+        }
   
