@@ -25,7 +25,7 @@ body {
 .right {
 display: flex;
 height: 100vh;
-width: calc(100% - 300px);
+width: calc(100% - 325px);
 justify-content: center;
 align-items: center;
 align-content: center;
@@ -48,9 +48,15 @@ background-size: cover;
 background-position: center;
 background-image: url('./background.jpg');
 }
+
 .right .playerContainer {
 width: 100%;
 display: none;
+}
+.right .playerContainer .backImg {
+background-size: cover;
+background-position: center;
+background-image: getId('0');
 }
 .right .playerContainer .play {
 width: 50px;
@@ -91,6 +97,18 @@ top: 50%;
 transform: translate(0, -50%);
 position: absolute;
 }
+/*.right .playerContainer .back {
+    width: 1000%;
+    margin-left: 5%;
+    margin-bottom: 50px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 3px;
+    color: white;
+    background-size: cover;
+    background-position: center;
+    background-image: url('./background2.jpg');
+    }*/
 .right .playerContainer .subsContainer {
 position: absolute;
 width: 100%;
@@ -130,9 +148,13 @@ color: #999;
 .right .playerContainer .notice a:hover {
 color: black;
 }
-.right .playerContainer.active {
+/*.right .playerContainer.active {
 display: block;
-}
+background-size: cover;
+background-position: center;
+background-image: url('./background2.jpg');
+
+}*/
 
 
 /* PLAYLIST */
@@ -140,7 +162,7 @@ display: block;
 .left {
 /*color: rgb(255, 255, 255);*/
 display: block; /*esto funcionó para el scroll y mostrar completo*/
-width: 300px;
+width: 325px;
 flex-wrap: wrap;
 align-items: center;
 align-content: center;
@@ -149,7 +171,7 @@ top: 0;
 right: 0;
 height: 100%;
 border-left: 1px solid #999;
-overflow: auto;
+overflow: scroll;
 }
 
 .left .link {
@@ -159,7 +181,8 @@ overflow: auto;
   
 .left .top {
 padding: 3px;
-color: rgb(76, 226, 206);
+color: rgb(255, 255, 255);
+text-align: center;
 }
 .left .top img {
 max-width: 80px;
@@ -187,10 +210,29 @@ display: none;
 display: flex;
 align-items: center;
 }
+
+/* Va por aquí... */
+.left .item.active .top {
+background: #444;
+background-size: cover;
+background-position: center;
+background-image: url();
+
+    }
 .left .item .top .name {
-font-size: 0.9em;
+font-size: 1em;
 margin-left: 10px;
+margin-right: 5px;
 width: calc(100% - 40px);
+text-align: justify;
+}
+.left .item .top .name .description {
+font-size: 0.8em;
+margin-left: 10px;
+margin-right: 6px;
+width: calc(100% - 40px);
+color: #999;
+text-align: justify;
 }
 .left .item .top .icon {
 width: 40px;
@@ -200,10 +242,16 @@ border: 1px solid white;
 cursor: pointer;
 transition: all 0.25s ease;
 position: relative;
+text-align: left;
 }
-.left .item .top .icon:hover, .left .item.active .top .icon {
+/*.left .item .top .icon:hover, .left .item.active .top .icon {
+width: 400px;
+height: 400px;
 background: #444;
-}
+background-size: cover;
+background-position: center;
+background-image: url('data-url2');
+}*/
 .left .item .top .icon::before {
 font-family: 'icons';
 

@@ -51,6 +51,10 @@ $('.left .item .icon').on('click', (e) => {
         $parent.addClass('active');
         $(e.target).addClass('playing');
         var url = $(e.target).attr('data-url');
+        var img = $(e.target).attr('data-img');
+        if(img) {
+            $('.backImg').css({'background-image': 'url("'+img+'")'})
+        }
         $('.playerContainer').hide();
         audio.src = url;
         var promise = audio.play();
@@ -118,5 +122,3 @@ function secondsTimeSpanToHMS(s) {
     s = Math.floor(s);
     return (h < 10 ? '0'+h : h)+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s);
 }
-
-
