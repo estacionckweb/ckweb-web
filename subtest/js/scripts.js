@@ -61,7 +61,7 @@ $('.left .item .icon').on('click', (e) => {
                 for(let i = 0; i < data.length; i++){
                     let node = document.createElement("div");
                     var square = document.createElement("span");
-                    var leftPos = ((data[i].tiempo * 100)/total);
+                    var leftPos = ((data[i].tiempo * 100)/timeTotal);
                     node.setAttribute('style', 'left: '+leftPos+'%');
                     node.appendChild(square);
                     node.setAttribute('data-notice', data[i].contenido);
