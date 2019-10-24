@@ -1,3 +1,31 @@
+
+Skip to content
+Pull requests
+Issues
+Marketplace
+Explore
+@anattolia
+Learn Git and GitHub without any code!
+
+Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
+
+4
+0
+
+    0
+
+estacionckweb/reproductor-audio
+Code
+Issues 0
+Pull requests 0
+Projects 0
+Wiki
+Security
+Insights
+Settings
+reproductor-audio/js/scripts.js
+@nestorandrespe nestorandrespe error estupido e26fb3a 15 minutes ago
+146 lines (123 sloc) 4.55 KB
 var s = ( sketch ) => {
 
     let x = 100;
@@ -141,5 +169,4 @@ function secondsTimeSpanToHMS(s) {
     s = Math.floor(s);
     return (h < 10 ? '0'+h : h)+":"+(m < 10 ? '0'+m : m)+":"+(s < 10 ? '0'+s : s);
 }
-
 
