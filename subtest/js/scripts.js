@@ -57,7 +57,7 @@ $('.left .item .icon').on('click', (e) => {
             $('.backImg').css({'background-image': 'url("' + img + '")'})
         }
         if(json) {
-            $.getJSON('/json/' + json + '.json', data => {
+            $.getJSON('./json/' + json + '.json', data => {
                 for(let i = 0; i < data.length; i++){
                     let node = document.createElement("div");
                     var square = document.createElement("span");
