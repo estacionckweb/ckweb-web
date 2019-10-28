@@ -38,6 +38,7 @@ var s = ( sketch ) => {
 var audio = document.getElementById('audioPlayer');
 var timeTotal = 0;
 var timeCurrent = 0;
+var json;
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 } else {
@@ -52,34 +53,11 @@ $('.left .item .icon').on('click', (e) => {
         $(e.target).addClass('playing');
         var url = $(e.target).attr('data-url');
         var img = $(e.target).attr('data-img');
-        var json = $(e.target).attr('data-json');
+        json = $(e.target).attr('data-json');
         if(img) {
             $('.backImg').css({'background-image': 'url("' + img + '")'})
         }
-        if(json) {
-            $.getJSON('./json/' + json + '.json', data => {
-                var subsContainer = document.getElementsByClassName("subsContainer")[0];
-                var child = subsContainer.lastElementChild;
-                while (child) { 
-                    subsContainer.removeChild(child); 
-                    child = subsContainer.lastElementChild; 
-                }
-                for(let i = 0; i < data.length; i++){
-                    let node = document.createElement("div");
-                    var square = document.createElement("span");
-                    var leftPos = ((data[i].tiempo * 100)/timeTotal);
-                    node.setAttribute('style', 'left: '+leftPos+'%');
-                    node.appendChild(square);
-                    node.setAttribute('data-notice', data[i].contenido);
-                    node.addEventListener('click', (e, elem) => {
-                        var notice = document.getElementsByClassName("notice")[0];
-                        notice.innerHTML = node.getAttribute('data-notice');
-                        
-                    })
-                    subsContainer.appendChild(node);  
-                }
-            })
-        }
+        
         $('.playerContainer').hide();
         audio.src = url;
         var promise = audio.play();
@@ -101,6 +79,30 @@ $('.left .item .icon').on('click', (e) => {
 
 audio.oncanplaythrough = () => {
     audio.play();
+    if(json) {
+        $.getJSON('./json/' + json + '.json', data => {
+            var subsContainer = document.getElementsByClassName("subsContainer")[0];
+            var child = subsContainer.lastElementChild;
+            while (child) { 
+                subsContainer.removeChild(child); 
+                child = subsContainer.lastElementChild; 
+            }
+            for(let i = 0; i < data.length; i++){
+                let node = document.createElement("div");
+                var square = document.createElement("span");
+                var leftPos = ((data[i].tiempo * 100)/timeTotal);
+                node.setAttribute('style', 'left: '+leftPos+'%');
+                node.appendChild(square);
+                node.setAttribute('data-notice', data[i].contenido);
+                node.addEventListener('click', (e, elem) => {
+                    var notice = document.getElementsByClassName("notice")[0];
+                    notice.innerHTML = node.getAttribute('data-notice');
+                    
+                })
+                subsContainer.appendChild(node);  
+            }
+        })
+    }
     $('.playerContainer').show();
     timeTotal = audio.duration;
     var width = document.getElementById('canvas_player').offsetWidth;
