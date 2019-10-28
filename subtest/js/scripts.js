@@ -99,7 +99,8 @@ audio.oncanplaythrough = () => {
                     var str = node.getAttribute('data-notice');
                     
                     if(str.indexOf('http') >= 0){
-                        console.log(str.indexOf('http'));
+                        var link = '<a href="' + str + '">' + str + '</a>';
+                        notice.innerHTML = link;
                     } else {
                         notice.innerHTML = str;
                     }
