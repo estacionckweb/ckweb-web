@@ -96,8 +96,13 @@ audio.oncanplaythrough = () => {
                 node.setAttribute('data-notice', data[i].contenido);
                 node.addEventListener('click', (e, elem) => {
                     var notice = document.getElementsByClassName("notice")[0];
-                    notice.innerHTML = node.getAttribute('data-notice');
+                    var str = node.getAttribute('data-notice');
                     
+                    if(str.indexOf('http') >= 0){
+                        console.log(str.indexOf('http'));
+                    } else {
+                        notice.innerHTML = str;
+                    }
                 })
                 subsContainer.appendChild(node);  
             }
