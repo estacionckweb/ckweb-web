@@ -123,6 +123,7 @@ text-align: center;
 padding: 10px;
 border-radius: 3px;
 color: white;
+position: relative;
 }
 .right .playerContainer .notice a {
 color: #999;
