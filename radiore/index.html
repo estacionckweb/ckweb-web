@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <title>radioRe: | CK\Web</title>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -8,6 +10,9 @@
       name="description"
       content="Reproductor multimedia de CKWEB"
     />
+    <!--- favicon info --->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel='stylesheet' href='./style.css' media='all' />
 
     <script type='text/javascript' src='./js/p5.js'></script>
@@ -15,7 +20,19 @@
     <script type='text/javascript' src='./js/p5sound.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-    <title>radioRe: | CK\Web</title>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145234955-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'UA-145234955-1');
+</script>
+
   </head>
   <body>
     <div class="App">
@@ -126,5 +143,6 @@
             </div>
         </div>
         <script type='text/javascript' src='./js/scripts.js'></script>
+
     </body>
 </html>
