@@ -62,7 +62,7 @@ background-image: getId('0');
 width: 50px;
 height: 50px;
 border-radius: 200px;
-border: 2px solid white;
+border: 2px solid rgb(37, 37, 37);
 margin: 0 auto;
 }
 .right .playerContainer .time {
@@ -92,7 +92,7 @@ width: 100%;
 .right .playerContainer .line .current {
 height: 5px;
 width: 0%;
-background: white;
+background: rgb(181, 233, 174);
 top: 50%;
 transform: translate(0, -50%);
 position: absolute;
