@@ -26,6 +26,7 @@
     cursor: pointer;
     transition: all 0.25s ease;
     text-decoration: none;
+    margin-bottom: 10px;;
 }
 
 #container_video .texto .btn:hover {
