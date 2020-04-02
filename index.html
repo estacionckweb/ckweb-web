@@ -11,6 +11,7 @@
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv=”Content-Security-Policy” content=”upgrade-insecure-requests”>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- import the webpage's stylesheet -->
@@ -117,7 +118,8 @@
       //alert("hola");
 
       setInterval(function () {
-        fetch('https://domolleno2018.airtime.pro/api/live-info')
+        
+        fetch('https://domolleno2018.airtime.pro/api/live-info-v2')
           .then(res => res.json())
           .then((out) => {
             var currentName = out.tracks.current.metadata.track_title;
