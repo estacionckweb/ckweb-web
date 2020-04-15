@@ -73,7 +73,15 @@ function hydraBackground({ canvas, initialAnimationDuration }) {
       self.hydra.tick(dt)
   }).start()
 
-  osc(9, 0, 1.8)
+  osc(-1, 0.5, 1.8)
+    .pixelate(2, 20)
+    .mult(osc(7, 0.1, 1).modulate(osc(10).rotate(0, -0.1), 1))
+    .color(10.5,1.5,10.39)
+    .modulate(o0, () => mouse.x * 0.0003)
+    .scale(1.1)
+    .out(o0)
+
+  /*osc(9, 0, 1.8)
   .rotate(-1, -1.01)
     .pixelate(2, 20)
 	  .mult(osc(7, 0.1, 1).modulate(osc(10).rotate(0, -0.1), 1))
@@ -82,7 +90,7 @@ function hydraBackground({ canvas, initialAnimationDuration }) {
     .color(10.5,1.5,10.39)
     .modulate(o0, () => 0.2 + mouse.x * 0.001)
     .scale(1.1)
-    .out(o0)
+    .out(o0)*/
 
   setTimeout(() => this.engine.stop(), initialAnimationDuration)
   //self.hydra.tick(0.01)
