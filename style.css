@@ -48,6 +48,7 @@ html {
   position: fixed;
   right: 40px;
   bottom: 100px;
+  margin-left: 300;
   /* width: 100%;
   max-width: 300px; */
   background-color: rgba(200, 200, 200, 0.8);
@@ -58,8 +59,42 @@ html {
 
 .menu-item {
   color: #000;
-  position: fixed;
+  position: absolute;
+  right: 20px;
+  bottom: 100px;
+  max-width: 300px;
   /* background-color: #fff; */
+}
+
+/* Styles for description */
+#descripcion {
+  position: fixed;
+  right: 95px;
+  bottom: 500px;
+  width: 100%;
+  max-width: 800px;
+  background-color: rgba(252, 61, 61, 0.8);
+  padding: 20px;
+  color: #000;
+  text-align: center;
+  
+}
+
+.descripcion-item {
+  background: rgb(0, 0, 0);
+  left: 25px;
+  bottom: 95px;
+  padding: 5px;
+  margin: 3px;
+  border-radius: 5px;
+  font-family: 'Inconsolata', monospace;
+  font-size: 0.9em;
+  padding-left: 10px;
+  position: fixed;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  display: block;
 }
 
 /* Styles for bottom bar */
@@ -67,7 +102,7 @@ html {
 #bottom-bar {
   position: fixed;
   height: 80px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.7);
   bottom: 0px;
   width: 100%;
   bottom: 10px;
