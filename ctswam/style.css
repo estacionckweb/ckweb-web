@@ -33,8 +33,27 @@ flex-wrap: wrap;
 position: relative;
 overflow: hidden;
 }
+.right .text{
+    color: #d43939;
+    width: 750px;
+    /* height: min-content; */
+    /* flex-wrap: wrap; */
+    align-items: left;
+    align-content: left;
+    position: relative;
+    text-align: justify;
+    margin-top: 0px;
+    margin-left: 40px;
+    margin-bottom: 30px;
+    height: 40%;
+    /*font-family: monospace;*/
+}
 .right .relative {
-position: relative;
+width: 170px;
+position: absolute;
+margin-top: 280px;
+margin-left: 360px;
+
 }
 .right #canvas_player, .right .backImg {
 position: absolute;
@@ -52,6 +71,7 @@ background-image: url('./background.jpg');
 width: 100%;
 display: none;
 }
+
 .right .playerContainer .play {
 width: 50px;
 height: 50px;
@@ -140,7 +160,7 @@ display: block;
 
 .left {
 color: white;
-display: flex;
+display: block;
 width: 300px;
 flex-wrap: wrap;
 align-items: center;
@@ -150,15 +170,22 @@ top: 0;
 right: 0;
 height: 100%;
 border-left: 1px solid #999;
+overflow: scroll;
+}
+.left .link {
+    padding: 0px;
+    color: rgb(148, 148, 148);
 }
 .left .top {
 padding: 3px;
+text-align: justify;
 }
 .left .top img {
 max-width: 80px;
 display: block;
 margin: 0 auto;
 margin-bottom: 10px;
+text-align: left;
 }
 .left > .top {
 padding: 10px;
