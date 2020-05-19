@@ -214,3 +214,51 @@ content: '\e801';
     content: '\E800';
     }
   
+
+     /*Especificaciones para pantallas de menos de 720px de ancho*/
+     @media (max-width:768px){
+
+        .right {
+        display: flex;
+        height: 100vh;
+        width: calc(100% - 180px);
+        /*width: calc(200% - 100px);*/
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        flex-wrap: wrap;
+        position: relative;
+        overflow: scroll;
+        }
+        .right .backImg {
+        background-size: cover;
+        background-position: center;
+        background-image: url('./background.jpg');
+        width: calc(320% + 200px);
+        overflow: scroll;
+        }
+        /*logo ckweb*/
+        .right .relative {
+        width: 170px;
+        position: absolute;
+        margin-top: 450px;
+        margin-left: 0px;
+        }  
+
+        .left {
+        color: white;
+        display: flow-root;
+        box-sizing: initial;
+        width: 180px;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        border-left: 1px solid #999;
+        overflow: scroll;
+        }
+        
+      }

@@ -169,8 +169,8 @@ width: 300px;
 flex-wrap: wrap;
 align-items: center;
 align-content: center;
-position: fixed;
-top: 0;
+position: absolute;
+top: -200px;
 right: 0;
 height: 100%;
 border-left: 1px solid #999;
@@ -247,7 +247,7 @@ content: '\e801';
   
 
     /*Especificaciones para pantallas de menos de 720px de ancho*/
-    @media (max-width:768px){
+    @media (max-width:1024px){
 
         .right {
         display: flex;
