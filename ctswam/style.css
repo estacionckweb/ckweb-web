@@ -170,7 +170,7 @@ flex-wrap: wrap;
 align-items: center;
 align-content: center;
 position: absolute;
-top: -200px;
+top: 0px;
 right: 0;
 height: 100%;
 border-left: 1px solid #999;
