@@ -133,6 +133,11 @@ color: black;
 .right .playerContainer.active {
 display: block;
 }
+.right .logo {
+display: flex;
+margin-left: 5%;
+}
+
 
 
 /* PLAYLIST */
