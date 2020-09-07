@@ -196,6 +196,7 @@ iframe {
   width: 100%;
   height: 100%;
 
+
 }
 
 .play-button,
@@ -204,6 +205,7 @@ iframe {
   height: 100%;
   position: absolute;
   text-align: center;
+  display: block;
 }
 
 .play-button:before {
@@ -286,6 +288,7 @@ iframe {
   border-radius: 50px;
   cursor: pointer;
   z-index: 200;
+
 }
 
 #menu_open>div {
@@ -323,6 +326,7 @@ iframe {
   padding-left: 80px;
   left: -100%;
   transition: all 0.4s ease;
+  overflow: scroll;
 }
 
 .enlaces.active {
@@ -349,7 +353,7 @@ iframe {
 }
 
 .sociales .item.facebook:before {
-  content: '\F09A';
+  content: '\F30C';
 }
 
 .sociales .item.twitter:before {
@@ -361,7 +365,7 @@ iframe {
 }
 
 .sociales .item.instagram:before {
-  content: '\F16D';
+  content: '\F32D';
 }
 
 .sociales .item.podcast:before {
@@ -370,6 +374,10 @@ iframe {
 
 .sociales .item.play:before {
   content: '\E800';
+}
+
+.sociales .item.mail:before {
+  content: '\F1D9';
 }
 
 
@@ -436,8 +444,11 @@ iframe {
   width: 100%;
   height: calc(100vh);
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 10px;
+  left: 10px;
+  bottom: 10px;
+  right:10px;
+
 }
 
 
