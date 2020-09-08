@@ -381,8 +381,6 @@ iframe {
 
 .sociales .item.play:before {
   content: '\E800';
-  color:#fff;
-  background-color:#000000;
 }
 
 .sociales .item.mail:before {
