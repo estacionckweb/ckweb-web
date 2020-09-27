@@ -163,6 +163,13 @@ margin-bottom: 10px;
 .left > .top {
 padding: 10px;
 }
+.left .title{
+font-size: 1em;  
+}
+.left .subtitle{
+font-size: 0.8em;
+padding: 10px;    
+}
 .left .item {
 width: 100%;
 border-bottom: 1px solid #999;
