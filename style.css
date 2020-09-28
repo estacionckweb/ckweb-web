@@ -416,6 +416,24 @@ iframe {
   border-right-color: white;
 }
 
+.aviso_noticia {
+  background: rgb(255, 76, 76);
+  width: 49%;
+  max-width: 500px;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 5px;
+  font-family: 'Inconsolata', monospace;
+  font-size: 1em;
+  padding-left: 10px;
+  position: relative;
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+  display: block;
+  border: 1px solid white;
+}
+
 /* .aviso:before {
   position: absolute;
   top: 50%;
