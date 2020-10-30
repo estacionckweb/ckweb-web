@@ -74,10 +74,10 @@ function hydraBackground({ canvas, initialAnimationDuration }) {
   }).start()
 
   speed=1.9
-  shape(99,.1,.5).color(0.6,1.8,4).brightness( ({time}) => Math.sin(time*0.05) )
+  shape(99,.1,.5).color(0.1,1.8,4).brightness( ({time}) => Math.sin(time*0.05) )
   
-  .diff( shape(240,5,0).scrollX(.5).rotate( ()=>time/5 ).color(.1,0.4,.75) )
-  .diff( shape(100,.8,.002).scrollX(.10).rotate( ()=>time/10 ).color(1,0,.9) )
+  .diff( shape(240,5,0).scrollX(.5).rotate( ()=>time/5 ).color(1.9,0.4,.75) )
+  .diff( shape(100,.8,.002).scrollX(.10).rotate( ()=>time/10 ).color(1,2,.9) )
   //.diff( shape(150,.3,.002).scrollX(.15).rotate( ()=>time/30 ).color(1,0,1.7) )
   //.diff( shape(100,.2,.002).scrollX(.20).rotate( ()=>time/40 ).color(1,0,.75) )
   .diff( shape(50,.1,.002).scrollX(.25).rotate( ()=>time/50 ).color(1,0,.75))
