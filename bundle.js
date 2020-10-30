@@ -73,13 +73,26 @@ function hydraBackground({ canvas, initialAnimationDuration }) {
       self.hydra.tick(dt)
   }).start()
 
-  osc(-1, 0.5, 1.8)
-    .pixelate(2, 20)
-    .mult(osc(7, 0.1, 1).modulate(osc(10).rotate(0, -0.1), 1))
-    .color(10.5,1.5,10.39)
-    .modulate(o0, () => mouse.x * 0.0003)
-    .scale(1.1)
-    .out(o0)
+  speed=1.9
+  shape(99,.1,.5).color(0.6,1.8,4).brightness( ({time}) => Math.sin(time*0.05) )
+  
+  .diff( shape(240,5,0).scrollX(.5).rotate( ()=>time/5 ).color(.1,0.4,.75) )
+  .diff( shape(100,.8,.002).scrollX(.10).rotate( ()=>time/10 ).color(1,0,.9) )
+  //.diff( shape(150,.3,.002).scrollX(.15).rotate( ()=>time/30 ).color(1,0,1.7) )
+  //.diff( shape(100,.2,.002).scrollX(.20).rotate( ()=>time/40 ).color(1,0,.75) )
+  .diff( shape(50,.1,.002).scrollX(.25).rotate( ()=>time/50 ).color(1,0,.75))
+  .mult(osc(0.5, 0.1, 1).modulate(noise(10).rotate(0, -0.2), 0.1).brightness(0.2))
+  
+  
+  
+  .modulateScale(
+    shape(240,.5,0).scrollX(.05).rotate( ()=>time/10 )
+    , ()=>(Math.sin(time/3)*.2)+.2 ).modulate(o0, () => mouse.x * 0.005)
+  
+  
+  .scale(1.3,.6,1)
+  .out()
+  
 
   /*osc(9, 0, 1.8)
   .rotate(-1, -1.01)
