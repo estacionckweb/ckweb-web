@@ -227,6 +227,7 @@ a:hover, a:active, a:focus {
 }
 
 
+
 /*---------------------------------------
   About section              
 -----------------------------------------*/
@@ -299,6 +300,39 @@ a:hover, a:active, a:focus {
   border-radius: 5px;
   cursor: crosshair;
 }
+
+/*---------------------------------------
+  Links section              
+-----------------------------------------*/
+#links {
+  padding-top: 100px;
+}
+
+#links .col-md-4 img {
+  border-radius: 5px;
+  margin-bottom: 28px;
+}
+
+#links .col-md-4 a {
+  background: #e8e8e8;
+  border-radius: 8px;
+  color: #000000;
+  padding: 6px 12px;
+  display: inline-block;
+  margin-bottom: 40px;
+}
+
+#links .col-md-4 a:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+#links .links-thumb {
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 42px 32px;
+}
+
 
 /*---------------------------------------
   Contact section              
