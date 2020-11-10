@@ -47,7 +47,7 @@ h2 {
 }
 
 h3 {
-  color: #d7b065;
+  color: #5c6f91;
   font-size: 16px;
   font-weight: bold;
   line-height: 25px;
@@ -95,7 +95,7 @@ strong, span {
 }
 
 .arrow-btn i:hover {
-  background: #d7b065;
+  background: #f7b817;
 }
 
 
@@ -279,12 +279,20 @@ a:hover, a:active, a:focus {
   /*width: 15em;*/
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
+  /*filter: hue-rotate(90deg);*/
+  filter: contrast(110%);
+  
+  /*filter: grayscale(100%);*/
 }
 
 #work .work-thumb:hover {
   background: #ffffff;
-  box-shadow: 0px 16px 22px 0px rgba(90, 91, 95, 0.3);
-  top: -5px;
+  box-shadow: 0px 16px 22px 0px rgba(9, 163, 245, 0.3);
+  top: 5px;
+  left: 5px;
+  /*filter: hue-rotate(180deg);*/
+  filter: grayscale(100%);
+  
 }
 
 #work .work-thumb img {
@@ -313,7 +321,7 @@ a:hover, a:active, a:focus {
 }
 
 #contact button#submit {
-  background: #d7b065;
+  background: #222222;
   border: none;
   border-radius: 40px;
   color: #ffffff;
@@ -324,7 +332,7 @@ a:hover, a:active, a:focus {
 }
 
 #contact button#submit:hover {
-  background: #3d3d3f;
+  background: #ffffff;
   color: #ffffff;
 }
 
@@ -430,7 +438,7 @@ footer .dash-line {
 }
 
 .social-icon li a:hover {
-  background: #d7b065;
+  background: #f7b817;
   color: #ffffff;
   transform: scale(1.1);
 }
