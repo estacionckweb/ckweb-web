@@ -224,6 +224,7 @@ a:hover, a:active, a:focus {
 .home-wrapper {
   background: rgba(250,250,250,0.8);
   padding: 32px 12px;
+  border-radius: 5px;
 }
 
 
@@ -234,6 +235,7 @@ a:hover, a:active, a:focus {
 
 #about {
   padding-top: 100px;
+  
 }
 
 #about .col-md-4 img {
@@ -281,9 +283,8 @@ a:hover, a:active, a:focus {
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
   /*filter: hue-rotate(90deg);*/
-  filter: contrast(110%);
+  /*filter: contrast(110%);*/
   
-  /*filter: grayscale(100%);*/
 }
 
 #work .work-thumb:hover {
@@ -292,7 +293,7 @@ a:hover, a:active, a:focus {
   top: 5px;
   left: 5px;
   /*filter: hue-rotate(180deg);*/
-  filter: grayscale(100%);
+  filter: hue-rotate(190deg);
   
 }
 
@@ -330,8 +331,10 @@ a:hover, a:active, a:focus {
 #links .links-thumb {
   background: #ffffff;
   border-radius: 5px;
-  padding: 42px 32px;
+  padding: 42px 35px;
 }
+
+
 
 
 /*---------------------------------------
