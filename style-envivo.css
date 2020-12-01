@@ -12,14 +12,14 @@
     color: white;
     font-family: Inconsolata;
     padding: 2em;
-    width: 700px;
     max-width: 700px;
-    position: absolute;
+    position: relative;
     text-align: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 5%;
+    left: 20%;
+    /*transform: translate(-50%, -50%);*/
     margin-top: 0px;
+    flex-wrap: wrap;
 }
 
 #container_video .video .btn {
@@ -28,6 +28,7 @@
     margin: 0 auto;
     display: block;
     cursor: pointer;
+    text-align: center;
     transition: all 0.25s ease;
     text-decoration: none;
 }
@@ -36,6 +37,8 @@
     background: white;
     color: black;
 }
+
+
 
 #frame {
     position: fixed;
@@ -55,3 +58,4 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
