@@ -45,6 +45,7 @@ h2 {
   color: #575757;
   font-size: 35px;
   line-height: normal;
+  padding: 10px 30px;
 }
 
 h3 {
@@ -54,12 +55,14 @@ h3 {
   line-height: 25px;
   letter-spacing: 6px;
   text-transform: uppercase;
+  padding: 10px 30px;
 }
 
 h4 {
   color: #797979;
   font-size: 20px;
   font-weight: 400;
+  padding: 10px 30px;
 }
 
 p {
@@ -68,6 +71,7 @@ p {
   font-weight: 300;
   line-height: 25px;
   letter-spacing: 0.2px;
+  padding: 10px 30px;
 }
 
 strong, span {
@@ -110,7 +114,7 @@ html{
 }
 
 a {
-  color: #575757;
+  color: #0e0af0;
   -webkit-transition: 0.5s;
   transition: 0.5s;
   text-decoration: none !important;
@@ -236,7 +240,10 @@ a:hover, a:active, a:focus {
 
 #about {
   padding-top: 100px;
-  
+}
+
+#about .pa p{ 
+  padding-left: 0px;
 }
 
 #about .col-md-4 img {
@@ -248,7 +255,7 @@ a:hover, a:active, a:focus {
   background: #e8e8e8;
   border-radius: 8px;
   color: #000000;
-  padding: 6px 12px;
+  padding: 12px 12px;
   display: inline-block;
   margin-bottom: 40px;
 }
