@@ -35,20 +35,20 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 h1 {
-  color: #3d3d3f;
+  color: #d35e3c;
   font-family: 'Inconsolata', monospace;
   font-size: 40px;
   line-height: normal;
 }
 
 h2 {
-  color: #575757;
+  color: 	#4c4941;
   font-size: 35px;
   line-height: normal;
 }
 
 h3 {
-  color: #5c6f91;
+  color: 	#4c4941;
   font-size: 16px;
   font-weight: bold;
   line-height: 25px;
@@ -57,7 +57,7 @@ h3 {
 }
 
 h4 {
-  color: #797979;
+  color: 	#4c4941;
   font-size: 20px;
   font-weight: 400;
 }
