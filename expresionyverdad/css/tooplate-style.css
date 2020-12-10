@@ -9,7 +9,7 @@ http://www.tooplate.com/view/2100-artist
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 body {
-    background: #f4f4f4;
+    background: #000000;
     font-family: 'Inconsolata', monospace;
     font-style: normal;
     font-weight: 300;
@@ -165,7 +165,7 @@ a:hover, a:active, a:focus {
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  background: none repeat scroll 0 0 #ffffff;
+  background: none repeat scroll 0 0 #000000;
 }
 
 .spinner {
