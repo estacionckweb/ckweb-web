@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Reproductor multimedia de CKWEB"
+    />
+    <link rel='stylesheet' href='./style.css' media='all' />
+
+    <script type='text/javascript' src='./js/p5.js'></script>
+    <script type='text/javascript' src='./js/p5dom.js'></script>
+    <script type='text/javascript' src='./js/p5sound.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <title>La cultura es el antivirus :: Pensar en imágenes</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145234955-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145234955-1');
+    
+</script>
+
+  </head>
+  <body>
+    <div class="App">
+        <div class="left">
+            <div class="top">Pensar en imágenes :: La cultura es <br>el aNTiViRuS <br>Omar Rincón en 
+                conversaciones con artistas y pensadores.
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-url="https://ia801506.us.archive.org/23/items/la_cultura_es_el_antivirus/pereOrtinEditado.mp3" data-id="0" data-json="#"></div>
+                    <!-- <div class="icon" data-url="https://domolleno2018.airtime.pro/rest/media/317/download/ZCM4LiMymkr0.mp3" data-id="0"></div> -->
+                    <div class="name">Pere Ortin</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-url="https://archive.org/download/la_cultura_es_el_antivirus/TaniaAedoEditado.mp3" data-id="1" data-json=#></div>
+                    <!-- <div class="icon" data-url="https://domolleno2018.airtime.pro/rest/media/317/download/ZCM4LiMymkr0.mp3" data-id="0"></div> -->
+                    <div class="name">Tania Aedo</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-url="https://archive.org/download/la_cultura_es_el_antivirus/BarbaraSantosEditado.mp3" data-id="2" data-json=#></div>
+                    <div class="name">Bárbara Santos</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-url="https://archive.org/download/la_cultura_es_el_antivirus/Clemencia_EcheverriEditado.mp3" data-id="3" data-json=#></div>
+                    <div class="name">Clemencia Echeverri</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-url="https://archive.org/download/la_cultura_es_el_antivirus/LauraMora_Editado.mp3" data-id="3" data-json=#></div>
+                    <div class="name">Laura Mora</div>
+                </div>
+                <div class="des"></div>
+            </div>
+                <div class="subtitle"><br> </div>
+              <!--  <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://domolleno2018.airtime.pro/rest/media/305/download/ZCM4LiMymkr0.mp3" data-id="3"></div>
+                    <div class="name">Draco Rosa</div>
+                </div>
+                <div class="des"></div>-->
+            </div>
+        </div>
+        <div class="right">
+            <div class="backImg"></div>
+            <div id="canvas_player">
+            </div>
+            <audio autoplay id="audioPlayer" crossorigin="anonymous">
+            </audio>
+            <img class="relative" src="./background.gif" alt="">
+            <img class="ckweb" src="./logo-ckweb.png" alt="">
+            <img class="logo" src="./logo-idartes.png" alt="">
+            
+            <!--<img class="relative" src="gorge_gregorio.png" alt=""> -->
+            <div class="playerContainer">
+                <div class="notice"></div>
+                <div class="line">
+                    <div class="current"></div>
+                    <div class="total"></div>
+                    <div class="subsContainer"></div>
+                </div>
+                <div class="time relative"></div>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript' src='./js/scripts.js'></script>
+    </body>
+</html>
