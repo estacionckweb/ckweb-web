@@ -167,7 +167,7 @@ background-image: url('./background2.jpg');
 .left {
   /*color: rgb(255, 255, 255);*/
   display: block; /*esto funcionó para el scroll y mostrar completo*/
-  width: 325px;
+  width: 315px;
   flex-wrap: wrap;
   align-items: center;
   align-content: center;
@@ -180,7 +180,7 @@ background-image: url('./background2.jpg');
 }
 
 .left .link {
-  padding: 0px;
+  padding: 10px;
   color: rgb(202, 110, 214);
 }
 
@@ -208,6 +208,7 @@ background-image: url('./background2.jpg');
 .left .item .des {
   font-size: 1em;
   margin-top: 10px;
+  margin-left: 10px;
   color: #999;
   display: none;
 }
