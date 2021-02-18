@@ -9,33 +9,36 @@ http://www.tooplate.com/view/2100-artist
 @import url('https://fonts.googleapis.com/css?family=Inconsolata&display=swap');
 
 body {
-    background: #f4f4f4;
-    font-family: 'Inconsolata', monospace;
-    font-style: normal;
-    font-weight: 300;
-    overflow-x: hidden;
-    
+  background: #f4f4f4;
+  font-family: 'Inconsolata', monospace;
+  font-style: normal;
+  font-weight: 300;
+  overflow-x: hidden;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
 }
-
-
 
 /*---------------------------------------
   Typorgraphy              
 -----------------------------------------*/
 
-h1,h2,h3,h4,h5,h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-style: normal;
   font-weight: 300;
   letter-spacing: 0px;
 }
 
 h1 {
-  color: #3d3d3f;
+  color: #3f3d3e;
   font-family: 'Inconsolata', monospace;
   font-size: 40px;
   line-height: normal;
@@ -48,7 +51,7 @@ h2 {
 }
 
 h3 {
-  color: #5c6f91;
+  color: #551c83;
   font-size: 16px;
   font-weight: bold;
   line-height: 25px;
@@ -70,12 +73,11 @@ p {
   letter-spacing: 0.2px;
 }
 
-strong, span {
+strong,
+span {
   color: #878787;
   font-weight: normal;
 }
-
-
 
 /*---------------------------------------
   Buttons               
@@ -99,24 +101,24 @@ strong, span {
   background: #f7b817;
 }
 
-
-
 /*---------------------------------------
   General               
 -----------------------------------------*/
 
-html{
+html {
   -webkit-font-smoothing: antialiased;
 }
 
 a {
-  color: #0e0af0;
+  color: #551c83;
   -webkit-transition: 0.5s;
   transition: 0.5s;
   text-decoration: none !important;
 }
 
-a:hover, a:active, a:focus {
+a:hover,
+a:active,
+a:focus {
   color: #000000;
   outline: none;
 }
@@ -142,13 +144,14 @@ a:hover, a:active, a:focus {
   background-size: cover !important;
 }
 
-#about, #work,
-#contact, footer {
+#about,
+#work,
+#contact,
+footer {
   position: relative;
   padding-top: 80px;
   padding-bottom: 80px;
 }
-
 
 /*---------------------------------------
   Pre loader section              
@@ -187,17 +190,20 @@ a:hover, a:active, a:focus {
   border-radius: 50%;
   border: 1px solid #000000;
   border-top-color: #f9f9f9;
-  animation: spinner .9s linear infinite;
+  animation: spinner 0.9s linear infinite;
 }
 
 @-webkit-@keyframes spinner {
-  to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes spinner {
-  to {transform: rotate(360deg);}
+  to {
+    transform: rotate(360deg);
+  }
 }
-
 
 /*---------------------------------------
   Home section              
@@ -215,7 +221,7 @@ a:hover, a:active, a:focus {
   -webkit-box-align: center;
   -webkit-align-items: center;
   -ms-flex-align: center;
-   align-items: center;
+  align-items: center;
   height: 75vh;
   text-align: center;
   position: relative;
@@ -223,12 +229,10 @@ a:hover, a:active, a:focus {
 }
 
 .home-wrapper {
-  background: rgba(250,250,250,0.8);
+  background: rgba(250, 250, 250, 0.8);
   padding: 32px 12px;
   border-radius: 5px;
 }
-
-
 
 /*---------------------------------------
   About section              
@@ -238,15 +242,15 @@ a:hover, a:active, a:focus {
   padding-top: 100px;
 }
 
-#about .pa p{ 
+#about .pa p {
   padding-left: 0px;
 }
 
-#about .tit { 
+#about .tit {
   padding-left: 60px;
 }
 
-#about .descr { 
+#about .descr {
   padding-left: 30px;
 }
 
@@ -275,7 +279,6 @@ a:hover, a:active, a:focus {
   padding: 42px 32px;
 }
 
-
 /*---------------------------------------
   Work section              
 -----------------------------------------*/
@@ -284,14 +287,13 @@ a:hover, a:active, a:focus {
   background: #ffffff;
 }
 
-#about .pa p{ 
+#about .pa p {
   padding-left: 0px;
 }
 
-#about .descr p{ 
+#about .descr p {
   padding-left: 30px;
 }
-
 
 #work .work-thumb {
   border-radius: 5px;
@@ -305,7 +307,6 @@ a:hover, a:active, a:focus {
   transition: all ease-in-out 0.4s;
   /*filter: hue-rotate(90deg);*/
   /*filter: contrast(110%);*/
-  
 }
 
 #work .work-thumb:hover {
@@ -315,7 +316,6 @@ a:hover, a:active, a:focus {
   left: 5px;
   /*filter: hue-rotate(180deg);*/
   filter: hue-rotate(190deg);
-  
 }
 
 #work .work-thumb img {
@@ -355,9 +355,6 @@ a:hover, a:active, a:focus {
   padding: 42px 35px;
 }
 
-
-
-
 /*---------------------------------------
   Contact section              
 -----------------------------------------*/
@@ -393,7 +390,6 @@ a:hover, a:active, a:focus {
   background: #ffffff;
   color: #ffffff;
 }
-
 
 /*---------------------------------------
   Footer section              
@@ -461,7 +457,6 @@ footer .dash-line {
   position: relative;
 }
 
-
 /*---------------------------------------
   Social icon             
 -----------------------------------------*/
@@ -506,26 +501,27 @@ footer .dash-line {
 -----------------------------------------*/
 
 @media (max-width: 980px) {
+  h1 {
+    font-size: 30px;
+  }
 
- h1 {font-size: 30px;}
+  #about .about-thumb {
+    padding-left: 0px;
+  }
 
- #about .about-thumb {
-  padding-left: 0px;
- }
-
- #work .work-thumb {
-  margin-top: 25px;
- }
-
+  #work .work-thumb {
+    margin-top: 25px;
+  }
 }
 
 @media (max-width: 768px) {
-
   h1 {
     font-size: 27px;
   }
 
-  h2 {font-size: 25px;}
+  h2 {
+    font-size: 25px;
+  }
 
   footer .col-md-4 {
     margin-bottom: 35px;
@@ -538,11 +534,9 @@ footer .dash-line {
   footer .copyright-text {
     padding-bottom: 12px;
   }
-
 }
 
 @media (max-width: 580px) {
-
   h3 {
     font-size: 14px;
     letter-spacing: 4px;
@@ -552,12 +546,10 @@ footer .dash-line {
     padding: 22px 12px;
     margin-top: 0px;
   }
-
 }
 
 @media (max-width: 360px) {
   #home {
     height: 85vh;
-  } 
-
+  }
 }
