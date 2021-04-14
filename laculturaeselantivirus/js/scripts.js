@@ -43,7 +43,6 @@ var s = (sketch) => {
 var audio = document.getElementById('audioPlayer');
 var video = document.getElementById('videoPlayer');
 var fondo = document.getElementById('background');
-var container = document.getElementById('playerContainer');
 var timeTotal = 0;
 var timeCurrent = 0;
 var json;
@@ -85,6 +84,7 @@ $('.left .item .icon').on('click', (e) => {
   } else if (!$(e.target).hasClass('playing')) {
     $(e.target).addClass('playing');
     audio.play();
+    $('.playerContainer').show();
   } else {
     $(e.target).removeClass('playing');
     audio.pause();
