@@ -141,6 +141,20 @@ a {
   display: block;
 }
 
+.right .videoContainer {
+  display: flex;
+  z-index: 10;
+  align-items: center;
+  flex-direction: column;
+  -ms-flex-align: end;
+}
+
+.right .videoContainer .play {
+  border-radius: 200px;
+  border: 2px solid white;
+  margin: 0 auto;
+}
+
 .right .logo {
   position: absolute;
   width: 15vw;
@@ -159,7 +173,7 @@ a {
 
 .left {
   color: rgb(24, 24, 24);
-  display: flex;
+  display: revert;
   width: 300px;
   flex-wrap: wrap;
   align-items: center;
@@ -169,6 +183,7 @@ a {
   right: 0;
   height: 100%;
   border-left: 1px solid rgb(24, 24, 24);
+  overflow: scroll;
 }
 .left .a:visited {
   color: rgb(24, 24, 24);
@@ -245,5 +260,35 @@ a {
 }
 
 .left .item.active .top .icon:not(.playing)::before {
+  content: '\E800';
+}
+
+.left .item .top .iconV {
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  border: 1px solid rgb(255, 255, 255);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+.left .item .top .iconV:hover,
+.left .item.active .top .iconV {
+  background: rgb(252, 0, 210);
+}
+.left .item .top .iconV::before {
+  font-family: 'icons';
+  line-height: 40px;
+  text-align: center;
+  width: 100%;
+  position: absolute;
+  content: '\E800';
+  font-size: 0.7em;
+}
+.left .item.active .top .iconV::before {
+  content: '\e801';
+}
+
+.left .item.active .top .iconV:not(.playing)::before {
   content: '\E800';
 }
