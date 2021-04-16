@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Reproductor multimedia de CKWEB"
+    />
+    <link rel='stylesheet' href='./style.css' media='all' />
+
+    <script type='text/javascript' src='./js/p5.js'></script>
+    <script type='text/javascript' src='./js/p5dom.js'></script>
+    <script type='text/javascript' src='./js/p5sound.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <title>Podcast Legado a la ciudad</title>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145234955-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145234955-1');
+    
+</script>
+
+  </head>
+  <body>
+    <div class="App">
+        <div class="left">
+            <div class="descripcion">Legado a la ciudad: un espacio para visibilizar la trayectoria de 10 
+                músicos adultos mayores de 60 años que han dedicado su vida a la música, 
+                de gran relevancia e impacto en la historia de la música popular en 
+                Bogotá, con la finalidad de dignificar su labor artística, reconocer sus prácticas, 
+                generar conocimiento sobre sus lógicas culturales y expresiones de sabiduría y 
+                contribuir a la garantía de sus derechos culturales. <br><br>
+                Gerencia de Música de Idartes, 2020. <br>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/01%20Carlos%20Montan%CC%83a%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="0" data-json=""></div>
+                    <!-- <div class="icon" data-url="https://domolleno2018.airtime.pro/rest/media/317/download/ZCM4LiMymkr0.mp3" data-id="0"></div> -->
+                    <div class="name">1. Carlos Montaña</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/02%20Alberto%20Puello%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="1" data-json=></div>
+                    <!-- <div class="icon" data-url="https://domolleno2018.airtime.pro/rest/media/317/download/ZCM4LiMymkr0.mp3" data-id="0"></div> -->
+                    <div class="name">2. Alberto Puello</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/03%20Roberto%20Echeverria%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="2" data-json=></div>
+                    <div class="name">3. Roberto Echeverría</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/04%20Luis%20Alfredo%20Go%CC%81mez%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="3" data-json=></div>
+                    <div class="name">4. Luis Alfredo Gómez</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/05%20Edgar%20Espinoza%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="4" data-json=></div>
+                    <div class="name">5. Edgar Espinoza</div>
+                </div>
+                <div class="des"></div>
+            </div>
+            <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/06%20Jose%CC%81%20Humberto%20Reyes%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="5" data-json=></div>
+                    <div class="name">6. José Humberto Reyes</div>
+                </div>
+                <div class="des"></div>
+                </div>
+                <div class="item">
+                    <div class="top">
+                        <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/07%20Omar%20Flo%CC%81rez%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="6" data-json=></div>
+                        <div class="name">7. Omar Flórez</div>
+                    </div>
+                    <div class="des"></div>
+                    </div>
+                    <div class="item">
+                        <div class="top">
+                            <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/08%20Miguel%20Angel%20Fajardo%20Mayoral%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="7" data-json=></div>
+                            <div class="name">8. Miguel Ángel Fajardo Mayoral</div>
+                        </div>
+                        <div class="des"></div>
+                        </div>
+                    <div class="item">
+                            <div class="top">
+                                <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/09%20Jeanette%20Riveros%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="8" data-json=></div>
+                                <div class="name">9. Jeanette Riveros</div>
+                            </div>
+                        <div class="des"></div>
+                    </div>
+                    <div class="item">
+                        <div class="top">
+                            <div class="icon" data-img="./background.jpg" data-url="https://archive.org/download/010-juan-carlos-cuesta-podcast-idartes-4-cuartos/010%20Juan%20Carlos%20Cuesta%20PODCAST%20IDARTES%204%20CUARTOS.mp3" data-id="9" data-json=></div>
+                            <div class="name">10. Juan Carlos Cuesta</div>
+                        </div>
+                    <div class="des"></div>
+                </div>
+                <div class="subtitle"><br> </div>
+              <!--  <div class="item">
+                <div class="top">
+                    <div class="icon" data-img="./background.jpg" data-url="https://domolleno2018.airtime.pro/rest/media/305/download/ZCM4LiMymkr0.mp3" data-id="3"></div>
+                    <div class="name">Draco Rosa</div>
+                </div>
+                <div class="des"></div>-->
+            </div>
+        </div>
+        <div class="right">
+            <div class="backImg"></div>
+            <div id="canvas_player">
+            </div>
+            <audio autoplay id="audioPlayer" crossorigin="anonymous">
+            </audio>
+            <!--<img class="relative" src="LogoBZZZTA.png" alt=""> -->
+            
+            <div class="playerContainer">
+                <div class="notice"></div>
+                <div class="line">
+                    <div class="current"></div>
+                    <div class="total"></div>
+                    <div class="subsContainer"></div>
+                </div>
+                <div class="time relative"></div>
+                </div>
+            </div>
+        </div>
+        <script type='text/javascript' src='./js/scripts.js'></script>
+    </body>
+</html>

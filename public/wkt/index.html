@@ -1,0 +1,42 @@
+<html>
+    <head>
+
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
+        <script type="text/javascript" src="./svg-to-wkt.js"></script>
+
+	<style>
+	#input_txt,
+	#output_txt {
+		width: 100%;
+	}
+
+    #btn {
+        padding: 10px;
+        margin: 0 auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background: #999;
+        color: white;
+        display: inline-block;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    a {
+    	margin-top: 20px;
+    	font-size: 0.75em;
+    	display: block;
+    }
+	
+	</style>
+    </head>
+
+    <body>
+        <textarea name="input" id="input_txt" cols="30" rows="10"></textarea>
+        <div id="btn">Convert</div>
+    	<textarea name="output" id="output_txt" cols="30" rows="10"></textarea>
+    	<a href="https://github.com/davidmcclure/svg-to-wkt">Thanks to davidmcclure for his JS library</a>
+        <script type="text/javascript" src="./script.js"></script>
+    </body>
+</html>

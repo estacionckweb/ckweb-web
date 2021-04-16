@@ -1,0 +1,55 @@
+#container_video {
+    width: 100%;
+    height: 100vh;
+    background-image: url(./images/periodismo.jpg);
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #0e0511;
+}
+
+#container_video .texto {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-family: Inconsolata;
+    padding: 2em;
+    max-width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#container_video .texto .btn {
+    border: 2px solid white;
+    color: white;
+    margin: 0 auto;
+    display: block;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+
+#container_video .texto .btn:hover {
+    background: white;
+    color: black;
+}
+
+#frame {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+}
+
+#frame iframe {
+    width: 70%;
+    height: 60%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

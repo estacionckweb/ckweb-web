@@ -1,65 +1,162 @@
-
-
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>CK:\\WEB</title>
-    <meta name="description" content="CK:\\WEB">
+<html lang="es">
 
-    <!--- favicon info --->
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<head>
+  <title>...CKWEB...</title>
+  <meta name="description" content="CKWEB: Estación experimental audiovisual y radiofónica de la Línea de Arte, Ciencia y 
+  Tecnología del Instituto Distrital de Artes de Bogotá, Idartes. Espacio para la experimentación, formación, circulación, debate,
+  creación de redes y difusión de contenidos culturales.">
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--- script de googleadsense --->
+  <!---<script data-ad-client="pub-8705427419971426" async src="https://pagead2.googlesyndication.com/
+pagead/js/adsbygoogle.js"></script>--->
 
-    <!-- import the webpage's stylesheet -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/preflight.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/utilities.min.css" rel="stylesheet">
+  <!--- favicon info --->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-    <!-- import the webpage's client-side javascript file -->
-    <script src="./bundle.js" defer></script>
-
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  </head>
-  <body>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <meta name="viewport" content="width=500, user-scalable=no">
 
 
-    <main class="containerOtro">
+  <!-- import the webpage's stylesheet -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/preflight.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/utilities.min.css" rel="stylesheet">
 
-      <canvas id="hydra">
-      </canvas>
+  <!-- import the webpage's client-side javascript file -->
+  <script src="./bundle.js" defer></script>
 
-      <div id="whiteout"></div>
-      <div id="logo">
+  <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
 
-        <!-- <div class="container" style="height: 100%">
-          <div class="row align-items-right  justify-content-end" style=" height:15%">
-            <A style="height: 100%" HREF="https://convocatorias.scrd.gov.co/estimulos/public/convocatoria-pde.xhtml?c=ZTQzODZhOWUtOWQ1Mi00NDRmLWJhNDctOGU1ZTI5YTdmYTZl&v=OTc3ZjIyN2ItMzE5Yy00ZGFkLWFiZjItYmVmYzM4MzdhMzg4"><img class="anuncios" src="./images/Beca1.png" title="Beca1" alt="Beca1"></A>
-          </div>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-          <div class="row align-items-right  justify-content-end" style=" height: 15%">
-            <A style="height: 100%" HREF="https://convocatorias.scrd.gov.co/estimulos/public/convocatoria-pde.xhtml?c=NTc3ZGQ1ZTctZTMxOS00ZWQwLWIyYTgtNGM0OWY1NmI2NjM1&v=Y2Y4MWIxYjgtZDhjNC00YTRjLWE0NGItZTEwYzM2NjI3OGVh"><img class="anuncios" src="./images/Beca2.png" title="Beca2" alt="Beca2"></A>
-          </div>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
 
-          <div class="row align-items-right  justify-content-end" style=" height: 15%">
-              <A style="height: 100%" HREF="https://convocatorias.scrd.gov.co/estimulos/public/convocatoria-pde.xhtml?c=YWNjN2IwYjctYTA1ZC00OTEwLTgxNjAtMTQzNWIwMWZiNDMw&v=Zjc2OTg1YTgtM2EzMS00MWE1LTg5ZjItMmZmNWU3ODI3NzI0"><img class="anuncios" src="./images/Beca3.png" title="Beca3" alt="Beca3"></A>
-          </div>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145234955-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-            <div class="row align-items-right justify-content-end" style=" height: 15%">
-              <A style="height: 100%" HREF="https://convocatorias.scrd.gov.co/estimulos/public/convocatoria-pde.xhtml?c=MDNiNmRkMWMtOTAzNS00NmYyLTlhZWEtMWUzNmJhOGVkZTQ4&v=NWY5ODFmYjUtYjY4OS00ZmFkLWJhYTItYjA1YzY4ZmJhMWY4"><img class="anuncios" src="./images/Residencia.png" title="Residencia" alt="Residencia"</A>
-            </div>
-        </div> -->
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-145234955-1');
+  </script>
+
+</head>
+
+<body>
+
+
+  <main class="containerOtro">
+
+    <canvas id="hydra">
+    </canvas>
+
+    <div id="whiteout"></div>
+    <div id="logo">
+
+    </div>
+    <div id="bloque_menu" class="enlaces">
+      <!-- <a href="https://#" class="aviso">CK:\WEB : Estación del Idartes para la experimentación, formación, circulación, debate, creación de redes y difusión de contenidos culturales.</a> -->
+      <!-- <a href="https://domolleno2018.out.airtime.pro/domolleno2018_a" class="aviso">Escucha CK:\WEB en tu teléfono.</a> -->
+      <!--  <a href="https://ckweb.gov.co/laportatil" class="aviso">La Portátil : transmisión errante.</a> -->
+
+     <!-- <a href="https://www.facebook.com/ckwebestacion/" class="aviso">TRANSMISIÓN EN VIVO |
+        Posibilidades del NET ART pre y post pandemia. 9 de junio, 6:00 p.m. (COL)</a> -->
+      <!--<a href="https://form.jotform.com/201766430192654" class="aviso">LABORATORIO DE CREACIÓN | Otros videojuegos, otros públicos. Inscríbete.</a>-->
+      
+     <a href="https://ckweb.gov.co/laculturaeselantivirus" class="aviso">RADIO | La cultura es el antivirus :: <br>Conversaciones con artistas y pensadores</a>
+     <a href="https://ckweb.gov.co/expresionyverdad" class="aviso">RESULTADOS | Laboratorio Expresión y Verdad</a> 
+     <a href="https://ckweb.gov.co/aprendizajeautomatico" class="aviso">RESULTADOS | Laboratorio Arte y Aprendizaje Automático</a>
+     <a href="https://ckweb.gov.co/dispositivosmoviles" class="aviso">RESULTADOS | Laboratorio Arte y Dispositivos Móviles</a>
+     <a href="https://ckweb.gov.co/tecnofeminismo" class="aviso">RESULTADOS | Laboratorio Tecnofeminismo, arte y disidencias</a>
+     <a href="https://ckweb.gov.co/becas/" class="aviso">RESULTADOS | Becas CK:\WEB 2020</a>
+     <a href="https://ckweb.gov.co/encuentrocollage" class="aviso">RESULTADOS | Encuentro Creación de collage en tiempos de pandemia</a>
+     <!--<a href="https://ckweb.gov.co/mensaje" class="aviso">MENSAJES| Déjanos tu mensaje de voz, cuéntanos historias para pasarlas en la radio. Te escuchamos</a>-->
+      <a href="https://ckweb.gov.co/legadoalaciudad" class="aviso">PODCAST |  Legado a la Ciudad</a>
+      <!-- <a href="https://ckweb.gov.co/aprendizajeautomatico" class="aviso">SELECCIONADOS | Laboratorio Arte y Aprendizaje Automático.</a> -->
+      <a href="https://ckweb.gov.co/artka" class="aviso">RADIO | Artka : Plataforma de música electrónica y creatividad digital en CKWEB</a>
+      <a href="https://itch.io/jam/laboratorio-virtual-otros-videojuegos-otros-publicos" class="aviso">RESULTADOS| Laboratorio Otros videojuegos, otros públicos</a>
+      <a href="https://www.youtube.com/playlist?list=PLU5wrYko0XsAaDZpXSFU3rJ5y6uMnHX2P" class="aviso">REGISTRO| Laboratorio Otros videojuegos, otros públicos</a>
+      <a href="https://ckweb.gov.co/bzzzta" class="aviso">RADIO | Bzzztá :: Búsquedas sonoras</a>
+      <a href="https://www.youtube.com/playlist?list=PLU5wrYko0XsALjCowPcCX_4RfvSVgz755" class="aviso">ENCUENTRO | Blockchain en las artes</a>
+      <a href="https://ckweb.gov.co/libroalviento" class="aviso">LITERATURA | Libros en estéreo: Libro al Viento en tus oídos</a>
+      <a href="https://ckweb.gov.co/ctswam" class="aviso">RADIO | CT::SWaM Broadband Echos - Sonido y espacialización</a>
+      <a href="https://ckweb.gov.co/radiore" class="aviso">PODCAST | radioRe: Conversaciones y paisajes
+      <a href="https://ckweb.gov.co/crea/" class="aviso">PODCAST | Radio Crea Artes Electrónicas</a>
+      <!--<a href="https://ckweb.gov.co/premioluiscaballero" class="aviso">PODCAST | X Premio Luis Caballero.</a>-->
+      <a href="https://ckweb.gov.co/triunfocristalpaez/" class="aviso">RESULTADOS | Residencia CK:\WEB para el
+        desarrollo de proyectos de arte sonoro</a>
+      <a href="https://ckweb.gov.co/taller-deep" class="aviso">RESULTADOS DEL TALLER | Introducción al Deep Learning
+        para artistas</a>
+      <a href="https://ckweb.gov.co/donna" class="aviso">VIDEO | Conversación: Brigitte Baptiste y Donna Haraway</a>
+    </div>
+    <div id="menu_open">
+      <div class="cerrar">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+          <g id="cerrar">
+            <polygon fill="#FFFFFF" points="35,17.5 32,14.5 24.8,21.7 17.5,14.5 14.5,17.5 21.8,24.7 14.5,32 17.5,35 24.8,27.7 32,35 35,32 
+		27.7,24.7 	" />
+          </g>
+        </svg>
 
       </div>
+      <div class="menu">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+          <g id="menu">
+            <path fill="#FFFFFF" d="M12.8,18.7h24c1.1,0,2-0.9,2-2s-0.9-2-2-2h-24c-1.1,0-2,0.9-2,2S11.7,18.7,12.8,18.7z M36.8,22.7h-24
+		c-1.1,0-2,0.9-2,2s0.9,2,2,2h24c1.1,0,2-0.9,2-2S37.9,22.7,36.8,22.7z M36.8,30.7h-24c-1.1,0-2,0.9-2,2s0.9,2,2,2h24
+		c1.1,0,2-0.9,2-2S37.9,30.7,36.8,30.7z" />
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="sociales">
+      <div></div>
 
+      <div></div>
+      <div class="inside">
+        <a href="https://www.facebook.com/ckwebestacion/" class="item facebook"></a>
+        <a href="https://twitter.com/EstacionCKWEB" class="item twitter"></a>
+        <a href="https://instagram.com/ckweb?igshid=1cv1s9db25yxl" class="item instagram"></a>
+        <a href="https://www.youtube.com/channel/UCB0fd-Rsc4zwwNSncJuYKlg" class="item ytube"></a>
+        <a href="https://anchor.fm/estacin-ckweb" class="item podcast"></a>
+        <a href="https://domolleno2018.out.airtime.pro/domolleno2018_a" class="item play"></a>
+        <a href="mailto:ckweb@idartes.gov.co,ckweb@idartes.gov.co" class="item mail"></a>
+      </div>
+    </div>
 
+    <div class="descripcion">
+      <div class="descripcion-item">Estación del Idartes para la experimentación, formación, circulación, debate,
+        creación de redes y difusión de contenidos culturales.
+        
+      </div>
 
-      <!--code for video element ACA ABAJO -->
-      <!--div id="videoPlayer">
+      
+      
+    </div>
+
+    <!-- Begin SpeakPipe code -->
+    <!--script type="text/javascript">
+  (function(d){
+  var app = d.createElement('script'); app.type = 'text/javascript'; app.async = true;
+  var pt = ('https:' == document.location.protocol ? 'https://' : 'http://');
+  app.src = pt + 'www.speakpipe.com/loader/q1f90vq71g2ggqx5pgrc12gu92nc773u.js';
+  var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(app, s);
+  })(document);
+  </script>-->
+    <!-- End SpeakPipe code -->
+
+    <!--code for video element ACA ABAJO -->
+    <!--div id="videoPlayer">
       <video width="320" height="240" id="playerItem" controls>
 
         <source src="http://88.99.123.96:8000/ckweb.ogv" type="video/ogg">
@@ -73,33 +170,63 @@
       <a class="menu-item" href="./archivos"> Archivos </a>
     </section>-->
     <section id="bottom-bar">
-      <ul id="playData"></ul>
-      <div id="scroll-text">
-        <div id="inner-scroll">
-          <A HREF= "https://convocatorias.scrd.gov.co/estimulos/public/convocatorias-pde.xhtml?ea=6" style="color: rgba(255,255,255,1.0)">Publicación del programa distrital de estimulos 2019 </A>
-        </div>
-      </div>
-      <div id="player">
-      </div>
-      <img id="logo-alcaldia" src="./images/logo_alcaldia.png" />
 
-      <A HREF="https://www.youtube.com/channel/UCB0fd-Rsc4zwwNSncJuYKlg"><img id="youtube" src="./images/youtube.png" title="youtube" alt="youtube"></A>
-      <A HREF="https://instagram.com/ckweb?igshid=1cv1s9db25yxl"><img id="instagram" src="./images/instagram.png" title="instagram" alt="instagram"></A>
-      <A HREF="https://www.facebook.com/ckwebestacion/"><img id="facebook" src="./images/facebook.png" title="facebook" alt="facebook"></A>
-      <A HREF="https://twitter.com/EstacionCKWEB"><img id="twitter" src="./images/twitter.png" title="twitter" alt="twitter"></A>
-      <A HREF="podcast.html "><img id="airtime" src="./images/airtime.png" title="airtime" alt="airtime"></A>
+      <div id="player">
+        
+        <div id="myData" class="myData" title="myData" alt="myData" style="font=impact"></div>
+      </div>
+      
+       <div id="logo-alcaldia">
+       
+        <img src="./logo_bogota.png" alt="">
+      </div>
       <!--A HREF="https://domolleno2018.airtime.pro/ "><img id="airtime" src="./images/airtime.png" title="airtime" alt="airtime"></A>
 
       <!---<img id="Beca1" src="./images/Beca1.png" />
       <img id="Beca2" src="./images/Beca2.png" />
       <img id="Beca3" src="./images/Beca3.png" />
       <img id="Residencia" src="./images/Residencia.png" /> --->
+
+
     </section>
+    <script>
+      var mainContainer = document.getElementById("myData");
+      //alert("hola");
+
+      setInterval(function () {
+
+        fetch('https://domolleno2018.airtime.pro/api/live-info-v2')
+          .then(res => res.json())
+          .then((out) => {
+            var currentName = out.tracks.current.metadata.track_title;
+            var currentArtist = out.tracks.current.metadata.artist_name;
+            var nextName = out.tracks.current.metadata.track_title;
+            var nextArtist = out.tracks.current.metadata.artist_name;
+            // console.log('Output: ', currentName + " - "+ currentArtist);
+
+            var div = document.createElement("div");
+            div.innerHTML = currentName + ' - ' + currentArtist;
+            mainContainer.innerHTML = '';
+            mainContainer.appendChild(div);
+
+          }).catch(err => console.error(err));
+      }, 500);
+    </script>
+
 
 
     <!-- Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+    <script src="./script-bonito.js"></script>
+</body>
+
 </html>
