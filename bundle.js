@@ -3,7 +3,7 @@ function audioPlayer(opts) {
   this.file = opts.file
   this.container = opts.container
   this.isPlaying = false
-  // console.log(opts)
+
   var audio = new Audio(opts.stream)
   console.log('audio is', audio)
   this.audio = audio
@@ -15,8 +15,6 @@ function audioPlayer(opts) {
   buttonHolder.onclick = () => {
     console.log(audio.paused)
     if(audio.paused){
-      // self.audio = new Audio(opts.stream);
-      $(audio).attr('src', opts.stream)
       self.play()
     } else {
       self.pause()
@@ -73,37 +71,13 @@ function hydraBackground({ canvas, initialAnimationDuration }) {
       self.hydra.tick(dt)
   }).start()
 
-  speed=1.9
-  shape(99,.1,.5).color(0.1,1.8,4).brightness( ({time}) => Math.sin(time*0.05) )
-  
-  .diff( shape(240,5,0).scrollX(.5).rotate( ()=>time/5 ).color(1.9,0.4,.75) )
-  .diff( shape(100,.8,.002).scrollX(.10).rotate( ()=>time/10 ).color(1,2,.9) )
-  //.diff( shape(150,.3,.002).scrollX(.15).rotate( ()=>time/30 ).color(1,0,1.7) )
-  //.diff( shape(100,.2,.002).scrollX(.20).rotate( ()=>time/40 ).color(1,0,.75) )
-  .diff( shape(50,.1,.002).scrollX(.25).rotate( ()=>time/50 ).color(1,0,.75))
-  .mult(osc(0.5, 0.1, 1).modulate(noise(10).rotate(0, -0.2), 0.1).brightness(0.2))
-  
-  
-  
-  .modulateScale(
-    shape(240,.5,0).scrollX(.05).rotate( ()=>time/10 )
-    , ()=>(Math.sin(time/3)*.2)+.2 ).modulate(o0, () => mouse.x * 0.005)
-  
-  
-  .scale(1.3,.6,1)
-  .out()
-  
-
-  /*osc(9, 0, 1.8)
-  .rotate(-1, -1.01)
-    .pixelate(2, 20)
-	  .mult(osc(7, 0.1, 1).modulate(osc(10).rotate(0, -0.1), 1))
-	  .kaleid(2)
-	.kaleid(10)
-    .color(10.5,1.5,10.39)
-    .modulate(o0, () => 0.2 + mouse.x * 0.001)
-    .scale(1.1)
-    .out(o0)*/
+  osc(80, 0.02, 1.4)
+    .rotate(0.1, -0.008)
+    .pixelate(50, 20)
+    .diff(o0)
+    .luma(0.1)
+    .scale(1.01)
+    .out()
 
   setTimeout(() => this.engine.stop(), initialAnimationDuration)
   //self.hydra.tick(0.01)
@@ -119,136 +93,33 @@ hydraBackground.prototype.pause = function() {
 
 module.exports = hydraBackground
 
-},{"hydra-synth":8,"raf-loop":29}],3:[function(require,module,exports){
+},{"hydra-synth":6,"raf-loop":28}],3:[function(require,module,exports){
 const AudioPlayer = require('./audioPlayer.js')
-const VideoPlayer = require('./videoPlayer.js')
+
 const HydraBackground = require('./hydraBackground.js')
 
 var canvas = document.getElementById("hydra")
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
- //alert("hi")
 
 var hydra = new HydraBackground({
-  canvas: canvas,AudioPlayer,
+  canvas: canvas,
   initialAnimationDuration: 300
 })
 
 var audio = new AudioPlayer({
-  stream: "https://domolleno2018.out.airtime.pro/domolleno2018_a",
+  stream: "http://domolleno2018.out.airtime.pro:8000/domolleno2018_a",
   type: "application/ogg",
   container: document.getElementById("player")
 })
 
-console.log(audio)
 
-audio.onPlay = () => { hydra.play(); audio.currentTime = 0; }
+
+audio.onPlay = () => { hydra.play() }
 
 audio.onPause = () => { hydra.pause() }
 
-},{"./audioPlayer.js":1,"./hydraBackground.js":2,"./videoPlayer.js":4}],4:[function(require,module,exports){
-function videoPlayer(opts) {
-  console.log('stream', opts)
-  console.log('hola mundo')
-  this.stream = opts.stream
-  this.container = opts.container
-  this.isPlaying = false
-
-  this.player = document.createElement('video')
-  this.player.src = this.stream
-  this.player.controls = true
-  this.player.width = window.innerWidth
-  this.player.height = window.innerHeight
-
-
-  this.player.onplay = () => {
-    console.log("play!")
-    this.player.style.position = 'absolute'
-    this.player.style.zIndex = 100
-  }
-  this.player.onpause = () => {
-    console.log("pause!")
-    this.player.style.position = 'static'
-  }
-  this.container.appendChild(this.player)
-}
-
-// audioPlayer.prototype.play = function () {
-//   this.pauseButton.style.display = 'block'
-//   this.playButton.style.display = 'none'
-//   this.audio.play()
-//   this.onPlay()
-// }
-//
-// audioPlayer.prototype.pause = function() {
-//   this.playButton.style.display = 'block'
-//   this.pauseButton.style.display = 'none'
-//   this.audio.pause()
-//   this.onPause()
-// }
-//
-// audioPlayer.prototype.onPlay = () => {}
-//
-// audioPlayer.prototype.onPause = () => {}
-
-module.exports = videoPlayer
-
-},{}],5:[function(require,module,exports){
-module.exports = function (cb) {
-    if (typeof Promise !== 'function') {
-      var err = new Error('Device enumeration not supported.');
-      err.kind = 'METHOD_NOT_AVAILABLE';
-      if (cb) {
-          console.warn('module now uses promise based api - callback is deprecated');
-          return cb(err);
-      }
-      throw err;
-    }
-
-    return new Promise(function(resolve, reject) {
-        var processDevices = function (devices) {
-            var normalizedDevices = [];
-            for (var i = 0; i < devices.length; i++) {
-                var device = devices[i];
-                //make chrome values match spec
-                var kind = device.kind || null;
-                if (kind && kind.toLowerCase() === 'audio') {
-                    kind = 'audioinput';
-                } else if (kind && kind.toLowerCase() === 'video') {
-                    kind = 'videoinput';
-                }
-                normalizedDevices.push({
-                    facing: device.facing || null,
-                    deviceId: device.id || device.deviceId || null,
-                    label: device.label || null,
-                    kind: kind,
-                    groupId: device.groupId || null
-                });
-            }
-            resolve(normalizedDevices);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(null, normalizedDevices);
-            }
-        };
-
-        if (window.navigator && window.navigator.mediaDevices && window.navigator.mediaDevices.enumerateDevices) {
-            window.navigator.mediaDevices.enumerateDevices().then(processDevices);
-        } else if (window.MediaStreamTrack && window.MediaStreamTrack.getSources) {
-            window.MediaStreamTrack.getSources(processDevices);
-        } else {
-            var err = new Error('Device enumeration not supported.');
-            err.kind = 'METHOD_NOT_AVAILABLE';
-            reject(err);
-            if (cb) {
-                console.warn('module now uses promise based api - callback is deprecated');
-                cb(err);
-            }
-        }
-    });
-};
-
-},{}],6:[function(require,module,exports){
+},{"./audioPlayer.js":1,"./hydraBackground.js":2}],4:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -773,95 +644,20 @@ function functionBindPolyfill(context) {
   };
 }
 
-},{}],7:[function(require,module,exports){
-// getUserMedia helper by @HenrikJoreteg used for navigator.getUserMedia shim
-var adapter = require('webrtc-adapter');
-
-module.exports = function (constraints, cb) {
-    var error;
-    var haveOpts = arguments.length === 2;
-    var defaultOpts = {video: true, audio: true};
-
-    var denied = 'PermissionDeniedError';
-    var altDenied = 'PERMISSION_DENIED';
-    var notSatisfied = 'ConstraintNotSatisfiedError';
-
-    // make constraints optional
-    if (!haveOpts) {
-        cb = constraints;
-        constraints = defaultOpts;
-    }
-
-    // treat lack of browser support like an error
-    if (typeof navigator === 'undefined' || !navigator.getUserMedia) {
-        // throw proper error per spec
-        error = new Error('MediaStreamError');
-        error.name = 'NotSupportedError';
-
-        // keep all callbacks async
-        return setTimeout(function () {
-            cb(error);
-        }, 0);
-    }
-
-    // normalize error handling when no media types are requested
-    if (!constraints.audio && !constraints.video) {
-        error = new Error('MediaStreamError');
-        error.name = 'NoMediaRequestedError';
-
-        // keep all callbacks async
-        return setTimeout(function () {
-            cb(error);
-        }, 0);
-    }
-
-    navigator.mediaDevices.getUserMedia(constraints)
-    .then(function (stream) {
-        cb(null, stream);
-    }).catch(function (err) {
-        var error;
-        // coerce into an error object since FF gives us a string
-        // there are only two valid names according to the spec
-        // we coerce all non-denied to "constraint not satisfied".
-        if (typeof err === 'string') {
-            error = new Error('MediaStreamError');
-            if (err === denied || err === altDenied) {
-                error.name = denied;
-            } else {
-                error.name = notSatisfied;
-            }
-        } else {
-            // if we get an error object make sure '.name' property is set
-            // according to spec: http://dev.w3.org/2011/webrtc/editor/getusermedia.html#navigatorusermediaerror-and-navigatorusermediaerrorcallback
-            error = err;
-            if (!error.name) {
-                // this is likely chrome which
-                // sets a property called "ERROR_DENIED" on the error object
-                // if so we make sure to set a name
-                if (error[denied]) {
-                    err.name = denied;
-                } else {
-                    err.name = notSatisfied;
-                }
-            }
-        }
-
-        cb(error);
-    });
-};
-
-},{"webrtc-adapter":34}],8:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 const Output = require('./src/output.js')
 const loop = require('raf-loop')
 const Source = require('./src/hydra-source.js')
-const GeneratorFactory = require('./src/GeneratorFactory.js')
-const getUserMedia = require('getusermedia')
-const mouse = require('mouse-change')()
-const Audio = require('./src/audio.js')
-const VidRecorder = require('./src/video-recorder.js')
+const Mouse = require('./src/lib/mouse.js')()
+const Audio = require('./src/lib/audio.js')
+const VidRecorder = require('./src/lib/video-recorder.js')
+const ArrayUtils = require('./src/lib/array-utils.js')
+const Sandbox = require('./src/eval-sandbox.js')
+
+const Generator = require('./src/generator-factory.js')
 
 // to do: add ability to pass in certain uniforms and transforms
-class HydraSynth {
+class HydraRenderer {
 
   constructor ({
     pb = null,
@@ -873,17 +669,63 @@ class HydraSynth {
     autoLoop = true,
     detectAudio = true,
     enableStreamCapture = true,
-    canvas
+    canvas,
+    precision,
+    extendTransforms = {} // add your own functions on init
   } = {}) {
 
-    this.bpm = 60
+    ArrayUtils.init()
+
     this.pb = pb
+
     this.width = width
     this.height = height
-    this.time = 0
-    this.makeGlobal = makeGlobal
     this.renderAll = false
     this.detectAudio = detectAudio
+
+    this._initCanvas(canvas)
+
+
+    // object that contains all properties that will be made available on the global context and during local evaluation
+    this.synth = {
+      time: 0,
+      bpm: 30,
+      width: this.width,
+      height: this.height,
+      fps: undefined,
+      stats: {
+        fps: 0
+      },
+      speed: 1,
+      mouse: Mouse,
+      render: this._render.bind(this),
+      setResolution: this.setResolution.bind(this),
+      update: (dt) => {},// user defined update function
+      hush: this.hush.bind(this)
+    }
+
+    this.timeSinceLastUpdate = 0
+    this._time = 0 // for internal use, only to use for deciding when to render frames
+
+    // only allow valid precision options
+    let precisionOptions = ['lowp','mediump','highp']
+    if(precision && precisionOptions.includes(precision.toLowerCase())) {
+      this.precision = precision.toLowerCase()
+      //
+      // if(!precisionValid){
+      //   console.warn('[hydra-synth warning]\nConstructor was provided an invalid floating point precision value of "' + precision + '". Using default value of "mediump" instead.')
+      // }
+    } else {
+      let isIOS =
+    (/iPad|iPhone|iPod/.test(navigator.platform) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) &&
+    !window.MSStream;
+      this.precision = isIOS ? 'highp' : 'mediump'
+    }
+
+
+
+    this.extendTransforms = extendTransforms
 
     // boolean to store when to save screenshot
     this.saveFrame = false
@@ -891,37 +733,68 @@ class HydraSynth {
     // if stream capture is enabled, this object contains the capture stream
     this.captureStream = null
 
-    this._initCanvas(canvas)
+    this.generator = undefined
+
     this._initRegl()
     this._initOutputs(numOutputs)
     this._initSources(numSources)
     this._generateGlslTransforms()
 
-    window.screencap = () => {
+    this.synth.screencap = () => {
       this.saveFrame = true
     }
 
     if (enableStreamCapture) {
-      this.captureStream = this.canvas.captureStream(25)
-
-      // to do: enable capture stream of specific sources and outputs
-      window.vidRecorder = new VidRecorder(this.captureStream)
+      try {
+        this.captureStream = this.canvas.captureStream(25)
+        // to do: enable capture stream of specific sources and outputs
+        this.synth.vidRecorder = new VidRecorder(this.captureStream)
+      } catch (e) {
+        console.warn('[hydra-synth warning]\nnew MediaSource() is not currently supported on iOS.')
+        console.error(e)
+      }
     }
 
     if(detectAudio) this._initAudio()
-    //if(makeGlobal) {
-      window.mouse = mouse
-      window.time = this.time
-      window['render'] = this.render.bind(this)
-    //  window.bpm = this.bpm
-      window.bpm = this._setBpm.bind(this)
-  //  }
+
     if(autoLoop) loop(this.tick.bind(this)).start()
+
+    // final argument is properties that the user can set, all others are treated as read-only
+    this.sandbox = new Sandbox(this.synth, makeGlobal, ['speed', 'update', 'bpm', 'fps'])
+  }
+
+  eval(code) {
+    this.sandbox.eval(code)
   }
 
   getScreenImage(callback) {
     this.imageCallback = callback
     this.saveFrame = true
+  }
+
+  hush() {
+    this.s.forEach((source) => {
+      source.clear()
+    })
+    this.o.forEach((output) => {
+      this.synth.solid(1, 1, 1, 0).out(output)
+    })
+  }
+
+  setResolution(width, height) {
+  //  console.log(width, height)
+    this.canvas.width = width
+    this.canvas.height = height
+    this.width = width
+    this.height = height
+    this.o.forEach((output) => {
+      output.resize(width, height)
+    })
+    this.s.forEach((source) => {
+      source.resize(width, height)
+    })
+    this.regl._refresh()
+     console.log(this.canvas.width)
   }
 
   canvasToImage (callback) {
@@ -933,8 +806,6 @@ class HydraSynth {
     document.body.appendChild(a)
     var self = this
     this.canvas.toBlob( (blob) => {
-      //  var url = window.URL.createObjectURL(blob)
-
         if(self.imageCallback){
           self.imageCallback(blob)
           delete self.imageCallback
@@ -951,11 +822,24 @@ class HydraSynth {
   }
 
   _initAudio () {
-    this.audio = new Audio({
-      numBins: 4
+    const that = this
+    this.synth.a = new Audio({
+      numBins: 4,
+      // changeListener: ({audio}) => {
+      //   that.a = audio.bins.map((_, index) =>
+      //     (scale = 1, offset = 0) => () => (audio.fft[index] * scale + offset)
+      //   )
+      //
+      //   if (that.makeGlobal) {
+      //     that.a.forEach((a, index) => {
+      //       const aname = `a${index}`
+      //       window[aname] = a
+      //     })
+      //   }
+      // }
     })
-    if(this.makeGlobal) window.a = this.audio
   }
+
   // create main output canvas and add to screen
   _initCanvas (canvas) {
     if (canvas) {
@@ -968,22 +852,25 @@ class HydraSynth {
       this.canvas.height = this.height
       this.canvas.style.width = '100%'
       this.canvas.style.height = '100%'
+      this.canvas.style.imageRendering = 'pixelated'
       document.body.appendChild(this.canvas)
     }
   }
 
   _initRegl () {
     this.regl = require('regl')({
+    //  profile: true,
       canvas: this.canvas,
-      pixelRatio: 1,
-      extensions: [
-        'oes_texture_half_float',
-        'oes_texture_half_float_linear'
-      ],
-      optionalExtensions: [
-        'oes_texture_float',
-        'oes_texture_float_linear'
-      ]})
+      pixelRatio: 1//,
+      // extensions: [
+      //   'oes_texture_half_float',
+      //   'oes_texture_half_float_linear'
+      // ],
+      // optionalExtensions: [
+      //   'oes_texture_float',
+      //   'oes_texture_float_linear'
+     //]
+   })
 
     // This clears the color buffer to black and the depth buffer to 1
     this.regl.clear({
@@ -992,7 +879,7 @@ class HydraSynth {
 
     this.renderAll = this.regl({
       frag: `
-      precision mediump float;
+      precision ${this.precision} float;
       varying vec2 uv;
       uniform sampler2D tex0;
       uniform sampler2D tex1;
@@ -1020,7 +907,7 @@ class HydraSynth {
       }
       `,
       vert: `
-      precision mediump float;
+      precision ${this.precision} float;
       attribute vec2 position;
       varying vec2 uv;
 
@@ -1047,7 +934,7 @@ class HydraSynth {
 
     this.renderFbo = this.regl({
       frag: `
-      precision mediump float;
+      precision ${this.precision} float;
       varying vec2 uv;
       uniform vec2 resolution;
       uniform sampler2D tex0;
@@ -1057,7 +944,7 @@ class HydraSynth {
       }
       `,
       vert: `
-      precision mediump float;
+      precision ${this.precision} float;
       attribute vec2 position;
       varying vec2 uv;
 
@@ -1084,10 +971,16 @@ class HydraSynth {
   _initOutputs (numOutputs) {
     const self = this
     this.o = (Array(numOutputs)).fill().map((el, index) => {
-      var o = new Output({regl: this.regl, width: this.width, height: this.height})
-      o.render()
+      var o = new Output({
+        regl: this.regl,
+        width: this.width,
+        height: this.height,
+        precision: this.precision,
+        label: `o${index}`
+      })
+    //  o.render()
       o.id = index
-      if (self.makeGlobal) window['o' + index] = o
+      self.synth['o'+index] = o
       return o
     })
 
@@ -1098,36 +991,38 @@ class HydraSynth {
   _initSources (numSources) {
     this.s = []
     for(var i = 0; i < numSources; i++) {
-      this.createSource()
+      this.createSource(i)
     }
   }
 
-  _setBpm(bpm) {
-    this.bpm = bpm
-  }
-
-  createSource () {
-    let s = new Source({regl: this.regl, pb: this.pb, width: this.width, height: this.height})
-    if(this.makeGlobal) {
-      window['s' + this.s.length] = s
-    }
+  createSource (i) {
+    let s = new Source({regl: this.regl, pb: this.pb, width: this.width, height: this.height, label: `s${i}`})
+    this.synth['s' + this.s.length] = s
     this.s.push(s)
     return s
   }
 
   _generateGlslTransforms () {
-    const self = this
-    const gen = new GeneratorFactory(this.o[0])
-    window.generator = gen
-    Object.keys(gen.functions).forEach((key)=>{
-      self[key] = gen.functions[key]
-      if(self.makeGlobal === true) {
-        window[key] = gen.functions[key]
+    var self = this
+    this.generator = new Generator({
+      defaultOutput: this.o[0],
+      defaultUniforms: this.o[0].uniforms,
+      extendTransforms: this.extendTransforms,
+      changeListener: ({type, method, synth}) => {
+          if (type === 'add') {
+            self.synth[method] = synth.generators[method]
+            if(self.sandbox) self.sandbox.add(method)
+          } else if (type === 'remove') {
+            // what to do here? dangerously deleting window methods
+            //delete window[method]
+          }
+      //  }
       }
     })
+    this.synth.setFunction = this.generator.setFunction.bind(this.generator)
   }
 
-  render (output) {
+  _render (output) {
     if (output) {
       this.output = output
       this.isRenderingAll = false
@@ -1136,264 +1031,354 @@ class HydraSynth {
     }
   }
 
+  // dt in ms
   tick (dt, uniforms) {
-
-  //  if(self.detectAudio === true) self.fft = self.audio.frequencies()
-  // this.regl.frame(function () {
-    this.time += dt * 0.001
-    // console.log(this.time)
-    // this.regl.clear({
-    //   color: [0, 0, 0, 1]
-    // })
-    window.time = this.time
-    if(this.detectAudio === true) this.audio.tick()
-    for (let i = 0; i < this.s.length; i++) {
-      this.s[i].tick(this.time)
+    this.sandbox.tick()
+    if(this.detectAudio === true) this.synth.a.tick()
+  //  let updateInterval = 1000/this.synth.fps // ms
+    if(this.synth.update) {
+      try { this.synth.update(dt) } catch (e) { console.log(error) }
     }
 
-    for (let i = 0; i < this.o.length; i++) {
-    //  console.log('WIDTH', this.canvas.width, this.o[0].getCurrent())
-      this.o[i].tick({
-        time: this.time,
-        mouse: mouse,
-        bpm: this.bpm,
-        resolution: [this.canvas.width, this.canvas.height]
-      })
-    }
+    this.sandbox.set('time', this.synth.time += dt * 0.001 * this.synth.speed)
+    this.timeSinceLastUpdate += dt
+    if(!this.synth.fps || this.timeSinceLastUpdate >= 1000/this.synth.fps) {
+    //  console.log(1000/this.timeSinceLastUpdate)
+      this.synth.stats.fps = Math.ceil(1000/this.timeSinceLastUpdate)
+    //  console.log(this.synth.speed, this.synth.time)
+      for (let i = 0; i < this.s.length; i++) {
+        this.s[i].tick(this.synth.time)
+      }
+    //  console.log(this.canvas.width, this.canvas.height)
+      for (let i = 0; i < this.o.length; i++) {
+        this.o[i].tick({
+          time: this.synth.time,
+          mouse: this.synth.mouse,
+          bpm: this.synth.bpm,
+          resolution: [this.canvas.width, this.canvas.height]
+        })
+      }
+      if (this.isRenderingAll) {
+        this.renderAll({
+          tex0: this.o[0].getCurrent(),
+          tex1: this.o[1].getCurrent(),
+          tex2: this.o[2].getCurrent(),
+          tex3: this.o[3].getCurrent(),
+          resolution: [this.canvas.width, this.canvas.height]
+        })
+      } else {
 
-    // console.log("looping", self.o[0].fbo)
-    if (this.isRenderingAll) {
-      this.renderAll({
-        tex0: this.o[0].getCurrent(),
-        tex1: this.o[1].getCurrent(),
-        tex2: this.o[2].getCurrent(),
-        tex3: this.o[3].getCurrent(),
-        resolution: [this.canvas.width, this.canvas.height]
-      })
-    } else {
-    //  console.log('out', self.output.id)
-      this.renderFbo({
-        tex0: this.output.getCurrent(),
-        resolution: [this.canvas.width, this.canvas.height]
-      })
+        this.renderFbo({
+          tex0: this.output.getCurrent(),
+          resolution: [this.canvas.width, this.canvas.height]
+        })
+      }
+      this.timeSinceLastUpdate = 0
     }
     if(this.saveFrame === true) {
       this.canvasToImage()
       this.saveFrame = false
     }
+  //  this.regl.poll()
   }
 
 
 }
 
-module.exports = HydraSynth
+module.exports = HydraRenderer
 
-},{"./src/GeneratorFactory.js":9,"./src/audio.js":10,"./src/hydra-source.js":14,"./src/output.js":17,"./src/video-recorder.js":21,"getusermedia":7,"mouse-change":25,"raf-loop":29,"regl":31}],9:[function(require,module,exports){
-/* globals tex */
-const { seq, sin, ramp, createFades } = require('./timingUtils.js')
-const glslTransforms = require('./composable-glsl-functions.js')
+},{"./src/eval-sandbox.js":7,"./src/generator-factory.js":8,"./src/hydra-source.js":13,"./src/lib/array-utils.js":14,"./src/lib/audio.js":15,"./src/lib/mouse.js":18,"./src/lib/video-recorder.js":21,"./src/output.js":23,"raf-loop":28,"regl":30}],6:[function(require,module,exports){
+const Synth = require('./hydra-synth.js')
+//const ShaderGenerator = require('./shader-generator.js')
 
-// in progress: implementing multiple renderpasses within a single
-// function string
-const renderPassFunctions = require('./renderpass-functions.js')
+module.exports = Synth
 
-const counter = require('./counter.js')
-const shaderManager = require('./shaderManager.js')
+},{"./hydra-synth.js":5}],7:[function(require,module,exports){
+// handles code evaluation and attaching relevant objects to global and evaluation contexts
 
-var Generator = function (param) {
-  return Object.create(Generator.prototype)
-}
+const Sandbox = require('./lib/sandbox.js')
+const ArrayUtils = require('./lib/array-utils.js')
 
-// Functions that return a new transformation function based on the existing function chain as well
-// as the new function passed in.
-const compositionFunctions = {
-  coord: existingF => newF => x => existingF(newF(x)), // coord transforms added onto beginning of existing function chain
-  color: existingF => newF => x => newF(existingF(x)), // color transforms added onto end of existing function chain
-  combine: existingF1 => existingF2 => newF => x => newF(existingF1(x))(existingF2(x)), //
-  combineCoord: existingF1 => existingF2 => newF => x => existingF1(newF(x)(existingF2(x)))
-}
-// gl_FragColor = osc(modulate(osc(rotate(st, 10., 0.), 32., 0.1, 0.), st, 0.5), 199., 0.1, 0.);
-
-// hydra code: osc().rotate().color().repeat().out()
-// pseudo shader code: gl_FragColor = color(osc(rotate(repeat())))
-
-// hydra code: osc().rotate().add(s0).repeat().out()
-// gl_FragColor = osc(rotate(repeat())) + tex(repeat())
-
-// Parses javascript args to use in glsl
-function generateGlsl (inputs) {
-  var str = ''
-  inputs.forEach((input) => {
-    str += ', ' + input.name
-  })
-  return str
-}
-
-// when possible, reformats arguments to be the correct type
-// creates unique names for variables requiring a uniform to be passed in (i.e. a texture)
-// returns an object that contains the type and value of each argument
-// to do: add much more type checking, validation, and transformation to this part
-function formatArguments (userArgs, defaultArgs) {
-  return defaultArgs.map((input, index) => {
-    var typedArg = {}
-
-    // if there is a user input at a certain index, create a uniform for this variable so that the value is passed in on each render pass
-    // to do (possibly): check whether this is a function in order to only use uniforms when needed
-
-    counter.increment()
-    typedArg.name = input.name + counter.get()
-    typedArg.isUniform = true
-
-    if (userArgs.length > index) {
-    //  console.log("arg", userArgs[index])
-      typedArg.value = userArgs[index]
-      // if argument passed in contains transform property, i.e. is of type generator, do not add uniform
-      if (userArgs[index].transform) typedArg.isUniform = false
-
-      if (typeof userArgs[index] === 'function') {
-        typedArg.value = (context, props, batchId) => (userArgs[index](props))
-      } else if (userArgs[index].constructor === Array) {
-      //  console.log("is Array")
-        typedArg.value = (context, props, batchId) => seq(userArgs[index])(props)
-      }
-    } else {
-      // use default value for argument
-      typedArg.value = input.default
-    }
-    // if input is a texture, set unique name for uniform
-    if (input.type === 'texture') {
-      // typedArg.tex = typedArg.value
-      var x = typedArg.value
-      typedArg.value = () => (x.getTexture())
-    } else {
-      // if passing in a texture reference, when function asks for vec4, convert to vec4
-      if (typedArg.value.getTexture && input.type === 'vec4') {
-        var x1 = typedArg.value
-        typedArg.value = src(x1)
-        typedArg.isUniform = false
-      }
-    }
-    typedArg.type = input.type
-    return typedArg
-  })
-}
-
-
-var GeneratorFactory = function (defaultOutput) {
-
-  let self = this
-  self.functions = {}
-
-  // set global utility functions. to do: make global optional
-  window.sin = sin
-  window.ramp = ramp
-  window.frag = shaderManager(defaultOutput)
-
-  createFades(6)
-  // extend Array prototype
-  Array.prototype.fast = function(speed) {
-  //  console.log("array fast", speed, this)
-    this.speed = speed
-    return this
+class EvalSandbox {
+  constructor(parent, makeGlobal, userProps = []) {
+    this.makeGlobal = makeGlobal
+    this.sandbox = Sandbox(parent)
+    this.parent = parent
+    var properties = Object.keys(parent)
+    properties.forEach((property) => this.add(property))
+    this.userProps = userProps
   }
 
-  Object.keys(glslTransforms).forEach((method) => {
-    const transform = glslTransforms[method]
+  add(name) {
+    if(this.makeGlobal) window[name] = this.parent[name]
+    this.sandbox.addToContext(name, `parent.${name}`)
+  }
 
-    // if type is a source, create a new global generator function that inherits from Generator object
+// sets on window as well as synth object if global (not needed for objects, which can be set directly)
+
+  set(property, value) {
+    if(this.makeGlobal) {
+      window[property] = value
+    }
+    this.parent[property] = value
+  }
+
+  tick() {
+    if(this.makeGlobal) {
+      this.userProps.forEach((property) => {
+        this.parent[property] = window[property]
+      })
+      //  this.parent.speed = window.speed
+    } else {
+
+    }
+  }
+
+  eval(code) {
+    this.sandbox.eval(code)
+  }
+}
+
+module.exports = EvalSandbox
+
+},{"./lib/array-utils.js":14,"./lib/sandbox.js":19}],8:[function(require,module,exports){
+const glslTransforms = require('./glsl/glsl-functions.js')
+const GlslSource = require('./glsl-source.js')
+
+class GeneratorFactory {
+  constructor ({
+      defaultUniforms,
+      defaultOutput,
+      extendTransforms = [],
+      changeListener = (() => {})
+    } = {}
+    ) {
+    this.defaultOutput = defaultOutput
+    this.defaultUniforms = defaultUniforms
+    this.changeListener = changeListener
+    this.extendTransforms = extendTransforms
+    this.generators = {}
+    this.init()
+  }
+  init () {
+    this.glslTransforms = {}
+    this.generators = Object.entries(this.generators).reduce((prev, [method, transform]) => {
+      this.changeListener({type: 'remove', synth: this, method})
+      return prev
+    }, {})
+
+    this.sourceClass = (() => {
+      return class extends GlslSource {
+      }
+    })()
+
+    let functions = glslTransforms
+
+    // add user definied transforms
+    if (Array.isArray(this.extendTransforms)) {
+      functions.concat(this.extendTransforms)
+    } else if (typeof this.extendTransforms === 'object' && this.extendTransforms.type) {
+      functions.push(this.extendTransforms)
+    }
+
+    return functions.map((transform) => this.setFunction(transform))
+ }
+
+ _addMethod (method, transform) {
+    this.glslTransforms[method] = transform
     if (transform.type === 'src') {
-      self.functions[method] = (...args) => {
-        var obj = Object.create(Generator.prototype)
-        obj.name = method
-        const inputs = formatArguments(args, transform.inputs)
-        obj.transform = (x) => {
-          var glslString = `${method}(${x}`
-          glslString += generateGlsl(inputs)
-          glslString += ')'
-          return glslString
-        }
-        obj.defaultOutput = defaultOutput
-        obj.uniforms = []
-        inputs.forEach((input, index) => {
-          if (input.isUniform) {
-            obj.uniforms.push(input)
-          }
-        })
-
-        obj.passes = []
-        let pass = {
-          transform: (x) => {
-            var glslString = `${method}(${x}`
-            glslString += generateGlsl(inputs)
-            glslString += ')'
-            return glslString
-          },
-          uniforms: []
-        }
-        inputs.forEach((input, index) => {
-          if (input.isUniform) {
-            pass.uniforms.push(input)
-          }
-        })
-        obj.passes.push(pass)
-        return obj
-      }
-    } else {
-      Generator.prototype[method] = function (...args) {
-        const inputs = formatArguments(args, transform.inputs)
-
-        if (transform.type === 'combine' || transform.type === 'combineCoord') {
-        // composition function to be executed when all transforms have been added
-        // c0 and c1 are two inputs.. (explain more)
-          var f = (c0) => (c1) => {
-            var glslString = `${method}(${c0}, ${c1}`
-            glslString += generateGlsl(inputs.slice(1))
-            glslString += ')'
-            return glslString
-          }
-          this.transform = compositionFunctions[glslTransforms[method].type](this.transform)(inputs[0].value.transform)(f)
-
-          this.uniforms = this.uniforms.concat(inputs[0].value.uniforms)
-
-          var pass = this.passes[this.passes.length - 1]
-          pass.transform = this.transform
-          pass.uniform + this.uniform
-        } else {
-          var f1 = (x) => {
-            var glslString = `${method}(${x}`
-            glslString += generateGlsl(inputs)
-            glslString += ')'
-            return glslString
-          }
-          this.transform = compositionFunctions[glslTransforms[method].type](this.transform)(f1)
-          this.passes[this.passes.length - 1].transform = this.transform
-        }
-
-        inputs.forEach((input, index) => {
-          if (input.isUniform) {
-            this.uniforms.push(input)
-          }
-        })
-        this.passes[this.passes.length - 1].uniforms = this.uniforms
+      const func = (...args) => new this.sourceClass({
+        name: method,
+        transform: transform,
+        userArgs: args,
+        defaultOutput: this.defaultOutput,
+        defaultUniforms: this.defaultUniforms,
+        synth: this
+      })
+      this.generators[method] = func
+      this.changeListener({type: 'add', synth: this, method})
+      return func
+    } else  {
+      this.sourceClass.prototype[method] = function (...args) {
+        this.transforms.push({name: method, transform: transform, userArgs: args})
         return this
       }
     }
-  })
+    return undefined
+  }
+
+  setFunction(obj) {
+    var processedGlsl = processGlsl(obj)
+    if(processedGlsl) this._addMethod(obj.name, processedGlsl)
+  }
 }
 
-//
-//   iterate through transform types and create a function for each
-//
-Generator.prototype.compile = function (pass) {
-//  console.log("compiling", pass)
+const typeLookup = {
+  'src': {
+    returnType: 'vec4',
+    args: ['vec2 _st']
+  },
+  'coord': {
+    returnType: 'vec2',
+    args: ['vec2 _st']
+  },
+  'color': {
+    returnType: 'vec4',
+    args: ['vec4 _c0']
+  },
+  'combine': {
+    returnType: 'vec4',
+    args: ['vec4 _c0', 'vec4 _c1']
+  },
+  'combineCoord': {
+    returnType: 'vec2',
+    args: ['vec2 _st', 'vec4 _c0']
+  }
+}
+// expects glsl of format
+// {
+//   name: 'osc', // name that will be used to access function as well as within glsl
+//   type: 'src', // can be src: vec4(vec2 _st), coord: vec2(vec2 _st), color: vec4(vec4 _c0), combine: vec4(vec4 _c0, vec4 _c1), combineCoord: vec2(vec2 _st, vec4 _c0)
+//   inputs: [
+//     {
+//       name: 'freq',
+//       type: 'float', // 'float'   //, 'texture', 'vec4'
+//       default: 0.2
+//     },
+//     {
+//           name: 'sync',
+//           type: 'float',
+//           default: 0.1
+//         },
+//         {
+//           name: 'offset',
+//           type: 'float',
+//           default: 0.0
+//         }
+//   ],
+   //  glsl: `
+   //    vec2 st = _st;
+   //    float r = sin((st.x-offset*2/freq+time*sync)*freq)*0.5  + 0.5;
+   //    float g = sin((st.x+time*sync)*freq)*0.5 + 0.5;
+   //    float b = sin((st.x+offset/freq+time*sync)*freq)*0.5  + 0.5;
+   //    return vec4(r, g, b, 1.0);
+   // `
+// }
+
+// // generates glsl function:
+// `vec4 osc(vec2 _st, float freq, float sync, float offset){
+//  vec2 st = _st;
+//  float r = sin((st.x-offset*2/freq+time*sync)*freq)*0.5  + 0.5;
+//  float g = sin((st.x+time*sync)*freq)*0.5 + 0.5;
+//  float b = sin((st.x+offset/freq+time*sync)*freq)*0.5  + 0.5;
+//  return vec4(r, g, b, 1.0);
+// }`
+
+function processGlsl(obj) {
+  let t = typeLookup[obj.type]
+  if(t) {
+  let baseArgs = t.args.map((arg) => arg).join(", ")
+  // @todo: make sure this works for all input types, add validation
+  let customArgs = obj.inputs.map((input) => `${input.type} ${input.name}`).join(', ')
+  let args = `${baseArgs}${customArgs.length > 0 ? ', '+ customArgs: ''}`
+//  console.log('args are ', args)
+
+    let glslFunction =
+`
+  ${t.returnType} ${obj.name}(${args}) {
+      ${obj.glsl}
+  }
+`
+
+  // add extra input to beginning for backward combatibility @todo update compiler so this is no longer necessary
+    if(obj.type === 'combine' || obj.type === 'combineCoord') obj.inputs.unshift({
+        name: 'color',
+        type: 'vec4'
+      })
+    return Object.assign({}, obj, { glsl: glslFunction})
+  } else {
+    console.warn(`type ${obj.type} not recognized`, obj)
+  }
+
+}
+
+module.exports = GeneratorFactory
+
+},{"./glsl-source.js":9,"./glsl/glsl-functions.js":11}],9:[function(require,module,exports){
+const generateGlsl = require('./glsl-utils.js').generateGlsl
+const formatArguments = require('./glsl-utils.js').formatArguments
+
+// const glslTransforms = require('./glsl/composable-glsl-functions.js')
+const utilityGlsl = require('./glsl/utility-functions.js')
+
+var GlslSource = function (obj) {
+  this.transforms = []
+  this.transforms.push(obj)
+  this.defaultOutput = obj.defaultOutput
+  this.synth = obj.synth
+  this.type = 'GlslSource'
+  this.defaultUniforms = obj.defaultUniforms
+  return this
+}
+
+GlslSource.prototype.addTransform = function (obj)  {
+    this.transforms.push(obj)
+}
+
+GlslSource.prototype.out = function (_output) {
+  var output = _output || this.defaultOutput
+  var glsl = this.glsl(output)
+  this.synth.currentFunctions = []
+ // output.renderPasses(glsl)
+  if(output) try{
+    output.render(glsl)
+  } catch (error) {
+    console.log('shader could not compile', error)
+  }
+}
+
+GlslSource.prototype.glsl = function () {
+  //var output = _output || this.defaultOutput
+  var self = this
+  // uniforms included in all shaders
+//  this.defaultUniforms = output.uniforms
+  var passes = []
+  var transforms = []
+//  console.log('output', output)
+  this.transforms.forEach((transform) => {
+    if(transform.transform.type === 'renderpass'){
+      // if (transforms.length > 0) passes.push(this.compile(transforms, output))
+      // transforms = []
+      // var uniforms = {}
+      // const inputs = formatArguments(transform, -1)
+      // inputs.forEach((uniform) => { uniforms[uniform.name] = uniform.value })
+      //
+      // passes.push({
+      //   frag: transform.transform.frag,
+      //   uniforms: Object.assign({}, self.defaultUniforms, uniforms)
+      // })
+      // transforms.push({name: 'prev', transform:  glslTransforms['prev'], synth: this.synth})
+      console.warn('no support for renderpass')
+    } else {
+      transforms.push(transform)
+    }
+  })
+
+  if (transforms.length > 0) passes.push(this.compile(transforms))
+
+  return passes
+}
+
+GlslSource.prototype.compile = function (transforms) {
+  var shaderInfo = generateGlsl(transforms)
+  var uniforms = {}
+  shaderInfo.uniforms.forEach((uniform) => { uniforms[uniform.name] = uniform.value })
+
   var frag = `
-  precision mediump float;
-  ${pass.uniforms.map((uniform) => {
-    let type = ''
+  precision ${this.defaultOutput.precision} float;
+  ${Object.values(shaderInfo.uniforms).map((uniform) => {
+    let type = uniform.type
     switch (uniform.type) {
-      case 'float':
-        type = 'float'
-        break
       case 'texture':
         type = 'sampler2D'
         break
@@ -1404,99 +1389,1697 @@ Generator.prototype.compile = function (pass) {
   uniform float time;
   uniform vec2 resolution;
   varying vec2 uv;
+  uniform sampler2D prevBuffer;
 
-  ${Object.values(glslTransforms).map((transform) => {
+  ${Object.values(utilityGlsl).map((transform) => {
   //  console.log(transform.glsl)
     return `
             ${transform.glsl}
           `
   }).join('')}
 
+  ${shaderInfo.glslFunctions.map((transform) => {
+    return `
+            ${transform.transform.glsl}
+          `
+  }).join('')}
+
   void main () {
     vec4 c = vec4(1, 0, 0, 1);
-    //vec2 st = uv;
-    vec2 st = gl_FragCoord.xy/resolution;
-    gl_FragColor = ${pass.transform('st')};
+    vec2 st = gl_FragCoord.xy/resolution.xy;
+    gl_FragColor = ${shaderInfo.fragColor};
   }
   `
-  return frag
+
+  return {
+    frag: frag,
+    uniforms: Object.assign({}, this.defaultUniforms, uniforms)
+  }
+
 }
 
-// creates a fragment shader from an object containing uniforms and a snippet of
-// fragment shader code
-Generator.prototype.compileRenderPass = function (pass) {
-  var frag = `
-      precision mediump float;
-      ${pass.uniforms.map((uniform) => {
-        let type = ''
-        switch (uniform.type) {
-          case 'float':
-            type = 'float'
-            break
-          case 'texture':
-            type = 'sampler2D'
-            break
-        }
-        return `
-          uniform ${type} ${uniform.name};`
-      }).join('')}
-      uniform float time;
-      uniform vec2 resolution;
-      uniform sampler2D prevBuffer;
-      varying vec2 uv;
+module.exports = GlslSource
 
-      ${Object.values(renderPassFunctions).filter(transform => transform.type === 'renderpass_util')
-      .map((transform) => {
-      //  console.log(transform.glsl)
-        return `
-                ${transform.glsl}
-              `
-      }).join('')}
+},{"./glsl-utils.js":10,"./glsl/utility-functions.js":12}],10:[function(require,module,exports){
+// converts a tree of javascript functions to a shader
 
-      ${pass.glsl}
-  `
-  return frag
+// Add extra functionality to Array.prototype for generating sequences in time
+const arrayUtils = require('./lib/array-utils.js')
+
+// [WIP] how to treat different dimensions (?)
+const DEFAULT_CONVERSIONS = {
+  float: {
+    'vec4': {name: 'sum', args: [[1, 1, 1, 1]]},
+    'vec2': {name: 'sum', args: [[1, 1]]}
+  }
 }
 
-Generator.prototype.glsl = function (_output) {
-  var output = _output || this.defaultOutput
+module.exports = {
+  generateGlsl: function (transforms) {
+    var shaderParams = {
+      uniforms: [], // list of uniforms used in shader
+      glslFunctions: [], // list of functions used in shader
+      fragColor: ''
+    }
 
-  var passes = this.passes.map((pass) => {
-    var uniforms = {}
-    pass.uniforms.forEach((uniform) => { uniforms[uniform.name] = uniform.value })
-    if(pass.hasOwnProperty('transform')){
-    //  console.log(" rendering pass", pass)
+    var gen = generateGlsl(transforms, shaderParams)('st')
+    shaderParams.fragColor = gen
+    // remove uniforms with duplicate names
+    let uniforms = {}
+    shaderParams.uniforms.forEach((uniform) => uniforms[uniform.name] = uniform)
+    shaderParams.uniforms = Object.values(uniforms)
+    return shaderParams
+  },
+  formatArguments: formatArguments
+}
+// recursive function for generating shader string from object containing functions and user arguments. Order of functions in string depends on type of function
+// to do: improve variable names
+function generateGlsl (transforms, shaderParams) {
 
-      return {
-        frag: this.compile(pass),
-        uniforms: Object.assign(output.uniforms, uniforms)
-      }
-    } else {
-    //  console.log(" not rendering pass", pass)
-      return {
-        frag: pass.frag,
-        uniforms:  Object.assign(output.uniforms, uniforms)
-      }
+  // transform function that outputs a shader string corresponding to gl_FragColor
+  var fragColor = () => ''
+  // var uniforms = []
+  // var glslFunctions = []
+  transforms.forEach((transform) => {
+    var inputs = formatArguments(transform, shaderParams.uniforms.length)
+  //  console.log('inputs', inputs, transform)
+    inputs.forEach((input) => {
+      if(input.isUniform) shaderParams.uniforms.push(input)
+    })
+
+    // add new glsl function to running list of functions
+    if(!contains(transform, shaderParams.glslFunctions)) shaderParams.glslFunctions.push(transform)
+
+    // current function for generating frag color shader code
+    var f0 = fragColor
+    if (transform.transform.type === 'src') {
+      fragColor = (uv) => `${shaderString(uv, transform.name, inputs, shaderParams)}`
+    } else if (transform.transform.type === 'coord') {
+      fragColor = (uv) => `${f0(`${shaderString(uv, transform.name, inputs, shaderParams)}`)}`
+    } else if (transform.transform.type === 'color') {
+      fragColor = (uv) =>  `${shaderString(`${f0(uv)}`, transform.name, inputs, shaderParams)}`
+    } else if (transform.transform.type === 'combine') {
+      // combining two generated shader strings (i.e. for blend, mult, add funtions)
+      var f1 = inputs[0].value && inputs[0].value.transforms ?
+      (uv) => `${generateGlsl(inputs[0].value.transforms, shaderParams)(uv)}` :
+      (inputs[0].isUniform ? () => inputs[0].name : () => inputs[0].value)
+      fragColor = (uv) => `${shaderString(`${f0(uv)}, ${f1(uv)}`, transform.name, inputs.slice(1), shaderParams)}`
+    } else if (transform.transform.type === 'combineCoord') {
+      // combining two generated shader strings (i.e. for modulate functions)
+      var f1 = inputs[0].value && inputs[0].value.transforms ?
+      (uv) => `${generateGlsl(inputs[0].value.transforms, shaderParams)(uv)}` :
+      (inputs[0].isUniform ? () => inputs[0].name : () => inputs[0].value)
+      fragColor = (uv) => `${f0(`${shaderString(`${uv}, ${f1(uv)}`, transform.name, inputs.slice(1), shaderParams)}`)}`
+
+
     }
   })
-  return passes
+//  console.log(fragColor)
+  //  break;
+  return fragColor
 }
 
+// assembles a shader string containing the arguments and the function name, i.e. 'osc(uv, frequency)'
+function shaderString (uv, method, inputs, shaderParams) {
+  const str = inputs.map((input) => {
+    if (input.isUniform) {
+      return input.name
+    } else if (input.value && input.value.transforms) {
+      // this by definition needs to be a generator, hence we start with 'st' as the initial value for generating the glsl fragment
+      return `${generateGlsl(input.value.transforms, shaderParams)('st')}`
+    }
+    return input.value
+  }).reduce((p, c) => `${p}, ${c}`, '')
 
-
-Generator.prototype.out = function (_output) {
-//  console.log('UNIFORMS', this.uniforms, output)
-  var output = _output || this.defaultOutput
-
-  output.renderPasses(this.glsl(output))
-
+  return `${method}(${uv}${str})`
 }
 
-module.exports = GeneratorFactory
+// merge two arrays and remove duplicates
+function mergeArrays (a, b) {
+  return a.concat(b.filter(function (item) {
+    return a.indexOf(item) < 0;
+  }))
+}
 
-},{"./composable-glsl-functions.js":11,"./counter.js":12,"./renderpass-functions.js":18,"./shaderManager.js":19,"./timingUtils.js":20}],10:[function(require,module,exports){
+// check whether array
+function contains(object, arr) {
+  for(var i = 0; i < arr.length; i++){
+    if(object.name == arr[i].name) return true
+  }
+  return false
+}
+
+function fillArrayWithDefaults (arr, len) {
+  // fill the array with default values if it's too short
+  while (arr.length < len) {
+    if (arr.length === 3) { // push a 1 as the default for .a in vec4
+      arr.push(1.0)
+    } else {
+      arr.push(0.0)
+    }
+  }
+  return arr.slice(0, len)
+}
+
+const ensure_decimal_dot = (val) => {
+  val = val.toString()
+  if (val.indexOf('.') < 0) {
+    val += '.'
+  }
+  return val
+}
+
+function formatArguments (transform, startIndex) {
+  //  console.log('processing args', transform, startIndex)
+  const defaultArgs = transform.transform.inputs
+  const userArgs = transform.userArgs
+  return defaultArgs.map( (input, index) => {
+    const typedArg = {
+      value: input.default,
+      type: input.type, //
+      isUniform: false,
+      name: input.name,
+      vecLen: 0
+      //  generateGlsl: null // function for creating glsl
+    }
+
+    if(typedArg.type === 'float') typedArg.value = ensure_decimal_dot(input.default)
+    if (input.type.startsWith('vec')) {
+      try {
+        typedArg.vecLen = Number.parseInt(input.type.substr(3))
+      } catch (e) {
+        console.log(`Error determining length of vector input type ${input.type} (${input.name})`)
+      }
+    }
+
+    // if user has input something for this argument
+    if(userArgs.length > index) {
+      typedArg.value = userArgs[index]
+      // do something if a composite or transform
+
+      if (typeof userArgs[index] === 'function') {
+        if (typedArg.vecLen > 0) { // expected input is a vector, not a scalar
+          typedArg.value = (context, props, batchId) => (fillArrayWithDefaults(userArgs[index](props), typedArg.vecLen))
+        } else {
+          typedArg.value = (context, props, batchId) => {
+            try {
+              return userArgs[index](props)
+            } catch (e) {
+              console.log('ERROR', e)
+              return input.default
+            }
+          }
+        }
+
+        typedArg.isUniform = true
+      } else if (userArgs[index].constructor === Array) {
+        if (typedArg.vecLen > 0) { // expected input is a vector, not a scalar
+          typedArg.isUniform = true
+          typedArg.value = fillArrayWithDefaults(typedArg.value, typedArg.vecLen)
+        } else {
+          //  console.log("is Array")
+          typedArg.value = (context, props, batchId) => arrayUtils.getValue(userArgs[index])(props)
+          typedArg.isUniform = true
+        }
+      }
+    }
+
+    if(startIndex< 0){
+    } else {
+      if (typedArg.value && typedArg.value.transforms) {
+        const final_transform = typedArg.value.transforms[typedArg.value.transforms.length - 1]
+
+        if (final_transform.transform.glsl_return_type !== input.type) {
+          const defaults = DEFAULT_CONVERSIONS[input.type]
+          if (typeof defaults !== 'undefined') {
+            const default_def = defaults[final_transform.transform.glsl_return_type]
+            if (typeof default_def !== 'undefined') {
+              const {name, args} = default_def
+              typedArg.value = typedArg.value[name](...args)
+            }
+          }
+        }
+
+        typedArg.isUniform = false
+      } else if (typedArg.type === 'float' && typeof typedArg.value === 'number') {
+        typedArg.value = ensure_decimal_dot(typedArg.value)
+      } else if (typedArg.type.startsWith('vec') && typeof typedArg.value === 'object' && Array.isArray(typedArg.value)) {
+        typedArg.isUniform = false
+        typedArg.value = `${typedArg.type}(${typedArg.value.map(ensure_decimal_dot).join(', ')})`
+      } else if (input.type === 'sampler2D') {
+        // typedArg.tex = typedArg.value
+        var x = typedArg.value
+        typedArg.value = () => (x.getTexture())
+        typedArg.isUniform = true
+      } else {
+        // if passing in a texture reference, when function asks for vec4, convert to vec4
+        if (typedArg.value.getTexture && input.type === 'vec4') {
+          var x1 = typedArg.value
+          typedArg.value = src(x1)
+          typedArg.isUniform = false
+        }
+      }
+
+      // add tp uniform array if is a function that will pass in a different value on each render frame,
+      // or a texture/ external source
+
+      if(typedArg.isUniform) {
+        typedArg.name += startIndex
+        //  shaderParams.uniforms.push(typedArg)
+      }
+    }
+    return typedArg
+  })
+}
+
+},{"./lib/array-utils.js":14}],11:[function(require,module,exports){
+/*
+Format for adding functions to hydra. For each entry in this file, hydra automatically generates a glsl function and javascript function with the same name. You can also ass functions dynamically using setFunction(object).
+
+{
+  name: 'osc', // name that will be used to access function in js as well as in glsl
+  type: 'src', // can be 'src', 'color', 'combine', 'combineCoords'. see below for more info
+  inputs: [
+    {
+      name: 'freq',
+      type: 'float',
+      default: 0.2
+    },
+    {
+      name: 'sync',
+      type: 'float',
+      default: 0.1
+    },
+    {
+      name: 'offset',
+      type: 'float',
+      default: 0.0
+    }
+  ],
+    glsl: `
+      vec2 st = _st;
+      float r = sin((st.x-offset*2/freq+time*sync)*freq)*0.5  + 0.5;
+      float g = sin((st.x+time*sync)*freq)*0.5 + 0.5;
+      float b = sin((st.x+offset/freq+time*sync)*freq)*0.5  + 0.5;
+      return vec4(r, g, b, 1.0);
+   `
+}
+
+// The above code generates the glsl function:
+`vec4 osc(vec2 _st, float freq, float sync, float offset){
+ vec2 st = _st;
+ float r = sin((st.x-offset*2/freq+time*sync)*freq)*0.5  + 0.5;
+ float g = sin((st.x+time*sync)*freq)*0.5 + 0.5;
+ float b = sin((st.x+offset/freq+time*sync)*freq)*0.5  + 0.5;
+ return vec4(r, g, b, 1.0);
+}`
+
+
+Types and default arguments for hydra functions.
+The value in the 'type' field lets the parser know which type the function will be returned as well as default arguments.
+
+const types = {
+  'src': {
+    returnType: 'vec4',
+    args: ['vec2 _st']
+  },
+  'coord': {
+    returnType: 'vec2',
+    args: ['vec2 _st']
+  },
+  'color': {
+    returnType: 'vec4',
+    args: ['vec4 _c0']
+  },
+  'combine': {
+    returnType: 'vec4',
+    args: ['vec4 _c0', 'vec4 _c1']
+  },
+  'combineCoord': {
+    returnType: 'vec2',
+    args: ['vec2 _st', 'vec4 _c0']
+  }
+}
+
+*/
+
+module.exports = [
+  {
+  name: 'noise',
+  type: 'src',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scale',
+      default: 10,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0.1,
+    }
+  ],
+  glsl:
+`   return vec4(vec3(_noise(vec3(_st*scale, offset*time))), 1.0);`
+},
+{
+  name: 'voronoi',
+  type: 'src',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scale',
+      default: 5,
+    },
+{
+      type: 'float',
+      name: 'speed',
+      default: 0.3,
+    },
+{
+      type: 'float',
+      name: 'blending',
+      default: 0.3,
+    }
+  ],
+  glsl:
+`   vec3 color = vec3(.0);
+   // Scale
+   _st *= scale;
+   // Tile the space
+   vec2 i_st = floor(_st);
+   vec2 f_st = fract(_st);
+   float m_dist = 10.;  // minimun distance
+   vec2 m_point;        // minimum point
+   for (int j=-1; j<=1; j++ ) {
+   for (int i=-1; i<=1; i++ ) {
+   vec2 neighbor = vec2(float(i),float(j));
+   vec2 p = i_st + neighbor;
+   vec2 point = fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);
+   point = 0.5 + 0.5*sin(time*speed + 6.2831*point);
+   vec2 diff = neighbor + point - f_st;
+   float dist = length(diff);
+   if( dist < m_dist ) {
+   m_dist = dist;
+   m_point = point;
+   }
+   }
+   }
+   // Assign a color using the closest point position
+   color += dot(m_point,vec2(.3,.6));
+   color *= 1.0 - blending*m_dist;
+   return vec4(color, 1.0);`
+},
+{
+  name: 'osc',
+  type: 'src',
+  inputs: [
+    {
+      type: 'float',
+      name: 'frequency',
+      default: 60,
+    },
+{
+      type: 'float',
+      name: 'sync',
+      default: 0.1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec2 st = _st;
+   float r = sin((st.x-offset/frequency+time*sync)*frequency)*0.5  + 0.5;
+   float g = sin((st.x+time*sync)*frequency)*0.5 + 0.5;
+   float b = sin((st.x+offset/frequency+time*sync)*frequency)*0.5  + 0.5;
+   return vec4(r, g, b, 1.0);`
+},
+{
+  name: 'shape',
+  type: 'src',
+  inputs: [
+    {
+      type: 'float',
+      name: 'sides',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'radius',
+      default: 0.3,
+    },
+{
+      type: 'float',
+      name: 'smoothing',
+      default: 0.01,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * 2. - 1.;
+   // Angle and radius from the current pixel
+   float a = atan(st.x,st.y)+3.1416;
+   float r = (2.*3.1416)/sides;
+   float d = cos(floor(.5+a/r)*r-a)*length(st);
+   return vec4(vec3(1.0-smoothstep(radius,radius + smoothing + 0.0000001,d)), 1.0);`
+},
+{
+  name: 'gradient',
+  type: 'src',
+  inputs: [
+    {
+      type: 'float',
+      name: 'speed',
+      default: 0,
+    }
+  ],
+  glsl:
+`   return vec4(_st, sin(time*speed), 1.0);`
+},
+{
+  name: 'src',
+  type: 'src',
+  inputs: [
+    {
+      type: 'sampler2D',
+      name: 'tex',
+      default: NaN,
+    }
+  ],
+  glsl:
+`   //  vec2 uv = gl_FragCoord.xy/vec2(1280., 720.);
+   return texture2D(tex, fract(_st));`
+},
+{
+  name: 'solid',
+  type: 'src',
+  inputs: [
+    {
+      type: 'float',
+      name: 'r',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'g',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'b',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'a',
+      default: 1,
+    }
+  ],
+  glsl:
+`   return vec4(r, g, b, a);`
+},
+{
+  name: 'rotate',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'angle',
+      default: 10,
+    },
+{
+      type: 'float',
+      name: 'speed',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec2 xy = _st - vec2(0.5);
+   float ang = angle + speed *time;
+   xy = mat2(cos(ang),-sin(ang), sin(ang),cos(ang))*xy;
+   xy += 0.5;
+   return xy;`
+},
+{
+  name: 'scale',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1.5,
+    },
+{
+      type: 'float',
+      name: 'xMult',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'yMult',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offsetX',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'offsetY',
+      default: 0.5,
+    }
+  ],
+  glsl:
+`   vec2 xy = _st - vec2(offsetX, offsetY);
+   xy*=(1.0/vec2(amount*xMult, amount*yMult));
+   xy+=vec2(offsetX, offsetY);
+   return xy;
+   `
+},
+{
+  name: 'pixelate',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'pixelX',
+      default: 20,
+    },
+{
+      type: 'float',
+      name: 'pixelY',
+      default: 20,
+    }
+  ],
+  glsl:
+`   vec2 xy = vec2(pixelX, pixelY);
+   return (floor(_st * xy) + 0.5)/xy;`
+},
+{
+  name: 'posterize',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'bins',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'gamma',
+      default: 0.6,
+    }
+  ],
+  glsl:
+`   vec4 c2 = pow(_c0, vec4(gamma));
+   c2 *= vec4(bins);
+   c2 = floor(c2);
+   c2/= vec4(bins);
+   c2 = pow(c2, vec4(1.0/gamma));
+   return vec4(c2.xyz, _c0.a);`
+},
+{
+  name: 'shift',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'r',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'g',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'b',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'a',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec4 c2 = vec4(_c0);
+   c2.r = fract(c2.r + r);
+   c2.g = fract(c2.g + g);
+   c2.b = fract(c2.b + b);
+   c2.a = fract(c2.a + a);
+   return vec4(c2.rgba);`
+},
+{
+  name: 'repeat',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'repeatX',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'repeatY',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'offsetX',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'offsetY',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * vec2(repeatX, repeatY);
+   st.x += step(1., mod(st.y,2.0)) * offsetX;
+   st.y += step(1., mod(st.x,2.0)) * offsetY;
+   return fract(st);`
+},
+{
+  name: 'modulateRepeat',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'repeatX',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'repeatY',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'offsetX',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'offsetY',
+      default: 0.5,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * vec2(repeatX, repeatY);
+   st.x += step(1., mod(st.y,2.0)) + _c0.r * offsetX;
+   st.y += step(1., mod(st.x,2.0)) + _c0.g * offsetY;
+   return fract(st);`
+},
+{
+  name: 'repeatX',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'reps',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * vec2(reps, 1.0);
+   //  float f =  mod(_st.y,2.0);
+   st.y += step(1., mod(st.x,2.0))* offset;
+   return fract(st);`
+},
+{
+  name: 'modulateRepeatX',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'reps',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0.5,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * vec2(reps, 1.0);
+   //  float f =  mod(_st.y,2.0);
+   st.y += step(1., mod(st.x,2.0)) + _c0.r * offset;
+   return fract(st);`
+},
+{
+  name: 'repeatY',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'reps',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * vec2(1.0, reps);
+   //  float f =  mod(_st.y,2.0);
+   st.x += step(1., mod(st.y,2.0))* offset;
+   return fract(st);`
+},
+{
+  name: 'modulateRepeatY',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'reps',
+      default: 3,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0.5,
+    }
+  ],
+  glsl:
+`   vec2 st = _st * vec2(reps, 1.0);
+   //  float f =  mod(_st.y,2.0);
+   st.x += step(1., mod(st.y,2.0)) + _c0.r * offset;
+   return fract(st);`
+},
+{
+  name: 'kaleid',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'nSides',
+      default: 4,
+    }
+  ],
+  glsl:
+`   vec2 st = _st;
+   st -= 0.5;
+   float r = length(st);
+   float a = atan(st.y, st.x);
+   float pi = 2.*3.1416;
+   a = mod(a,pi/nSides);
+   a = abs(a-pi/nSides/2.);
+   return r*vec2(cos(a), sin(a));`
+},
+{
+  name: 'modulateKaleid',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'nSides',
+      default: 4,
+    }
+  ],
+  glsl:
+`   vec2 st = _st - 0.5;
+   float r = length(st);
+   float a = atan(st.y, st.x);
+   float pi = 2.*3.1416;
+   a = mod(a,pi/nSides);
+   a = abs(a-pi/nSides/2.);
+   return (_c0.r+r)*vec2(cos(a), sin(a));`
+},
+{
+  name: 'scroll',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scrollX',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'scrollY',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'speedX',
+      default: 0,
+    },
+{
+      type: 'float',
+      name: 'speedY',
+      default: 0,
+    }
+  ],
+  glsl:
+`
+   _st.x += scrollX + time*speedX;
+   _st.y += scrollY + time*speedY;
+   return fract(_st);`
+},
+{
+  name: 'scrollX',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scrollX',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'speed',
+      default: 0,
+    }
+  ],
+  glsl:
+`   _st.x += scrollX + time*speed;
+   return fract(_st);`
+},
+{
+  name: 'modulateScrollX',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scrollX',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'speed',
+      default: 0,
+    }
+  ],
+  glsl:
+`   _st.x += _c0.r*scrollX + time*speed;
+   return fract(_st);`
+},
+{
+  name: 'scrollY',
+  type: 'coord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scrollY',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'speed',
+      default: 0,
+    }
+  ],
+  glsl:
+`   _st.y += scrollY + time*speed;
+   return fract(_st);`
+},
+{
+  name: 'modulateScrollY',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scrollY',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'speed',
+      default: 0,
+    }
+  ],
+  glsl:
+`   _st.y += _c0.r*scrollY + time*speed;
+   return fract(_st);`
+},
+{
+  name: 'add',
+  type: 'combine',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1,
+    }
+  ],
+  glsl:
+`   return (_c0+_c1)*amount + _c0*(1.0-amount);`
+},
+{
+  name: 'sub',
+  type: 'combine',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1,
+    }
+  ],
+  glsl:
+`   return (_c0-_c1)*amount + _c0*(1.0-amount);`
+},
+{
+  name: 'layer',
+  type: 'combine',
+  inputs: [
+
+  ],
+  glsl:
+`   return vec4(mix(_c0.rgb, _c1.rgb, _c1.a), _c0.a+_c1.a);`
+},
+{
+  name: 'blend',
+  type: 'combine',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 0.5,
+    }
+  ],
+  glsl:
+`   return _c0*(1.0-amount)+_c1*amount;`
+},
+{
+  name: 'mult',
+  type: 'combine',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1,
+    }
+  ],
+  glsl:
+`   return _c0*(1.0-amount)+(_c0*_c1)*amount;`
+},
+{
+  name: 'diff',
+  type: 'combine',
+  inputs: [
+
+  ],
+  glsl:
+`   return vec4(abs(_c0.rgb-_c1.rgb), max(_c0.a, _c1.a));`
+},
+{
+  name: 'modulate',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 0.1,
+    }
+  ],
+  glsl:
+`   //  return fract(st+(_c0.xy-0.5)*amount);
+   return _st + _c0.xy*amount;`
+},
+{
+  name: 'modulateScale',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'multiple',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 1,
+    }
+  ],
+  glsl:
+`   vec2 xy = _st - vec2(0.5);
+   xy*=(1.0/vec2(offset + multiple*_c0.r, offset + multiple*_c0.g));
+   xy+=vec2(0.5);
+   return xy;`
+},
+{
+  name: 'modulatePixelate',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'multiple',
+      default: 10,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 3,
+    }
+  ],
+  glsl:
+`   vec2 xy = vec2(offset + _c0.x*multiple, offset + _c0.y*multiple);
+   return (floor(_st * xy) + 0.5)/xy;`
+},
+{
+  name: 'modulateRotate',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'multiple',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   vec2 xy = _st - vec2(0.5);
+   float angle = offset + _c0.x * multiple;
+   xy = mat2(cos(angle),-sin(angle), sin(angle),cos(angle))*xy;
+   xy += 0.5;
+   return xy;`
+},
+{
+  name: 'modulateHue',
+  type: 'combineCoord',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1,
+    }
+  ],
+  glsl:
+`   return _st + (vec2(_c0.g - _c0.r, _c0.b - _c0.g) * amount * 1.0/resolution);`
+},
+{
+  name: 'invert',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1,
+    }
+  ],
+  glsl:
+`   return vec4((1.0-_c0.rgb)*amount + _c0.rgb*(1.0-amount), _c0.a);`
+},
+{
+  name: 'contrast',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 1.6,
+    }
+  ],
+  glsl:
+`   vec4 c = (_c0-vec4(0.5))*vec4(amount) + vec4(0.5);
+   return vec4(c.rgb, _c0.a);`
+},
+{
+  name: 'brightness',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 0.4,
+    }
+  ],
+  glsl:
+`   return vec4(_c0.rgb + vec3(amount), _c0.a);`
+},
+{
+  name: 'mask',
+  type: 'combine',
+  inputs: [
+
+  ],
+  glsl:
+`   float a = _luminance(_c1.rgb);
+   return vec4(_c0.rgb*a, a);`
+},
+{
+  name: 'luma',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'threshold',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'tolerance',
+      default: 0.1,
+    }
+  ],
+  glsl:
+`   float a = smoothstep(threshold-(tolerance+0.0000001), threshold+(tolerance+0.0000001), _luminance(_c0.rgb));
+   return vec4(_c0.rgb*a, a);`
+},
+{
+  name: 'thresh',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'threshold',
+      default: 0.5,
+    },
+{
+      type: 'float',
+      name: 'tolerance',
+      default: 0.04,
+    }
+  ],
+  glsl:
+`   return vec4(vec3(smoothstep(threshold-(tolerance+0.0000001), threshold+(tolerance+0.0000001), _luminance(_c0.rgb))), _c0.a);`
+},
+{
+  name: 'color',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'r',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'g',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'b',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'a',
+      default: 1,
+    }
+  ],
+  glsl:
+`   vec4 c = vec4(r, g, b, a);
+   vec4 pos = step(0.0, c); // detect whether negative
+   // if > 0, return r * _c0
+   // if < 0 return (1.0-r) * _c0
+   return vec4(mix((1.0-_c0)*abs(c), c*_c0, pos));`
+},
+{
+  name: 'saturate',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 2,
+    }
+  ],
+  glsl:
+`   const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+   vec3 intensity = vec3(dot(_c0.rgb, W));
+   return vec4(mix(intensity, _c0.rgb, amount), _c0.a);`
+},
+{
+  name: 'hue',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'hue',
+      default: 0.4,
+    }
+  ],
+  glsl:
+`   vec3 c = _rgbToHsv(_c0.rgb);
+   c.r += hue;
+   //  c.r = fract(c.r);
+   return vec4(_hsvToRgb(c), _c0.a);`
+},
+{
+  name: 'colorama',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 0.005,
+    }
+  ],
+  glsl:
+`   vec3 c = _rgbToHsv(_c0.rgb);
+   c += vec3(amount);
+   c = _hsvToRgb(c);
+   c = fract(c);
+   return vec4(c, _c0.a);`
+},
+{
+  name: 'prev',
+  type: 'src',
+  inputs: [
+
+  ],
+  glsl:
+`   return texture2D(prevBuffer, fract(_st));`
+},
+{
+  name: 'sum',
+  type: 'color',
+  inputs: [
+    {
+      type: 'vec4',
+      name: 'scale',
+      default: 1,
+    }
+  ],
+  glsl:
+`   vec4 v = _c0 * s;
+   return v.r + v.g + v.b + v.a;
+   }
+   float sum(vec2 _st, vec4 s) { // vec4 is not a typo, because argument type is not overloaded
+   vec2 v = _st.xy * s.xy;
+   return v.x + v.y;`
+},
+{
+  name: 'r',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scale',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   return vec4(_c0.r * scale + offset);`
+},
+{
+  name: 'g',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scale',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   return vec4(_c0.g * scale + offset);`
+},
+{
+  name: 'b',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scale',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   return vec4(_c0.b * scale + offset);`
+},
+{
+  name: 'a',
+  type: 'color',
+  inputs: [
+    {
+      type: 'float',
+      name: 'scale',
+      default: 1,
+    },
+{
+      type: 'float',
+      name: 'offset',
+      default: 0,
+    }
+  ],
+  glsl:
+`   return vec4(_c0.a * scale + offset);`
+}
+]
+
+},{}],12:[function(require,module,exports){
+// functions that are only used within other functions
+
+module.exports = {
+  _luminance: {
+    type: 'util',
+    glsl: `float _luminance(vec3 rgb){
+      const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+      return dot(rgb, W);
+    }`
+  },
+  _noise: {
+    type: 'util',
+    glsl: `
+    //	Simplex 3D Noise
+    //	by Ian McEwan, Ashima Arts
+    vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+  vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+
+  float _noise(vec3 v){
+    const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
+    const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+
+  // First corner
+    vec3 i  = floor(v + dot(v, C.yyy) );
+    vec3 x0 =   v - i + dot(i, C.xxx) ;
+
+  // Other corners
+    vec3 g = step(x0.yzx, x0.xyz);
+    vec3 l = 1.0 - g;
+    vec3 i1 = min( g.xyz, l.zxy );
+    vec3 i2 = max( g.xyz, l.zxy );
+
+    //  x0 = x0 - 0. + 0.0 * C
+    vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+    vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+    vec3 x3 = x0 - 1. + 3.0 * C.xxx;
+
+  // Permutations
+    i = mod(i, 289.0 );
+    vec4 p = permute( permute( permute(
+               i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
+             + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
+             + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
+
+  // Gradients
+  // ( N*N points uniformly over a square, mapped onto an octahedron.)
+    float n_ = 1.0/7.0; // N=7
+    vec3  ns = n_ * D.wyz - D.xzx;
+
+    vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  //  mod(p,N*N)
+
+    vec4 x_ = floor(j * ns.z);
+    vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
+
+    vec4 x = x_ *ns.x + ns.yyyy;
+    vec4 y = y_ *ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs(x) - abs(y);
+
+    vec4 b0 = vec4( x.xy, y.xy );
+    vec4 b1 = vec4( x.zw, y.zw );
+
+    vec4 s0 = floor(b0)*2.0 + 1.0;
+    vec4 s1 = floor(b1)*2.0 + 1.0;
+    vec4 sh = -step(h, vec4(0.0));
+
+    vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
+    vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
+
+    vec3 p0 = vec3(a0.xy,h.x);
+    vec3 p1 = vec3(a0.zw,h.y);
+    vec3 p2 = vec3(a1.xy,h.z);
+    vec3 p3 = vec3(a1.zw,h.w);
+
+  //Normalise gradients
+    vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+    p0 *= norm.x;
+    p1 *= norm.y;
+    p2 *= norm.z;
+    p3 *= norm.w;
+
+  // Mix final noise value
+    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+    m = m * m;
+    return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                                  dot(p2,x2), dot(p3,x3) ) );
+  }
+    `
+  },
+
+
+  _rgbToHsv: {
+    type: 'util',
+    glsl: `vec3 _rgbToHsv(vec3 c){
+            vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+            vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+            vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
+
+            float d = q.x - min(q.w, q.y);
+            float e = 1.0e-10;
+            return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
+        }`
+  },
+  _hsvToRgb: {
+    type: 'util',
+    glsl: `vec3 _hsvToRgb(vec3 c){
+        vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+        vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+        return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+    }`
+  }
+}
+
+},{}],13:[function(require,module,exports){
+const Webcam = require('./lib/webcam.js')
+const Screen = require('./lib/screenmedia.js')
+
+class HydraSource {
+  constructor ({ regl, width, height, pb, label = ""}) {
+    this.label = label
+    this.regl = regl
+    this.src = null
+    this.dynamic = true
+    this.width = width
+    this.height = height
+    this.tex = this.regl.texture({
+      //  shape: [width, height]
+      shape: [ 1, 1 ]
+    })
+    this.pb = pb
+  }
+
+  init (opts) {
+    if (opts.src) {
+      this.src = opts.src
+      this.tex = this.regl.texture(this.src)
+    }
+    if (opts.dynamic) this.dynamic = opts.dynamic
+  }
+
+  initCam (index) {
+    const self = this
+    Webcam(index)
+      .then(response => {
+        self.src = response.video
+        self.dynamic = true
+        self.tex = self.regl.texture(self.src)
+      })
+      .catch(err => console.log('could not get camera', err))
+  }
+
+  initVideo (url = '') {
+    // const self = this
+    const vid = document.createElement('video')
+    vid.crossOrigin = 'anonymous'
+    vid.autoplay = true
+    vid.loop = true
+    vid.muted = true // mute in order to load without user interaction
+    const onload = vid.addEventListener('loadeddata', () => {
+      this.src = vid
+      vid.play()
+      this.tex = this.regl.texture(this.src)
+      this.dynamic = true
+    })
+    vid.src = url
+  }
+
+  initImage (url = '') {
+    const img = document.createElement('img')
+    img.crossOrigin = 'anonymous'
+    img.src = url
+    img.onload = () => {
+      this.src = img
+      this.dynamic = false
+      this.tex = this.regl.texture(this.src)
+    }
+  }
+
+  initStream (streamName) {
+    //  console.log("initing stream!", streamName)
+    let self = this
+    if (streamName && this.pb) {
+      this.pb.initSource(streamName)
+
+      this.pb.on('got video', function (nick, video) {
+        if (nick === streamName) {
+          self.src = video
+          self.dynamic = true
+          self.tex = self.regl.texture(self.src)
+        }
+      })
+    }
+  }
+
+  initScreen () {
+    const self = this
+    Screen()
+      .then(function (response) {
+        self.src = response.video
+        self.tex = self.regl.texture(self.src)
+        self.dynamic = true
+        //  console.log("received screen input")
+      })
+      .catch(err => console.log('could not get screen', err))
+  }
+
+  resize (width, height) {
+    this.width = width
+    this.height = height
+  }
+
+  clear () {
+    if (this.src && this.src.srcObject) {
+      if (this.src.srcObject.getTracks) {
+        this.src.srcObject.getTracks().forEach(track => track.stop())
+      }
+    }
+    this.src = null
+    this.tex = this.regl.texture({ shape: [ 1, 1 ] })
+  }
+
+  tick (time) {
+    //  console.log(this.src, this.tex.width, this.tex.height)
+    if (this.src !== null && this.dynamic === true) {
+      if (this.src.videoWidth && this.src.videoWidth !== this.tex.width) {
+        console.log(
+          this.src.videoWidth,
+          this.src.videoHeight,
+          this.tex.width,
+          this.tex.height
+        )
+        this.tex.resize(this.src.videoWidth, this.src.videoHeight)
+      }
+
+      if (this.src.width && this.src.width !== this.tex.width) {
+        this.tex.resize(this.src.width, this.src.height)
+      }
+
+      this.tex.subimage(this.src)
+    }
+  }
+
+  getTexture () {
+    return this.tex
+  }
+}
+
+module.exports = HydraSource
+
+},{"./lib/screenmedia.js":20,"./lib/webcam.js":22}],14:[function(require,module,exports){
+// WIP utils for working with arrays
+// Possibly should be integrated with lfo extension, etc.
+// to do: transform time rather than array values, similar to working with coordinates in hydra
+
+var easing = require('./easing-functions.js')
+
+var map = (num, in_min, in_max, out_min, out_max) => {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+module.exports = {
+  init: () => {
+
+    Array.prototype.fast = function(speed = 1) {
+      this._speed = speed
+      return this
+    }
+
+    Array.prototype.smooth = function(smooth = 1) {
+      this._smooth = smooth
+      return this
+    }
+
+    Array.prototype.ease = function(ease = 'linear') {
+      if (typeof ease == 'function') {
+        this._smooth = 1
+        this._ease = ease
+      }
+      else if (easing[ease]){
+        this._smooth = 1
+        this._ease = easing[ease]
+      }
+      return this
+    }
+
+    Array.prototype.offset = function(offset = 0.5) {
+      this._offset = offset%1.0
+      return this
+    }
+
+    // Array.prototype.bounce = function() {
+    //   this.modifiers.bounce = true
+    //   return this
+    // }
+
+    Array.prototype.fit = function(low = 0, high =1) {
+      let lowest = Math.min(...this)
+      let highest =  Math.max(...this)
+      var newArr = this.map((num) => map(num, lowest, highest, low, high))
+      newArr._speed = this._speed
+      newArr._smooth = this._smooth
+      newArr._ease = this._ease
+      return newArr
+    }
+  },
+
+  getValue: (arr = []) => ({time, bpm}) =>{
+    let speed = arr._speed ? arr._speed : 1
+    let smooth = arr._smooth ? arr._smooth : 0
+    let index = time * speed * (bpm / 60) + (arr._offset || 0)
+
+    if (smooth!==0) {
+      let ease = arr._ease ? arr._ease : easing['linear']
+      let _index = index - (smooth / 2)
+      let currValue = arr[Math.floor(_index % (arr.length))]
+      let nextValue = arr[Math.floor((_index + 1) % (arr.length))]
+      let t = Math.min((_index%1)/smooth,1)
+      return ease(t) * (nextValue - currValue) + currValue
+    }
+    else {
+      return arr[Math.floor(index % (arr.length))]
+    }
+  }
+}
+
+},{"./easing-functions.js":16}],15:[function(require,module,exports){
 const Meyda = require('meyda')
-const getUserMedia = require('getusermedia')
 
 class Audio {
   constructor ({
@@ -1524,7 +3107,7 @@ class Audio {
     }
 
     this.onBeat = () => {
-      console.log("beat")
+    //  console.log("beat")
     }
 
     this.canvas = document.createElement('canvas')
@@ -1543,31 +3126,27 @@ class Audio {
     this.ctx.strokeStyle="#0ff"
     this.ctx.lineWidth=0.5
 
-    getUserMedia(
-      {video: false, audio: true},
-      (err, stream) => {
-        if(err) {
-          console.log('ERROR', err)
-        } else {
-          console.log('got mic stream', stream)
-          this.stream = stream
-          this.context = new AudioContext()
+    window.navigator.mediaDevices.getUserMedia({video: false, audio: true})
+      .then((stream) => {
+      //  console.log('got mic stream', stream)
+        this.stream = stream
+        this.context = new AudioContext()
         //  this.context = new AudioContext()
-          let audio_stream = this.context.createMediaStreamSource(stream)
+        let audio_stream = this.context.createMediaStreamSource(stream)
 
-          console.log(this.context)
-          this.meyda = Meyda.createMeydaAnalyzer({
-            audioContext: this.context,
-            source: audio_stream,
-            featureExtractors: [
-              'loudness',
+      //  console.log(this.context)
+        this.meyda = Meyda.createMeydaAnalyzer({
+          audioContext: this.context,
+          source: audio_stream,
+          featureExtractors: [
+            'loudness',
             //  'perceptualSpread',
             //  'perceptualSharpness',
             //  'spectralCentroid'
-            ]
-          })
-        }
+          ]
+        })
       })
+      .catch((err) => console.log('ERROR', err))
   }
 
   detectBeat (level) {
@@ -1649,7 +3228,7 @@ class Audio {
     this.bins.forEach((bin, index) => {
       window['a' + index] = (scale = 1, offset = 0) => () => (a.fft[index] * scale + offset)
     })
-    console.log(this.settings)
+  //  console.log(this.settings)
   }
 
   setScale(scale){
@@ -1706,7 +3285,6 @@ class Audio {
     this.ctx.moveTo(0, y)
     this.ctx.lineTo(this.canvas.width, y)
     this.ctx.stroke()
-
     var yMax = this.canvas.height - scale*this.max
     this.ctx.beginPath()
     this.ctx.moveTo(0, yMax)
@@ -1717,2141 +3295,358 @@ class Audio {
 
 module.exports = Audio
 
-},{"getusermedia":7,"meyda":24}],11:[function(require,module,exports){
-// to add: ripple: https://www.shadertoy.com/view/4djGzz
-// mask
-// convolution
-// basic sdf shapes
-// repeat
-// iq color palletes
+},{"meyda":25}],16:[function(require,module,exports){
+// from https://gist.github.com/gre/1650294
 
 module.exports = {
-
-  _noise: {
-    type: 'util',
-    glsl: `
-    //	Simplex 3D Noise
-    //	by Ian McEwan, Ashima Arts
-    vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
-vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
-
-float _noise(vec3 v){
-  const vec2  C = vec2(1.0/6.0, 1.0/3.0) ;
-  const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
-
-// First corner
-  vec3 i  = floor(v + dot(v, C.yyy) );
-  vec3 x0 =   v - i + dot(i, C.xxx) ;
-
-// Other corners
-  vec3 g = step(x0.yzx, x0.xyz);
-  vec3 l = 1.0 - g;
-  vec3 i1 = min( g.xyz, l.zxy );
-  vec3 i2 = max( g.xyz, l.zxy );
-
-  //  x0 = x0 - 0. + 0.0 * C
-  vec3 x1 = x0 - i1 + 1.0 * C.xxx;
-  vec3 x2 = x0 - i2 + 2.0 * C.xxx;
-  vec3 x3 = x0 - 1. + 3.0 * C.xxx;
-
-// Permutations
-  i = mod(i, 289.0 );
-  vec4 p = permute( permute( permute(
-             i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
-           + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
-           + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-
-// Gradients
-// ( N*N points uniformly over a square, mapped onto an octahedron.)
-  float n_ = 1.0/7.0; // N=7
-  vec3  ns = n_ * D.wyz - D.xzx;
-
-  vec4 j = p - 49.0 * floor(p * ns.z *ns.z);  //  mod(p,N*N)
-
-  vec4 x_ = floor(j * ns.z);
-  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
-
-  vec4 x = x_ *ns.x + ns.yyyy;
-  vec4 y = y_ *ns.x + ns.yyyy;
-  vec4 h = 1.0 - abs(x) - abs(y);
-
-  vec4 b0 = vec4( x.xy, y.xy );
-  vec4 b1 = vec4( x.zw, y.zw );
-
-  vec4 s0 = floor(b0)*2.0 + 1.0;
-  vec4 s1 = floor(b1)*2.0 + 1.0;
-  vec4 sh = -step(h, vec4(0.0));
-
-  vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy ;
-  vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww ;
-
-  vec3 p0 = vec3(a0.xy,h.x);
-  vec3 p1 = vec3(a0.zw,h.y);
-  vec3 p2 = vec3(a1.xy,h.z);
-  vec3 p3 = vec3(a1.zw,h.w);
-
-//Normalise gradients
-  vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
-  p0 *= norm.x;
-  p1 *= norm.y;
-  p2 *= norm.z;
-  p3 *= norm.w;
-
-// Mix final noise value
-  vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
-  m = m * m;
-  return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
-                                dot(p2,x2), dot(p3,x3) ) );
-}
-    `
-  },
-  noise: {
-    type: 'src',
-    inputs: [
-      {
-        type: 'float',
-        name: 'scale',
-        default: 10
-      },
-      {
-        type: 'float',
-        name: 'offset',
-        default : 0.1
-      }
-    ],
-    glsl: `vec4 noise(vec2 st, float scale, float offset){
-      return vec4(vec3(_noise(vec3(st*scale, offset*time))), 1.0);
-    }`
-  },
-  voronoi: {
-    type: 'src',
-    inputs: [
-      {
-        type: 'float',
-        name: 'scale',
-        default: 5
-      },
-      {
-        type: 'float',
-        name: 'speed',
-        default : 0.3
-      },
-      {
-        type: 'float',
-        name: 'blending',
-        default : 0.3
-      }
-    ],
-    notes: 'from https://thebookofshaders.com/edit.php#12/vorono-01.frag, https://www.shadertoy.com/view/ldB3zc',
-    glsl: `vec4 voronoi(vec2 st, float scale, float speed, float blending) {
-      vec3 color = vec3(.0);
-
-   // Scale
-   st *= scale;
-
-   // Tile the space
-   vec2 i_st = floor(st);
-   vec2 f_st = fract(st);
-
-   float m_dist = 10.;  // minimun distance
-   vec2 m_point;        // minimum point
-
-   for (int j=-1; j<=1; j++ ) {
-       for (int i=-1; i<=1; i++ ) {
-           vec2 neighbor = vec2(float(i),float(j));
-           vec2 p = i_st + neighbor;
-           vec2 point = fract(sin(vec2(dot(p,vec2(127.1,311.7)),dot(p,vec2(269.5,183.3))))*43758.5453);
-           point = 0.5 + 0.5*sin(time*speed + 6.2831*point);
-           vec2 diff = neighbor + point - f_st;
-           float dist = length(diff);
-
-           if( dist < m_dist ) {
-               m_dist = dist;
-               m_point = point;
-           }
-       }
-   }
-
-   // Assign a color using the closest point position
-   color += dot(m_point,vec2(.3,.6));
- color *= 1.0 - blending*m_dist;
-   return vec4(color, 1.0);
-    }`
-  },
-  osc: {
-    type: 'src',
-    inputs: [
-      {
-        name: 'frequency',
-        type: 'float',
-        default: 60.0
-      },
-      {
-        name: 'sync',
-        type: 'float',
-        default: 0.1
-      },
-      {
-        name: 'offset',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec4 osc(vec2 _st, float freq, float sync, float offset){
-            vec2 st = _st;
-            float r = sin((st.x-offset/freq+time*sync)*freq)*0.5  + 0.5;
-            float g = sin((st.x+time*sync)*freq)*0.5 + 0.5;
-            float b = sin((st.x+offset/freq+time*sync)*freq)*0.5  + 0.5;
-            return vec4(r, g, b, 1.0);
-          }`
-  },
-  shape: {
-    type: 'src',
-    inputs: [
-      {
-        name: 'sides',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'radius',
-        type: 'float',
-        default: 0.3
-      },
-      {
-        name: 'smoothing',
-        type: 'float',
-        default: 0.01
-      }
-    ],
-    glsl: `vec4 shape(vec2 _st, float sides, float radius, float smoothing){
-      vec2 st = _st * 2. - 1.;
-      // Angle and radius from the current pixel
-      float a = atan(st.x,st.y)+3.1416;
-      float r = (2.*3.1416)/sides;
-      float d = cos(floor(.5+a/r)*r-a)*length(st);
-      return vec4(vec3(1.0-smoothstep(radius,radius + smoothing,d)), 1.0);
-    }`
-  },
-  gradient: {
-    type: 'src',
-    inputs: [
-      {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec4 gradient(vec2 _st, float speed) {
-      return vec4(_st, sin(time*speed), 1.0);
-    }
-    `
-  },
-  src: {
-    type: 'src',
-    inputs: [
-      {
-        name: 'tex',
-        type: 'texture'
-      }
-    ],
-    glsl: `vec4 src(vec2 _st, sampler2D _tex){
-    //  vec2 uv = gl_FragCoord.xy/vec2(1280., 720.);
-      return texture2D(_tex, fract(_st));
-    }`
-  },
-  solid: {
-    type: 'src',
-    inputs: [
-      {
-        name: 'r',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'g',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'b',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'a',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    notes: '',
-    glsl: `vec4 solid(vec2 uv, float _r, float _g, float _b, float _a){
-      return vec4(_r, _g, _b, _a);
-    }`
-  },
-  rotate: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'angle',
-        type: 'float',
-        default: 10.0
-      }, {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 rotate(vec2 st, float _angle, float speed){
-              vec2 xy = st - vec2(0.5);
-              float angle = _angle + speed *time;
-              xy = mat2(cos(angle),-sin(angle), sin(angle),cos(angle))*xy;
-              xy += 0.5;
-              return xy;
-          }`
-  },
-  scale: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'float',
-        default: 1.5
-      },
-      {
-        name: 'xMult',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'yMult',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'offsetX',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'offsetY',
-        type: 'float',
-        default: 0.5
-      }
-    ],
-    glsl: `vec2 scale(vec2 st, float amount, float xMult, float yMult, float offsetX, float offsetY){
-      vec2 xy = st - vec2(offsetX, offsetY);
-      xy*=(1.0/vec2(amount*xMult, amount*yMult));
-      xy+=vec2(offsetX, offsetY);
-      return xy;
-    }
-    `
-  },
-  pixelate: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'pixelX',
-        type: 'float',
-        default: 20
-      }, {
-        name: 'pixelY',
-        type: 'float',
-        default: 20
-      }
-    ],
-    glsl: `vec2 pixelate(vec2 st, float pixelX, float pixelY){
-      vec2 xy = vec2(pixelX, pixelY);
-      return (floor(st * xy) + 0.5)/xy;
-    }`
-  },
-  posterize: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'bins',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'gamma',
-        type: 'float',
-        default: 0.6
-      }
-    ],
-    glsl: `vec4 posterize(vec4 c, float bins, float gamma){
-      vec4 c2 = pow(c, vec4(gamma));
-      c2 *= vec4(bins);
-      c2 = floor(c2);
-      c2/= vec4(bins);
-      c2 = pow(c2, vec4(1.0/gamma));
-      return vec4(c2.xyz, c.a);
-    }`
-  },
-  shift: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'r',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'g',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'b',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'a',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec4 shift(vec4 c, float r, float g, float b, float a){
-      vec4 c2 = vec4(c);
-      c2.r = fract(c2.r + r);
-      c2.g = fract(c2.g + g);
-      c2.b = fract(c2.b + b);
-      c2.a = fract(c2.a + a);
-      return vec4(c2.rgba);
-    }
-    `
-  },
-  repeat: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'repeatX',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'repeatY',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'offsetX',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'offsetY',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 repeat(vec2 _st, float repeatX, float repeatY, float offsetX, float offsetY){
-        vec2 st = _st * vec2(repeatX, repeatY);
-        st.x += step(1., mod(st.y,2.0)) * offsetX;
-        st.y += step(1., mod(st.x,2.0)) * offsetY;
-        return fract(st);
-    }`
-  },
-  modulateRepeat: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'repeatX',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'repeatY',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'offsetX',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'offsetY',
-        type: 'float',
-        default: 0.5
-      }
-    ],
-    glsl: `vec2 modulateRepeat(vec2 _st, vec4 c1, float repeatX, float repeatY, float offsetX, float offsetY){
-        vec2 st = _st * vec2(repeatX, repeatY);
-        st.x += step(1., mod(st.y,2.0)) + c1.r * offsetX;
-        st.y += step(1., mod(st.x,2.0)) + c1.g * offsetY;
-        return fract(st);
-    }`
-  },
-  repeatX: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'reps',
-        type: 'float',
-        default: 3.0
-      }, {
-          name: 'offset',
-          type: 'float',
-          default: 0.0
-        }
-    ],
-    glsl: `vec2 repeatX(vec2 _st, float reps, float offset){
-      vec2 st = _st * vec2(reps, 1.0);
-    //  float f =  mod(_st.y,2.0);
-
-      st.y += step(1., mod(st.x,2.0))* offset;
-      return fract(st);
-    }`
-  },
-  modulateRepeatX: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'reps',
-        type: 'float',
-        default: 3.0
-      },
-      {
-          name: 'offset',
-          type: 'float',
-          default: 0.5
-      }
-    ],
-    glsl: `vec2 modulateRepeatX(vec2 _st, vec4 c1, float reps, float offset){
-      vec2 st = _st * vec2(reps, 1.0);
-    //  float f =  mod(_st.y,2.0);
-      st.y += step(1., mod(st.x,2.0)) + c1.r * offset;
-
-      return fract(st);
-    }`
-  },
-  repeatY: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'reps',
-        type: 'float',
-        default: 3.0
-      }, {
-        name: 'offset',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 repeatY(vec2 _st, float reps, float offset){
-      vec2 st = _st * vec2(1.0, reps);
-    //  float f =  mod(_st.y,2.0);
-      st.x += step(1., mod(st.y,2.0))* offset;
-      return fract(st);
-    }`
-  },
-  modulateRepeatY: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'reps',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'offset',
-        type: 'float',
-        default: 0.5
-      }
-    ],
-    glsl: `vec2 modulateRepeatY(vec2 _st, vec4 c1, float reps, float offset){
-      vec2 st = _st * vec2(reps, 1.0);
-    //  float f =  mod(_st.y,2.0);
-      st.x += step(1., mod(st.y,2.0)) + c1.r * offset;
-      return fract(st);
-    }`
-  },
-  kaleid: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'nSides',
-        type: 'float',
-        default: 4.0
-      }
-    ],
-    glsl: `vec2 kaleid(vec2 st, float nSides){
-      st -= 0.5;
-      float r = length(st);
-      float a = atan(st.y, st.x);
-      float pi = 2.*3.1416;
-      a = mod(a,pi/nSides);
-      a = abs(a-pi/nSides/2.);
-      return r*vec2(cos(a), sin(a));
-    }`
-  },
-  modulateKaleid: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'nSides',
-        type: 'float',
-        default: 4.0
-      }
-    ],
-    glsl: `vec2 modulateKaleid(vec2 st, vec4 c1, float nSides){
-      st -= 0.5;
-      float r = length(st);
-      float a = atan(st.y, st.x);
-      float pi = 2.*3.1416;
-      a = mod(a,pi/nSides);
-      a = abs(a-pi/nSides/2.);
-      return (c1.r+r)*vec2(cos(a), sin(a));
-    }`
-  },
-  scrollX: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'scrollX',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 scrollX(vec2 st, float amount, float speed){
-      st.x += amount + time*speed;
-      return fract(st);
-    }`
-  },
-  modulateScrollX: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'scrollX',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 modulateScrollX(vec2 st, vec4 c1, float amount, float speed){
-      st.x += c1.r*amount + time*speed;
-      return fract(st);
-    }`
-  },
-  scrollY: {
-    type: 'coord',
-    inputs: [
-      {
-        name: 'scrollY',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 scrollY(vec2 st, float amount, float speed){
-      st.y += amount + time*speed;
-      return fract(st);
-    }`
-  },
-  modulateScrollY: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'scrollY',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 modulateScrollY(vec2 st, vec4 c1, float amount, float speed){
-      st.y += c1.r*amount + time*speed;
-      return fract(st);
-    }`
-  },
-  add: {
-    type: 'combine',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 0.5
-      }
-    ],
-    glsl: `vec4 add(vec4 c0, vec4 c1, float amount){
-            return (c0+c1)*amount + c0*(1.0-amount);
-          }`
-  },
-  layer: {
-    type: 'combine',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      }
-    ],
-    glsl: `vec4 layer(vec4 c0, vec4 c1){
-        return vec4(mix(c0.rgb, c1.rgb, c1.a), c0.a+c1.a);
-    }
-    `
-  },
-  blend: {
-    type: 'combine',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 0.5
-      }
-    ],
-    glsl: `vec4 blend(vec4 c0, vec4 c1, float amount){
-      return c0*(1.0-amount)+c1*amount;
-    }`
-  },
-  mult: {
-    type: 'combine',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    glsl: `vec4 mult(vec4 c0, vec4 c1, float amount){
-      return c0*(1.0-amount)+(c0*c1)*amount;
-    }`
-  },
-
-  diff: {
-    type: 'combine',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      }
-    ],
-    glsl: `vec4 diff(vec4 c0, vec4 c1){
-      return vec4(abs(c0.rgb-c1.rgb), max(c0.a, c1.a));
-    }
-    `
-  },
-
-  modulate: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 0.1
-      }
-    ],
-    glsl: `vec2 modulate(vec2 st, vec4 c1, float amount){
-          //  return fract(st+(c1.xy-0.5)*amount);
-              return st + c1.xy*amount;
-          }`
-  },
-  modulateScale: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'multiple',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'offset',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    glsl: `vec2 modulateScale(vec2 st, vec4 c1, float multiple, float offset){
-      vec2 xy = st - vec2(0.5);
-      xy*=(1.0/vec2(offset + multiple*c1.r, offset + multiple*c1.g));
-      xy+=vec2(0.5);
-      return xy;
-    }`
-  },
-  modulatePixelate: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'multiple',
-        type: 'float',
-        default: 10.0
-      },
-      {
-        name: 'offset',
-        type: 'float',
-        default: 3.0
-      }
-    ],
-    glsl: `vec2 modulatePixelate(vec2 st, vec4 c1, float multiple, float offset){
-      vec2 xy = vec2(offset + c1.x*multiple, offset + c1.y*multiple);
-      return (floor(st * xy) + 0.5)/xy;
-    }`
-  },
-  modulateRotate: {
-    type: 'combineCoord',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'multiple',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'offset',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    glsl: `vec2 modulateRotate(vec2 st, vec4 c1, float multiple, float offset){
-        vec2 xy = st - vec2(0.5);
-        float angle = offset + c1.x * multiple;
-        xy = mat2(cos(angle),-sin(angle), sin(angle),cos(angle))*xy;
-        xy += 0.5;
-        return xy;
-    }`
-  },
-  modulateHue: {
-    type: 'combineCoord',
-    notes: 'changes coordinates based on hue of second input. Based on: https://www.shadertoy.com/view/XtcSWM',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    glsl: `vec2 modulateHue(vec2 st, vec4 c1, float amount){
-
-            return st + (vec2(c1.g - c1.r, c1.b - c1.g) * amount * 1.0/resolution);
-          }`
-  },
-  invert: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    glsl: `vec4 invert(vec4 c0, float amount){
-      return vec4((1.0-c0.rgb)*amount + c0.rgb*(1.0-amount), c0.a);
-    }`
-  },
-  contrast: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'float',
-        default: 1.6
-      }
-    ],
-    glsl: `vec4 contrast(vec4 c0, float amount) {
-      vec4 c = (c0-vec4(0.5))*vec4(amount) + vec4(0.5);
-      return vec4(c.rgb, c0.a);
-    }
-    `
-  },
-  brightness: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'float',
-        default: 0.4
-      }
-    ],
-    glsl: `vec4 brightness(vec4 c0, float amount){
-      return vec4(c0.rgb + vec3(amount), c0.a);
-    }
-    `
-  },
-  luminance: {
-    type: 'util',
-    glsl: `float luminance(vec3 rgb){
-      const vec3 W = vec3(0.2125, 0.7154, 0.0721);
-      return dot(rgb, W);
-    }`
-  },
-  mask: {
-    type: 'combine',
-    inputs: [
-      {
-        name: 'color',
-        type: 'vec4'
-      }
-    ],
-    glsl: `vec4 mask(vec4 c0, vec4 c1){
-      float a = luminance(c1.rgb);
-      return vec4(c0.rgb*a, a);
-    }`
-  },
-  luma: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'threshold',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'tolerance',
-        type: 'float',
-        default: 0.1
-      }
-    ],
-    glsl: `vec4 luma(vec4 c0, float threshold, float tolerance){
-      float a = smoothstep(threshold-tolerance, threshold+tolerance, luminance(c0.rgb));
-      return vec4(c0.rgb*a, a);
-    }`
-  },
-  thresh: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'threshold',
-        type: 'float',
-        default: 0.5
-      }, {
-        name: 'tolerance',
-        type: 'float',
-        default: 0.04
-      }
-    ],
-    glsl: `vec4 thresh(vec4 c0, float threshold, float tolerance){
-      return vec4(vec3(smoothstep(threshold-tolerance, threshold+tolerance, luminance(c0.rgb))), c0.a);
-    }`
-  },
-  color: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'r',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'g',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'b',
-        type: 'float',
-        default: 1.0
-      },
-      {
-        name: 'a',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    notes: 'https://www.youtube.com/watch?v=FpOEtm9aX0M',
-    glsl: `vec4 color(vec4 c0, float _r, float _g, float _b, float _a){
-      vec4 c = vec4(_r, _g, _b, _a);
-      vec4 pos = step(0.0, c); // detect whether negative
-
-      // if > 0, return r * c0
-      // if < 0 return (1.0-r) * c0
-      return vec4(mix((1.0-c0)*abs(c), c*c0, pos));
-    }`
-  },
-  _rgbToHsv: {
-    type: 'util',
-    glsl: `vec3 _rgbToHsv(vec3 c){
-            vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-            vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
-            vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r));
-
-            float d = q.x - min(q.w, q.y);
-            float e = 1.0e-10;
-            return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
-        }`
-  },
-  _hsvToRgb: {
-    type: 'util',
-    glsl: `vec3 _hsvToRgb(vec3 c){
-        vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
-        vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-        return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-    }`
-  },
-  saturate: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'float',
-        default: 2.0
-      }
-    ],
-    glsl: `vec4 saturate(vec4 c0, float amount){
-      const vec3 W = vec3(0.2125, 0.7154, 0.0721);
-      vec3 intensity = vec3(dot(c0.rgb, W));
-      return vec4(mix(intensity, c0.rgb, amount), c0.a);
-    }`
-  },
-  hue: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'hue',
-        type: 'float',
-        default: 0.4
-      }
-    ],
-    glsl: `vec4 hue(vec4 c0, float hue){
-      vec3 c = _rgbToHsv(c0.rgb);
-      c.r += hue;
-    //  c.r = fract(c.r);
-      return vec4(_hsvToRgb(c), c0.a);
-    }`
-  },
-  colorama: {
-    type: 'color',
-    inputs: [
-      {
-        name: 'amount',
-        type: 'float',
-        default: 0.005
-      }
-    ],
-    glsl: `vec4 colorama(vec4 c0, float amount){
-      vec3 c = _rgbToHsv(c0.rgb);
-      c += vec3(amount);
-      c = _hsvToRgb(c);
-      c = fract(c);
-      return vec4(c, c0.a);
-    }`
-  }
+  // no easing, no acceleration
+  linear: function (t) { return t },
+  // accelerating from zero velocity
+  easeInQuad: function (t) { return t*t },
+  // decelerating to zero velocity
+  easeOutQuad: function (t) { return t*(2-t) },
+  // acceleration until halfway, then deceleration
+  easeInOutQuad: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+  // accelerating from zero velocity
+  easeInCubic: function (t) { return t*t*t },
+  // decelerating to zero velocity
+  easeOutCubic: function (t) { return (--t)*t*t+1 },
+  // acceleration until halfway, then deceleration
+  easeInOutCubic: function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+  // accelerating from zero velocity
+  easeInQuart: function (t) { return t*t*t*t },
+  // decelerating to zero velocity
+  easeOutQuart: function (t) { return 1-(--t)*t*t*t },
+  // acceleration until halfway, then deceleration
+  easeInOutQuart: function (t) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+  // accelerating from zero velocity
+  easeInQuint: function (t) { return t*t*t*t*t },
+  // decelerating to zero velocity
+  easeOutQuint: function (t) { return 1+(--t)*t*t*t*t },
+  // acceleration until halfway, then deceleration
+  easeInOutQuint: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t },
+  // sin shape
+  sin: function (t) { return (1 + Math.sin(Math.PI*t-Math.PI/2))/2 }
 }
 
-},{}],12:[function(require,module,exports){
-// singleton class that generates ids to use has unique variable names for variables
-// counter.js
+},{}],17:[function(require,module,exports){
+// https://github.com/mikolalysenko/mouse-event
 
-let value = 0
+'use strict'
 
-module.exports = {
-  increment: () => value++,
-  get: () => value
+function mouseButtons(ev) {
+  if(typeof ev === 'object') {
+    if('buttons' in ev) {
+      return ev.buttons
+    } else if('which' in ev) {
+      var b = ev.which
+      if(b === 2) {
+        return 4
+      } else if(b === 3) {
+        return 2
+      } else if(b > 0) {
+        return 1<<(b-1)
+      }
+    } else if('button' in ev) {
+      var b = ev.button
+      if(b === 1) {
+        return 4
+      } else if(b === 2) {
+        return 2
+      } else if(b >= 0) {
+        return 1<<b
+      }
+    }
+  }
+  return 0
 }
+exports.buttons = mouseButtons
 
-},{}],13:[function(require,module,exports){
-module.exports = {
-  src: {
-    transformType: 'color',
-    isSource: true,
-    inputs: [{
-      name: 'src',
-      type: 'image'
-    }],
-    fragBody: `
-      c = texture2D(<0>, st);
-    `
-  },
-  invert: {
-    transformType: 'color',
-    fragBody: `
-      c = 1.0-c;
-      c = vec4(c.xyz, 1.0);
-    `
-  },
-  osc: {
-    transformType: 'color',
-    isSource: true,
-    inputs: [
-      {
-        name: 'frequency',
-        type: 'float',
-        default: 60
-      },
-      {
-        name: 'sync',
-        type: 'float',
-        default: 0.1
-      },
-      {
-        name: 'offset',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    fragBody: `
-      float r<0> = sin((st.x-<2>/100.+time*<1>)*<0>)*0.5 + 0.5;
-      float g<0> = sin((st.x+time*<1>)*<0>)*0.5 + 0.5;
-      float b<0> = sin((st.x+<2>/100.+time*<1>)*<0>)*0.5 + 0.5;
-      c = vec4(r<0>, g<0>, b<0>, 1.0);
-    `
-  },
-  blend: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'src',
-        type: 'image'
-      },
-      {
-        name: 'blendAmount',
-        type: 'float',
-        default: 0.4
-      }
-    ],
-    fragBody: `
-      c*=(1.0-<1>);
-      c+= texture2D(<0>, uv)*<1>;
-    `
-  },
-  mult: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'src',
-        type: 'image'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 1.0
-      }
-    ],
-    fragBody: `
-      vec4 c<1> = c*(texture2D(<0>, uv));
-      c*=(1.0-<1>);
-      c+= c<1>*<1>;
-    `
-  },
-  add: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'src',
-        type: 'image'
-      }
-    ],
-    fragBody: `
-      c += texture2D(<0>, uv);
-    `
-  },
-  diff: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'src',
-        type: 'image'
-      }
-    ],
-    fragBody: `
-      c -= texture2D(<0>, uv);
-      c = vec4(abs(c).xyz, 1.0);
-    `
-  },
-  scale: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'scaleAmount',
-        type: 'float',
-        default: 1.5
-      }
-    ],
-    fragBody: `
-      st = vec2(1.0/<0>)*st;
-    `
-  },
-  pixelate: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'pixelX',
-        type: 'float',
-        default: 20
-      }, {
-        name: 'pixelY',
-        type: 'float',
-        default: 20
-      }
-    ],
-    fragBody: `
-      st *= vec2(<0>, <1>);
-      st = floor(st) + 0.5;
-      st /= vec2(<0>, <1>);
-    `
-  },
-  contrast: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'contrast',
-        type: 'float',
-        default: 1.6
-      }
-    ],
-    fragBody: `
-      c = (c-vec4(0.5))*<0> + vec4(0.5);
-      c = vec4(c.xyz, 1.0);
-    `
-  },
-  kaleid: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'nSides',
-        type: 'float',
-        default: 4.0
-      }
-    ],
-    fragBody: `
-      st -= 0.5;
-      float r<0> = length(st);
-      float a<0> = atan(st.y, st.x);
-      float pi<0> = 2.*3.1416;
-      a<0> = mod(a<0>, pi<0>/<0>);
-      a<0> = abs(a<0>-pi<0>/<0>/2.);
-      st = r<0>*vec2(cos(a<0>), sin(a<0>));
-    `
-  },
-  brightness: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'brightness',
-        type: 'float',
-        default: 0.4
-      }
-    ],
-    fragBody: `
-      c = vec4(c.xyz + vec3(<0>), 1.0);
-    `
-  },
-  posterize: {
-    transformType: 'color',
-    inputs: [
-      {
-        name: 'bins',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'gamma',
-        type: 'float',
-        default: 0.6
-      }
-    ],
-    fragBody: `
-      c = pow(c, vec4(<1>));
-      c*=vec4(<0>);
-      c = floor(c);
-      c/=vec4(<0>);
-      c = pow(c, vec4(1.0/<1>));
-      c = vec4(c.xyz, 1.0);
-    `
-  },
-  modulate: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'src',
-        type: 'image'
-      },
-      {
-        name: 'amount',
-        type: 'float',
-        default: 0.1
-      }
-    ],
-    fragBody: `
-      st += texture2D(<0>, uv).xy*<1>;
-    `
-  },
-
-  color: {
-    transformType: 'color',
-    inputs: [{
-      name: 'color',
-      type: 'color',
-      default: [1.0, 0.5, 0.0]
-    }],
-    fragBody: `
-      c.rgb = c.rgb*<0>;
-      c = vec4(c.rgb, 1.0);
-    `
-  },
-  gradient: {
-    transformType: 'color',
-    isSource: true,
-    fragBody: `
-      c = vec4(st, sin(time), 1.0);
-    `
-  },
-  scrollX: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'scrollX',
-        type: 'float',
-        default: 0.5
-      },
-      {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    fragBody: `
-      st.x += <0> + time*<1>;
-      st = fract(st);
-    `
-  },
-  repeatX: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'repeatX',
-        type: 'float',
-        default: 3.0
-      }, {
-        name: 'offsetX',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    fragBody: `
-      st*= vec2(<0>, 1.0);
-      st.x += step(1., mod(st.y,2.0)) * <1>;
-      st = fract(st);
-      `
-  },
-  repeatY: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'repeatY',
-        type: 'float',
-        default: 3.0
-      }, {
-        name: 'offsetY',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    fragBody: `
-      st*= vec2(1.0, <0>);
-      st.y += step(1., mod(st.x,2.0)) * <1>;
-      st = fract(st);
-      `
-  },
-  repeat: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'repeatX',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'repeatY',
-        type: 'float',
-        default: 3.0
-      },
-      {
-        name: 'offsetX',
-        type: 'float',
-        default: 0.0
-      },
-      {
-        name: 'offsetY',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    fragBody: `
-      st*= vec2(<0>, <1>);
-      st.x += step(1., mod(st.y,2.0)) * <2>;
-      st.y += step(1., mod(st.x,2.0)) * <3>;
-      st = fract(st);
-      `
-  },
-  rotate: {
-    transformType: 'coord',
-    inputs: [
-      {
-        name: 'angle',
-        type: 'float',
-        default: 10.0
-      }, {
-        name: 'speed',
-        type: 'float',
-        default: 0.0
-      }
-    ],
-    fragBody: `
-      st -= vec2(0.5);
-      float angle<0> = <0> + <1>*time;
-      st = mat2(cos(angle<0>),-sin(angle<0>), sin(angle<0>),cos(angle<0>))*st;
-      st += vec2(0.5);
-    `
-  }
+function mouseElement(ev) {
+  return ev.target || ev.srcElement || window
 }
+exports.element = mouseElement
 
-},{}],14:[function(require,module,exports){
-const Webcam = require('./webcam.js')
-const Screen = require('./lib/screenmedia.js')
-
-class HydraSource  {
-
-  constructor (opts) {
-    this.regl = opts.regl
-    this.src = null
-    this.dynamic = true
-    this.width = opts.width
-    this.height = opts.height
-    this.tex = this.regl.texture({
-      shape: [opts.width, opts.height]
-    })
-    this.pb = opts.pb
-  }
-
-  init (opts) {
-    if (opts.src) {
-      this.src = opts.src
-      this.tex = this.regl.texture(this.src)
-    }
-    if(opts.dynamic) this.dynamic = opts.dynamic
-  }
-
-  initCam (index) {
-    const self = this
-    Webcam(index).then((response) => {
-      self.src = response.video
-      self.tex = self.regl.texture(self.src)
-    })
-  }
-
-  initStream (streamName) {
-    console.log("initing stream!", streamName)
-    let self = this
-    if (streamName && this.pb) {
-        this.pb.initSource(streamName)
-
-        this.pb.on("got video", function(nick, video){
-          if(nick === streamName) {
-            self.src = video
-            self.tex = self.regl.texture(self.src)
-          }
-        })
-
+function mouseRelativeX(ev) {
+  if(typeof ev === 'object') {
+    if('pageX' in ev) {
+      return ev.pageX
     }
   }
-
-  initScreen () {
-    const self = this
-    Screen().then(function (response) {
-       self.src = response.video
-       self.tex = self.regl.texture(self.src)
-     //  console.log("received screen input")
-     })
-  }
-
-  clear () {
-    this.src = null
-    this.tex = this.regl.texture({
-      shape: [this.width, this.height]
-    })
-  }
-
-  tick (time) {
-
-    if (this.src !== null && this.dynamic === true) {
-        if(this.src.videoWidth && this.src.videoWidth !== this.tex.width) {
-          this.tex.resize(this.src.videoWidth, this.src.videoHeight)
-        }
-        this.tex.subimage(this.src)
-       //this.tex = this.regl.texture(this.src)
-    }
-  }
-
-  getTexture () {
-    return this.tex
-  }
+  return 0
 }
+exports.x = mouseRelativeX
 
-module.exports = HydraSource
-
-},{"./lib/screenmedia.js":16,"./webcam.js":22}],15:[function(require,module,exports){
-var adapter = require('webrtc-adapter');
-// to do: clean up this code
-// cache for constraints and callback
-var cache = {};
-
-module.exports = function (constraints, cb) {
-    var hasConstraints = arguments.length === 2;
-    var callback = hasConstraints ? cb : constraints;
-    var error;
-
-    if (typeof window === 'undefined' || window.location.protocol === 'http:') {
-        error = new Error('NavigatorUserMediaError');
-        error.name = 'HTTPS_REQUIRED';
-        return callback(error);
+function mouseRelativeY(ev) {
+  if(typeof ev === 'object') {
+    if('pageY' in ev) {
+      return ev.pageY
     }
+  }
+  return 0
+}
+exports.y = mouseRelativeY
 
-    if (window.navigator.userAgent.match('Chrome')) {
-      
-        var chromever = parseInt(window.navigator.userAgent.match(/Chrome\/(.*) /)[1], 10);
-        var maxver = 33;
+},{}],18:[function(require,module,exports){
+// based on https://github.com/mikolalysenko/mouse-change
 
-        // check whether running in electron
-        if (window && window.process && window.process.type) {
-          constraints = (hasConstraints && constraints) || {audio: false, video: {
-              mandatory: {
-                  chromeMediaSource: 'desktop',
-                  maxWidth: window.screen.width,
-                  maxHeight: window.screen.height,
-                  maxFrameRate: 3
-              }
-          }};
+'use strict'
 
+module.exports = mouseListen
 
-          console.log("running in electron" , constraints)
-        //  constraints.video.mandatory.chromeMediaSourceId = data.sourceId;
-          window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-              callback(null, stream);
-          }).catch(function (err) {
-              callback(err);
-          })
-        } else {
-          var isCef = !window.chrome.webstore;
-        // "known" crash in chrome 34 and 35 on linux
-          if (window.navigator.userAgent.match('Linux')) maxver = 35;
+var mouse = require('./mouse-event.js')
 
-        // check that the extension is installed by looking for a
-        // sessionStorage variable that contains the extension id
-        // this has to be set after installation unless the contest
-        // script does that
-          if (sessionStorage.getScreenMediaJSExtensionId) {
-              chrome.runtime.sendMessage(sessionStorage.getScreenMediaJSExtensionId,
-                  {type:'getScreen', id: 1}, null,
-                  function (data) {
-                      console.log("getting screen", data)
-                      if (!data || data.sourceId === '') { // user canceled
-                          var error = new Error('NavigatorUserMediaError');
-                          error.name = 'NotAllowedError';
-                          callback(error);
-                      } else {
-                          constraints = (hasConstraints && constraints) || {audio: false, video: {
-                              mandatory: {
-                                  chromeMediaSource: 'desktop',
-                                  maxWidth: window.screen.width,
-                                  maxHeight: window.screen.height,
-                                  maxFrameRate: 3
-                              }
-                          }};
+function mouseListen (element, callback) {
+  if (!callback) {
+    callback = element
+    element = window
+  }
 
+  var buttonState = 0
+  var x = 0
+  var y = 0
+  var mods = {
+    shift: false,
+    alt: false,
+    control: false,
+    meta: false
+  }
+  var attached = false
 
-                          console.log("constriants", constraints)
-                          constraints.video.mandatory.chromeMediaSourceId = data.sourceId;
-                          window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                              callback(null, stream);
-                          }).catch(function (err) {
-                              callback(err);
-                          });
-                      }
-                  }
-              );
-          } else if (window.cefGetScreenMedia) {
-              //window.cefGetScreenMedia is experimental - may be removed without notice
-              window.cefGetScreenMedia(function(sourceId) {
-                  if (!sourceId) {
-                      var error = new Error('cefGetScreenMediaError');
-                      error.name = 'CEF_GETSCREENMEDIA_CANCELED';
-                      callback(error);
-                  } else {
-                      constraints = (hasConstraints && constraints) || {audio: false, video: {
-                          mandatory: {
-                              chromeMediaSource: 'desktop',
-                              maxWidth: window.screen.width,
-                              maxHeight: window.screen.height,
-                              maxFrameRate: 3
-                          },
-                          optional: [
-                              {googLeakyBucket: true},
-                              {googTemporalLayeredScreencast: true}
-                          ]
-                      }};
-                      constraints.video.mandatory.chromeMediaSourceId = sourceId;
-                      window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                          callback(null, stream);
-                      }).catch(function (err) {
-                          callback(err);
-                      });
-                  }
-              });
-          } else if (isCef || (chromever >= 26 && chromever <= maxver)) {
-              // chrome 26 - chrome 33 way to do it -- requires bad chrome://flags
-              // note: this is basically in maintenance mode and will go away soon
-              constraints = (hasConstraints && constraints) || {
-                  video: {
-                      mandatory: {
-                          googLeakyBucket: true,
-                          maxWidth: window.screen.width,
-                          maxHeight: window.screen.height,
-                          maxFrameRate: 3,
-                          chromeMediaSource: 'screen'
-                      }
-                  }
-              };
-              window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                  callback(null, stream);
-              }).catch(function (err) {
-                  callback(err);
-              });
-          } else {
-              // chrome 34+ way requiring an extension
-              var pending = window.setTimeout(function () {
-                  error = new Error('NavigatorUserMediaError');
-                  error.name = 'EXTENSION_UNAVAILABLE';
-                  return callback(error);
-              }, 1000);
-              cache[pending] = [callback, hasConstraints ? constraints : null];
-              window.postMessage({ type: 'getScreen', id: pending }, '*');
-          }
-      }
-    } else if (window.navigator.userAgent.match('Firefox')) {
-        var ffver = parseInt(window.navigator.userAgent.match(/Firefox\/(.*)/)[1], 10);
-        if (ffver >= 33) {
-            constraints = (hasConstraints && constraints) || {
-                video: {
-                    mozMediaSource: 'window',
-                    mediaSource: 'window'
-                }
-            };
-            window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                callback(null, stream);
-                var lastTime = stream.currentTime;
-                var polly = window.setInterval(function () {
-                    if (!stream) window.clearInterval(polly);
-                    if (stream.currentTime == lastTime) {
-                        window.clearInterval(polly);
-                        if (stream.onended) {
-                            stream.onended();
-                        }
-                    }
-                    lastTime = stream.currentTime;
-                }, 500);
-            }).catch(function (err) {
-                callback(err);
-            });
-        } else {
-            error = new Error('NavigatorUserMediaError');
-            error.name = 'EXTENSION_UNAVAILABLE'; // does not make much sense but...
-        }
+  function updateMods (ev) {
+    var changed = false
+    if ('altKey' in ev) {
+      changed = changed || ev.altKey !== mods.alt
+      mods.alt = !!ev.altKey
     }
-};
-
-typeof window !== 'undefined' && window.addEventListener('message', function (event) {
-    if (event.origin != window.location.origin) {
-        return;
+    if ('shiftKey' in ev) {
+      changed = changed || ev.shiftKey !== mods.shift
+      mods.shift = !!ev.shiftKey
     }
-    if (event.data.type == 'gotScreen' && cache[event.data.id]) {
-      alert("got screen!")
-        var data = cache[event.data.id];
-        var constraints = data[1];
-        var callback = data[0];
-        delete cache[event.data.id];
-
-        if (event.data.sourceId === '') { // user canceled
-            var error = new Error('NavigatorUserMediaError');
-            error.name = 'NotAllowedError';
-            callback(error);
-        } else {
-            constraints = constraints || {audio: false, video: {
-                mandatory: {
-                    chromeMediaSource: 'desktop',
-                    maxWidth: window.screen.width,
-                    maxHeight: window.screen.height,
-                    maxFrameRate: 3
-                },
-                optional: [
-                    {googLeakyBucket: true},
-                    {googTemporalLayeredScreencast: true}
-                ]
-            }};
-            constraints.video.mandatory.chromeMediaSourceId = event.data.sourceId;
-            window.navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                callback(null, stream);
-            }).catch(function (err) {
-                callback(err);
-            });
-        }
-    } else if (event.data.type == 'getScreenPending') {
-        window.clearTimeout(event.data.id);
+    if ('ctrlKey' in ev) {
+      changed = changed || ev.ctrlKey !== mods.control
+      mods.control = !!ev.ctrlKey
     }
-});
+    if ('metaKey' in ev) {
+      changed = changed || ev.metaKey !== mods.meta
+      mods.meta = !!ev.metaKey
+    }
+    return changed
+  }
 
-},{"webrtc-adapter":34}],16:[function(require,module,exports){
-const getScreenMedia = require('./getscreenmedia.js')
+  function handleEvent (nextButtons, ev) {
+    var nextX = mouse.x(ev)
+    var nextY = mouse.y(ev)
+    if ('buttons' in ev) {
+      nextButtons = ev.buttons | 0
+    }
+    if (nextButtons !== buttonState ||
+      nextX !== x ||
+      nextY !== y ||
+      updateMods(ev)) {
+      buttonState = nextButtons | 0
+      x = nextX || 0
+      y = nextY || 0
+      callback && callback(buttonState, x, y, mods)
+    }
+  }
 
-module.exports = function (options) {
-  //const regl = options.regl
+  function clearState (ev) {
+    handleEvent(0, ev)
+  }
 
-  // mandatory: {
-  //     chromeMediaSource: 'desktop',
-  //     maxWidth: 640,
-  //     maxHeight: 480
-  // }
-  return new Promise(function(resolve, reject) {
-    getScreenMedia( {audio: false, video: {
-        mandatory: {
-            chromeMediaSource: 'desktop'
-        }
-    }}, function (err, stream) {
-    if (err) {
-      console.log('error getting screen media', err)
-      reject(err)
+  function handleBlur () {
+    if (buttonState ||
+      x ||
+      y ||
+      mods.shift ||
+      mods.alt ||
+      mods.meta ||
+      mods.control) {
+      x = y = 0
+      buttonState = 0
+      mods.shift = mods.alt = mods.control = mods.meta = false
+      callback && callback(0, 0, 0, mods)
+    }
+  }
+
+  function handleMods (ev) {
+    if (updateMods(ev)) {
+      callback && callback(buttonState, x, y, mods)
+    }
+  }
+
+  function handleMouseMove (ev) {
+    if (mouse.buttons(ev) === 0) {
+      handleEvent(0, ev)
     } else {
-      console.log("got stream", stream)
-      const video = document.createElement('video')
-      //video.src = window.URL.createObjectURL(stream)
-      video.srcObject = stream
-     // document.body.appendChild(video)
-      video.addEventListener('loadedmetadata', () => {
-        video.play()
-       // const webcam = regl.texture(video)
-        //regl.frame(() => webcam.subimage(video))
-        resolve({video: video})
-      })
-    //resolve()
+      handleEvent(buttonState, ev)
     }
-  })
-  })
-
-}
-
-},{"./getscreenmedia.js":15}],17:[function(require,module,exports){
-const transforms = require('./glsl-transforms.js')
-
-var Output = function (opts) {
-  this.regl = opts.regl
-  this.positionBuffer = this.regl.buffer([
-    [-2, 0],
-    [0, -2],
-    [2, 2]
-  ])
-
-  this.clear()
-  this.pingPongIndex = 0
-
-  // for each output, create two fbos to use for ping ponging
-  this.fbos = (Array(2)).fill().map(() => this.regl.framebuffer({
-    color: this.regl.texture({
-      width: opts.width,
-      height: opts.height,
-      format: 'rgba'
-    }),
-    depthStencil: false
-  }))
-
-  // array containing render passes
-  this.passes = []
-  // console.log("position", this.positionBuffer)
-}
-
-// Object.keys(transforms).forEach((method) => {
-//   Output.prototype[method] = function (...args) {
-//   //  console.log("applying", method, transforms[method])
-//     this.applyTransform(transforms[method], args)
-//
-//     return this
-//   }
-// })
-
-Output.prototype.getCurrent = function () {
-  // console.log("get current",this.pingPongIndex )
-  return this.fbos[this.pingPongIndex]
-}
-
-Output.prototype.getTexture = function () {
-//  return this.fbos[!this.pingPongIndex]
-  var index = this.pingPongIndex ? 0 : 1
-  //  console.log("get texture",index)
-  return this.fbos[index]
-}
-
-Output.prototype.clear = function () {
-  this.transformIndex = 0
-  this.fragHeader = `
-  precision mediump float;
-
-  uniform float time;
-  varying vec2 uv;
-  `
-  this.fragBody = ``
-  //
-  // uniform vec4 color;
-  // void main () {
-  //   gl_FragColor = color;
-  // }`
-  this.vert = `
-  precision mediump float;
-  attribute vec2 position;
-  varying vec2 uv;
-
-  void main () {
-    uv = position;
-    gl_Position = vec4(2.0 * position - 1.0, 0, 1);
-  }`
-  this.attributes = {
-    position: this.positionBuffer
   }
-  this.uniforms = {
-    time: this.regl.prop('time'),
-    resolution: this.regl.prop('resolution')
+
+  function handleMouseDown (ev) {
+    handleEvent(buttonState | mouse.buttons(ev), ev)
   }
-//  this.compileFragShader()
 
-  this.frag = `
-       ${this.fragHeader}
+  function handleMouseUp (ev) {
+    handleEvent(buttonState & ~mouse.buttons(ev), ev)
+  }
 
-      void main () {
-        vec4 c = vec4(0, 0, 0, 0);
-        vec2 st = uv;
-        ${this.fragBody}
-        gl_FragColor = c;
-      }
-  `
-  return this
-}
-
-
-// Output.prototype.compileFragShader = function () {
-//   var frag = `
-//     ${this.fragHeader}
-//
-//     void main () {
-//       vec4 c = vec4(0, 0, 0, 0);
-//       vec2 st = uv;
-//       ${this.fragBody}
-//       gl_FragColor = c;
-//     }
-//   `
-// // console.log("FRAG", frag)
-//   this.frag = frag
-// }
-
-Output.prototype.render = function () {
-  this.draw = this.regl({
-    frag: this.frag,
-    vert: this.vert,
-    attributes: this.attributes,
-    uniforms: this.uniforms,
-    count: 3,
-    framebuffer: () => {
-      this.pingPongIndex = this.pingPongIndex ? 0 : 1
-      return this.fbos[this.pingPongIndex]
+  function attachListeners () {
+    if (attached) {
+      return
     }
-  })
-}
+    attached = true
 
-Output.prototype.renderPasses = function(passes) {
-  var self = this
-//  console.log("passes", passes)
-  this.passes = passes.map( (pass, passIndex) => {
+    element.addEventListener('mousemove', handleMouseMove)
 
-    //  console.log("get texture",index)
-    var uniforms = Object.assign(pass.uniforms, { prevBuffer:  () =>  {
-           var index = this.pingPongIndex ? 0 : 1
-        //  console.log('pass index', passIndex, 'fbo index', index)
-         return this.fbos[this.pingPongIndex ? 0 : 1]
+    element.addEventListener('mousedown', handleMouseDown)
+
+    element.addEventListener('mouseup', handleMouseUp)
+
+    element.addEventListener('mouseleave', clearState)
+    element.addEventListener('mouseenter', clearState)
+    element.addEventListener('mouseout', clearState)
+    element.addEventListener('mouseover', clearState)
+
+    element.addEventListener('blur', handleBlur)
+
+    element.addEventListener('keyup', handleMods)
+    element.addEventListener('keydown', handleMods)
+    element.addEventListener('keypress', handleMods)
+
+    if (element !== window) {
+      window.addEventListener('blur', handleBlur)
+
+      window.addEventListener('keyup', handleMods)
+      window.addEventListener('keydown', handleMods)
+      window.addEventListener('keypress', handleMods)
+    }
+  }
+
+  function detachListeners () {
+    if (!attached) {
+      return
+    }
+    attached = false
+
+    element.removeEventListener('mousemove', handleMouseMove)
+
+    element.removeEventListener('mousedown', handleMouseDown)
+
+    element.removeEventListener('mouseup', handleMouseUp)
+
+    element.removeEventListener('mouseleave', clearState)
+    element.removeEventListener('mouseenter', clearState)
+    element.removeEventListener('mouseout', clearState)
+    element.removeEventListener('mouseover', clearState)
+
+    element.removeEventListener('blur', handleBlur)
+
+    element.removeEventListener('keyup', handleMods)
+    element.removeEventListener('keydown', handleMods)
+    element.removeEventListener('keypress', handleMods)
+
+    if (element !== window) {
+      window.removeEventListener('blur', handleBlur)
+
+      window.removeEventListener('keyup', handleMods)
+      window.removeEventListener('keydown', handleMods)
+      window.removeEventListener('keypress', handleMods)
+    }
+  }
+
+  // Attach listeners
+  attachListeners()
+
+  var result = {
+    element: element
+  }
+
+  Object.defineProperties(result, {
+    enabled: {
+      get: function () { return attached },
+      set: function (f) {
+        if (f) {
+          attachListeners()
+        } else {
+          detachListeners()
         }
-      })
-
-      return {
-        draw: self.regl({
-          frag: pass.frag,
-          vert: self.vert,
-          attributes: self.attributes,
-          uniforms: uniforms,
-          count: 3,
-          framebuffer: () => {
-
-            self.pingPongIndex = self.pingPongIndex ? 0 : 1
-          //  console.log('pass index', passIndex, 'render index',  self.pingPongIndex)
-            return self.fbos[self.pingPongIndex]
-          }
-        })
-      }
+      },
+      enumerable: true
+    },
+    buttons: {
+      get: function () { return buttonState },
+      enumerable: true
+    },
+    x: {
+      get: function () { return x },
+      enumerable: true
+    },
+    y: {
+      get: function () { return y },
+      enumerable: true
+    },
+    mods: {
+      get: function () { return mods },
+      enumerable: true
+    }
   })
+
+  return result
 }
 
-Output.prototype.tick = function (props) {
-//  this.draw(props)
-  this.passes.forEach((pass) => pass.draw(props))
-}
+},{"./mouse-event.js":17}],19:[function(require,module,exports){
+// attempt custom evaluation sandbox for hydra functions
+// for now, just avoids polluting the global namespace
+// should probably be replaced with an abstract syntax tree
 
-module.exports = Output
+module.exports = (parent) => {
+  var initialCode = ``
 
-},{"./glsl-transforms.js":13}],18:[function(require,module,exports){
-// to add: ripple: https://www.shadertoy.com/view/4djGzz
-// mask
-// convolution
-// basic sdf shapes
-// repeat
-// iq color palletes
+  var sandbox = createSandbox(initialCode)
 
-module.exports = {
-  _convolution: {
-    type: 'renderpass_util',
-    glsl: `
-      float kernel [9];
-
-      vec4 _convolution (vec2 uv, float[9] _kernel, float kernelWeight) {
-        vec2 st = uv/resolution;
-        vec2 onePixel = vec2(4.0, 4.0) / resolution;
-        //  vec2 onePixel = vec2(1.0, 1.0);
-        vec4 colorSum =
-          texture2D(prevBuffer, st + onePixel * vec2(-1, -1)) * _kernel[0] +
-          texture2D(prevBuffer, st + onePixel * vec2( 0, -1)) * _kernel[1] +
-          texture2D(prevBuffer, st + onePixel * vec2( 1, -1)) * _kernel[2] +
-          texture2D(prevBuffer, st + onePixel * vec2(-1,  0)) * _kernel[3] +
-          texture2D(prevBuffer, st + onePixel * vec2( 0,  0)) * _kernel[4] +
-          texture2D(prevBuffer, st + onePixel * vec2( 1,  0)) * _kernel[5] +
-          texture2D(prevBuffer, st + onePixel * vec2(-1,  1)) * _kernel[6] +
-          texture2D(prevBuffer, st + onePixel * vec2( 0,  1)) * _kernel[7] +
-          texture2D(prevBuffer, st + onePixel * vec2( 1,  1)) * _kernel[8] ;
-        colorSum /= kernelWeight;
-        return colorSum;
-      }
+  var addToContext = (name, object) => {
+    initialCode += `
+      var ${name} = ${object}
     `
-  },
-  rgbShift: {
-    type: 'renderpass',
-    glsl: `
+    sandbox = createSandbox(initialCode)
+  }
 
-    void main() {
-      vec2 p = st;
-      vec4 shift = vec4(-0.01, 0.02, 0.03, -0.04);
-      vec2 rs = vec2(shift.x,-shift.y);
-      vec2 gs = vec2(shift.y,-shift.z);
-      vec2 bs = vec2(shift.z,-shift.x);
 
-      float r = texture2D(prevBuffer, p+rs, 0.0).x;
-      float g = texture2D(prevBuffer, p+gs, 0.0).y;
-      float b = texture2D(prevBuffer, p+bs, 0.0).z;
+  return {
+    addToContext: addToContext,
+    eval: (code) => sandbox.eval(code)
+  }
+
+  function createSandbox (initial) {
+    eval(initial)
+    // optional params
+    var localEval = function (code)  {
+      eval(code)
     }
-    `
-  },
-  edges: {
-    type: 'renderpass',
-    glsl: `
-      void main () {
-    //    kernel[0] = -0.125; kernel[1] = -0.125; kernel[2] = -0.125;
-      //  kernel[3] = -0.125; kernel[4] = 1.0; kernel[5] = -0.125;
-      //  kernel[6] = -0.125; kernel[7] = -0.125; kernel[8] = -0.125;
 
-// blur
-     kernel[0] = 0.0; kernel[1] = 1.0; kernel[2] = 0.0;
-     kernel[3] = 1.0; kernel[4] = 1.0; kernel[5] = 1.0;
-     kernel[6] = 0.0; kernel[7] = 1.0; kernel[8] = 0.0;
-
-      kernel[0] = 5.0; kernel[1] = -0.0; kernel[2] = -0.0;
-      kernel[3] = 0.0; kernel[4] = 0.0; kernel[5] = 0.0;
-      kernel[6] = -0.0; kernel[7] = -0.0; kernel[8] = -5.0;
-
-        vec4 sum = _convolution( gl_FragCoord.xy, kernel, 10.0);
-        gl_FragColor = clamp(sum , vec4(0.0), vec4(1.0));
-    //   vec2 st = gl_FragCoord.xy/resolution;
-    //    vec4 col = texture2D(prevBuffer, fract(st));
-    //  gl_FragColor = vec4(st, 1.0, 1.0);
-      }
-    `
-  }
-}
-
-},{}],19:[function(require,module,exports){
-// to do:
-// 1. how to handle multi-pass renders
-// 2. how to handle vertex shaders
-
-module.exports = function (defaultOutput) {
-
-  var Frag = function (shaderString) {
-    var obj =  Object.create(Frag.prototype)
-    obj.shaderString =   `
-    void main () {
-      vec2 st = gl_FragCoord.xy/resolution;
-      gl_FragColor = vec4(st, 1.0, 1.0);
+    // API/data for end-user
+    return {
+      eval: localEval
     }
-    `
-    if(shaderString) obj.shaderString = shaderString
-    return obj
   }
-
-  Frag.prototype.compile = function () {
-    var frag = `
-    precision mediump float;
-    uniform float time;
-    uniform vec2 resolution;
-    varying vec2 uv;
-
-    ${this.shaderString}
-    `
-    return frag
-  }
-
-  Frag.prototype.out = function (_output) {
-    var output = _output || defaultOutput
-    var frag = this.compile()
-    output.frag = frag
-    var pass = {
-      frag: frag,
-      uniforms: output.uniforms
-    }
-    console.log('rendering', pass)
-    var passes = []
-    passes.push(pass)
-    output.renderPasses([pass])
-    // var uniformObj = {}
-    // this.uniforms.forEach((uniform) => { uniformObj[uniform.name] = uniform.value })
-    // output.uniforms = Object.assign(output.uniforms, uniformObj)
-    output.render()
-  }
-
-  return Frag
 }
 
 },{}],20:[function(require,module,exports){
-// some utility functions for managing time within hydra
-// to do: add easing functions: https://github.com/bameyrick/js-easing-functions
 
-// accepts a sequence of values as an array
-const seq = (arr = []) => ({time, bpm}) =>
-{
-   let speed = arr.speed ? arr.speed : 1
-   return arr[Math.floor(time * speed * (bpm / 60) % (arr.length))]
-}
-
-// base sin oscillation
-const sin = (amplitude = 1, period = 0.1, offset = 0, offsetTime = 0) => ({time, bpm}) => {
-	return amplitude * Math.sin((time + offsetTime) * period * (bpm / 60)) + offset
-}
-
-// continuously increasing
-const ramp = (scale = 1, offset = 0) => ({time, bpm}) => (time * scale + offset)
-
-// Utility functions and variables for managing fade in and outs:
-// creates a set of variables to store state.
-// usage: osc(f0(10, 100)).out() , where there variables are: minimum, maximum, and multiple in time
-// call fadeIn(0) to fade in all instances of f0, and fadeOut(0) to fadeOut
-function createFades (numFades) {
-  // variables containing current state of fade
-  const gain = Array(numFades).fill().map(() => ({ progress: 0, dir: 1, mult: 1}))
-
-  // fade function to use as parameter
-  const fade = (i) => (min = 0, max = 10, mult = 1) => () => {
-  //  console.log("gain", gain)
-  	gain[i].progress++
-  	if(gain[i].dir > 0) {
-  		return Math.min(max, min + gain[i].progress * mult * gain[i].mult)
-  	} else {
-  		return Math.max(min, max - gain[i].progress * mult * gain[i].mult)
-  	}
-  }
-
-  // to do: put this code somewhere else
-  gain.forEach((gain, index) => {
-    window['f'+index] = fade(index)
+module.exports = function (options) {
+  return new Promise(function(resolve, reject) {
+    //  async function startCapture(displayMediaOptions) {
+    navigator.mediaDevices.getDisplayMedia(options).then((stream) => {
+      const video = document.createElement('video')
+      video.srcObject = stream
+      video.addEventListener('loadedmetadata', () => {
+        video.play()
+        resolve({video: video})
+      })
+    }).catch((err) => reject(err))
   })
-
-  window.fadeIn = (index, _mult) => {
-  	gain[index] = {
-  		progress: 0, dir: 1, mult: _mult ? _mult : 1
-  	}
-  }
-  //
-  window.fadeOut = (index, _mult) => {
-  	gain[index] = {
-  		progress: 0, dir: -1, mult: _mult ? _mult : 1
-  	}
-  }
-}
-
-module.exports = {
-  seq: seq,
-  sin: sin,
-  ramp: ramp,
-  createFades: createFades
 }
 
 },{}],21:[function(require,module,exports){
@@ -3943,42 +3738,161 @@ class VideoRecorder {
 module.exports = VideoRecorder
 
 },{}],22:[function(require,module,exports){
-const getUserMedia = require('getusermedia')
-const enumerateDevices = require('enumerate-devices')
+//const enumerateDevices = require('enumerate-devices')
 
 module.exports = function (deviceId) {
-  return new Promise(function (resolve, reject) {
-    enumerateDevices()
+  return navigator.mediaDevices.enumerateDevices()
     .then(devices => devices.filter(devices => devices.kind === 'videoinput'))
-    .then(cameras =>
-      {
-        let constraints = { audio: false, video: true}
-        if(cameras[deviceId]) {
-          constraints['video'] = {
-            deviceId: { exact: cameras[deviceId].deviceId }
-          }
+    .then(cameras => {
+      let constraints = { audio: false, video: true}
+      if (cameras[deviceId]) {
+        constraints['video'] = {
+          deviceId: { exact: cameras[deviceId].deviceId }
         }
-        getUserMedia(constraints, function (err, stream) {
-          if(err) {
-            reject(err)
-          } else {
-            const video = document.createElement('video')
-          //  video.src = window.URL.createObjectURL(stream)
-          video.srcObject = stream
-            video.addEventListener('loadedmetadata', () => {
-              video.play().then(() => resolve({video: video}))
-            })
+      }
+    //  console.log(cameras)
+      return window.navigator.mediaDevices.getUserMedia(constraints)
+    })
+    .then(stream => {
+      const video = document.createElement('video')
+      //  video.src = window.URL.createObjectURL(stream)
+      video.srcObject = stream
+      return new Promise((resolve, reject) => {
+        video.addEventListener('loadedmetadata', () => {
+          video.play().then(() => resolve({video: video}))
+        })
+      })
+    })
+    .catch(console.log.bind(console))
+}
+
+},{}],23:[function(require,module,exports){
+//const transforms = require('./glsl-transforms.js')
+
+var Output = function ({ regl, precision, label = "", width, height}) {
+  this.regl = regl
+  this.precision = precision
+  this.label = label
+  this.positionBuffer = this.regl.buffer([
+    [-2, 0],
+    [0, -2],
+    [2, 2]
+  ])
+
+  this.draw = () => {}
+  this.init()
+  this.pingPongIndex = 0
+
+  // for each output, create two fbos for pingponging
+  this.fbos = (Array(2)).fill().map(() => this.regl.framebuffer({
+    color: this.regl.texture({
+      mag: 'nearest',
+      width: width,
+      height: height,
+      format: 'rgba'
+    }),
+    depthStencil: false
+  }))
+
+  // array containing render passes
+//  this.passes = []
+}
+
+Output.prototype.resize = function(width, height) {
+  this.fbos.forEach((fbo) => {
+    fbo.resize(width, height)
+  })
+//  console.log(this)
+}
+
+
+Output.prototype.getCurrent = function () {
+  return this.fbos[this.pingPongIndex]
+}
+
+Output.prototype.getTexture = function () {
+   var index = this.pingPongIndex ? 0 : 1
+  return this.fbos[index]
+}
+
+Output.prototype.init = function () {
+//  console.log('clearing')
+  this.transformIndex = 0
+  this.fragHeader = `
+  precision ${this.precision} float;
+
+  uniform float time;
+  varying vec2 uv;
+  `
+
+  this.fragBody = ``
+
+  this.vert = `
+  precision ${this.precision} float;
+  attribute vec2 position;
+  varying vec2 uv;
+
+  void main () {
+    uv = position;
+    gl_Position = vec4(2.0 * position - 1.0, 0, 1);
+  }`
+
+  this.attributes = {
+    position: this.positionBuffer
+  }
+  this.uniforms = {
+    time: this.regl.prop('time'),
+    resolution: this.regl.prop('resolution')
+  }
+
+  this.frag = `
+       ${this.fragHeader}
+
+      void main () {
+        vec4 c = vec4(0, 0, 0, 0);
+        vec2 st = uv;
+        ${this.fragBody}
+        gl_FragColor = c;
+      }
+  `
+  return this
+}
+
+
+Output.prototype.render = function (passes) {
+  let pass = passes[0]
+  //console.log('pass', pass, this.pingPongIndex)
+  var self = this
+      var uniforms = Object.assign(pass.uniforms, { prevBuffer:  () =>  {
+             //var index = this.pingPongIndex ? 0 : 1
+          //   var index = self.pingPong[(passIndex+1)%2]
+          //  console.log('ping pong', self.pingPongIndex)
+            return self.fbos[self.pingPongIndex]
           }
         })
 
-        console.log(cameras)
-      }
-    ).catch(console.log.bind(console))
-
+  self.draw = self.regl({
+    frag: pass.frag,
+    vert: self.vert,
+    attributes: self.attributes,
+    uniforms: uniforms,
+    count: 3,
+    framebuffer: () => {
+      self.pingPongIndex = self.pingPongIndex ? 0 : 1
+      return self.fbos[self.pingPongIndex]
+    }
   })
 }
 
-},{"enumerate-devices":5,"getusermedia":7}],23:[function(require,module,exports){
+
+Output.prototype.tick = function (props) {
+//  console.log(props)
+  this.draw(props)
+}
+
+module.exports = Output
+
+},{}],24:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -4003,7 +3917,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -7308,276 +7222,7 @@ function hamming(size) {
 /******/ });
 });
 
-},{}],25:[function(require,module,exports){
-'use strict'
-
-module.exports = mouseListen
-
-var mouse = require('mouse-event')
-
-function mouseListen (element, callback) {
-  if (!callback) {
-    callback = element
-    element = window
-  }
-
-  var buttonState = 0
-  var x = 0
-  var y = 0
-  var mods = {
-    shift: false,
-    alt: false,
-    control: false,
-    meta: false
-  }
-  var attached = false
-
-  function updateMods (ev) {
-    var changed = false
-    if ('altKey' in ev) {
-      changed = changed || ev.altKey !== mods.alt
-      mods.alt = !!ev.altKey
-    }
-    if ('shiftKey' in ev) {
-      changed = changed || ev.shiftKey !== mods.shift
-      mods.shift = !!ev.shiftKey
-    }
-    if ('ctrlKey' in ev) {
-      changed = changed || ev.ctrlKey !== mods.control
-      mods.control = !!ev.ctrlKey
-    }
-    if ('metaKey' in ev) {
-      changed = changed || ev.metaKey !== mods.meta
-      mods.meta = !!ev.metaKey
-    }
-    return changed
-  }
-
-  function handleEvent (nextButtons, ev) {
-    var nextX = mouse.x(ev)
-    var nextY = mouse.y(ev)
-    if ('buttons' in ev) {
-      nextButtons = ev.buttons | 0
-    }
-    if (nextButtons !== buttonState ||
-      nextX !== x ||
-      nextY !== y ||
-      updateMods(ev)) {
-      buttonState = nextButtons | 0
-      x = nextX || 0
-      y = nextY || 0
-      callback && callback(buttonState, x, y, mods)
-    }
-  }
-
-  function clearState (ev) {
-    handleEvent(0, ev)
-  }
-
-  function handleBlur () {
-    if (buttonState ||
-      x ||
-      y ||
-      mods.shift ||
-      mods.alt ||
-      mods.meta ||
-      mods.control) {
-      x = y = 0
-      buttonState = 0
-      mods.shift = mods.alt = mods.control = mods.meta = false
-      callback && callback(0, 0, 0, mods)
-    }
-  }
-
-  function handleMods (ev) {
-    if (updateMods(ev)) {
-      callback && callback(buttonState, x, y, mods)
-    }
-  }
-
-  function handleMouseMove (ev) {
-    if (mouse.buttons(ev) === 0) {
-      handleEvent(0, ev)
-    } else {
-      handleEvent(buttonState, ev)
-    }
-  }
-
-  function handleMouseDown (ev) {
-    handleEvent(buttonState | mouse.buttons(ev), ev)
-  }
-
-  function handleMouseUp (ev) {
-    handleEvent(buttonState & ~mouse.buttons(ev), ev)
-  }
-
-  function attachListeners () {
-    if (attached) {
-      return
-    }
-    attached = true
-
-    element.addEventListener('mousemove', handleMouseMove)
-
-    element.addEventListener('mousedown', handleMouseDown)
-
-    element.addEventListener('mouseup', handleMouseUp)
-
-    element.addEventListener('mouseleave', clearState)
-    element.addEventListener('mouseenter', clearState)
-    element.addEventListener('mouseout', clearState)
-    element.addEventListener('mouseover', clearState)
-
-    element.addEventListener('blur', handleBlur)
-
-    element.addEventListener('keyup', handleMods)
-    element.addEventListener('keydown', handleMods)
-    element.addEventListener('keypress', handleMods)
-
-    if (element !== window) {
-      window.addEventListener('blur', handleBlur)
-
-      window.addEventListener('keyup', handleMods)
-      window.addEventListener('keydown', handleMods)
-      window.addEventListener('keypress', handleMods)
-    }
-  }
-
-  function detachListeners () {
-    if (!attached) {
-      return
-    }
-    attached = false
-
-    element.removeEventListener('mousemove', handleMouseMove)
-
-    element.removeEventListener('mousedown', handleMouseDown)
-
-    element.removeEventListener('mouseup', handleMouseUp)
-
-    element.removeEventListener('mouseleave', clearState)
-    element.removeEventListener('mouseenter', clearState)
-    element.removeEventListener('mouseout', clearState)
-    element.removeEventListener('mouseover', clearState)
-
-    element.removeEventListener('blur', handleBlur)
-
-    element.removeEventListener('keyup', handleMods)
-    element.removeEventListener('keydown', handleMods)
-    element.removeEventListener('keypress', handleMods)
-
-    if (element !== window) {
-      window.removeEventListener('blur', handleBlur)
-
-      window.removeEventListener('keyup', handleMods)
-      window.removeEventListener('keydown', handleMods)
-      window.removeEventListener('keypress', handleMods)
-    }
-  }
-
-  // Attach listeners
-  attachListeners()
-
-  var result = {
-    element: element
-  }
-
-  Object.defineProperties(result, {
-    enabled: {
-      get: function () { return attached },
-      set: function (f) {
-        if (f) {
-          attachListeners()
-        } else {
-          detachListeners()
-        }
-      },
-      enumerable: true
-    },
-    buttons: {
-      get: function () { return buttonState },
-      enumerable: true
-    },
-    x: {
-      get: function () { return x },
-      enumerable: true
-    },
-    y: {
-      get: function () { return y },
-      enumerable: true
-    },
-    mods: {
-      get: function () { return mods },
-      enumerable: true
-    }
-  })
-
-  return result
-}
-
-},{"mouse-event":26}],26:[function(require,module,exports){
-'use strict'
-
-function mouseButtons(ev) {
-  if(typeof ev === 'object') {
-    if('buttons' in ev) {
-      return ev.buttons
-    } else if('which' in ev) {
-      var b = ev.which
-      if(b === 2) {
-        return 4
-      } else if(b === 3) {
-        return 2
-      } else if(b > 0) {
-        return 1<<(b-1)
-      }
-    } else if('button' in ev) {
-      var b = ev.button
-      if(b === 1) {
-        return 4
-      } else if(b === 2) {
-        return 2
-      } else if(b >= 0) {
-        return 1<<b
-      }
-    }
-  }
-  return 0
-}
-exports.buttons = mouseButtons
-
-function mouseElement(ev) {
-  return ev.target || ev.srcElement || window
-}
-exports.element = mouseElement
-
-function mouseRelativeX(ev) {
-  if(typeof ev === 'object') {
-    if('offsetX' in ev) {
-      return ev.offsetX
-    }
-    var target = mouseElement(ev)
-    var bounds = target.getBoundingClientRect()
-    return ev.clientX - bounds.left
-  }
-  return 0
-}
-exports.x = mouseRelativeX
-
-function mouseRelativeY(ev) {
-  if(typeof ev === 'object') {
-    if('offsetY' in ev) {
-      return ev.offsetY
-    }
-    var target = mouseElement(ev)
-    var bounds = target.getBoundingClientRect()
-    return ev.clientY - bounds.top
-  }
-  return 0
-}
-exports.y = mouseRelativeY
-
-},{}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (process){
 // Generated by CoffeeScript 1.12.2
 (function() {
@@ -7617,7 +7262,7 @@ exports.y = mouseRelativeY
 
 
 }).call(this,require('_process'))
-},{"_process":28}],28:[function(require,module,exports){
+},{"_process":27}],27:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -7803,7 +7448,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var inherits = require('inherits')
 var EventEmitter = require('events').EventEmitter
 var now = require('right-now')
@@ -7848,7 +7493,7 @@ Engine.prototype.tick = function() {
     this.emit('tick', dt)
     this.last = time
 }
-},{"events":6,"inherits":23,"raf":30,"right-now":32}],30:[function(require,module,exports){
+},{"events":4,"inherits":24,"raf":29,"right-now":31}],29:[function(require,module,exports){
 (function (global){
 var now = require('performance-now')
   , root = typeof window === 'undefined' ? global : window
@@ -7927,7 +7572,7 @@ module.exports.polyfill = function(object) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"performance-now":27}],31:[function(require,module,exports){
+},{"performance-now":26}],30:[function(require,module,exports){
 (function(aa,ia){"object"===typeof exports&&"undefined"!==typeof module?module.exports=ia():"function"===typeof define&&define.amd?define(ia):aa.createREGL=ia()})(this,function(){function aa(a,b){this.id=Ab++;this.type=a;this.data=b}function ia(a){if(0===a.length)return[];var b=a.charAt(0),c=a.charAt(a.length-1);if(1<a.length&&b===c&&('"'===b||"'"===b))return['"'+a.substr(1,a.length-2).replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"'];if(b=/\[(false|true|null|\d+|'[^']*'|"[^"]*")\]/.exec(a))return ia(a.substr(0,
 b.index)).concat(ia(b[1])).concat(ia(a.substr(b.index+b[0].length)));b=a.split(".");if(1===b.length)return['"'+a.replace(/\\/g,"\\\\").replace(/"/g,'\\"')+'"'];a=[];for(c=0;c<b.length;++c)a=a.concat(ia(b[c]));return a}function Za(a){return"["+ia(a).join("][")+"]"}function Bb(){var a={"":0},b=[""];return{id:function(c){var e=a[c];if(e)return e;e=a[c]=b.length;b.push(c);return e},str:function(a){return b[a]}}}function Cb(a,b,c){function e(){var b=window.innerWidth,e=window.innerHeight;a!==document.body&&
 (e=a.getBoundingClientRect(),b=e.right-e.left,e=e.bottom-e.top);g.width=c*b;g.height=c*e;E(g.style,{width:b+"px",height:e+"px"})}var g=document.createElement("canvas");E(g.style,{border:0,margin:0,padding:0,top:0,left:0});a.appendChild(g);a===document.body&&(g.style.position="absolute",E(a.style,{margin:0,padding:0}));window.addEventListener("resize",e,!1);e();return{canvas:g,onDestroy:function(){window.removeEventListener("resize",e);a.removeChild(g)}}}function Db(a,b){function c(c){try{return a.getContext(c,
@@ -8079,7 +7724,7 @@ instances:-1},O,B,a),u=Rb(k,K,V.procs.poll,O,h,x,R),S=V.next,L=k.canvas,G=[],U=[
 1),context:la.define.bind(null,2),"this":la.define.bind(null,3),draw:n({}),buffer:function(a){return F.create(a,34962,!1,!1)},elements:function(a){return T.create(a,!1)},texture:A.create2D,cube:A.createCube,renderbuffer:M.create,framebuffer:K.create,framebufferCube:K.createCube,attributes:h,frame:r,on:function(a,b){var c;switch(a){case "frame":return r(b);case "lost":c=U;break;case "restore":c=W;break;case "destroy":c=Z}c.push(b);return{cancel:function(){for(var a=0;a<c.length;++a)if(c[a]===b){c[a]=
 c[c.length-1];c.pop();break}}}},limits:R,hasExtension:function(a){return 0<=R.extensions.indexOf(a.toLowerCase())},read:u,destroy:function(){G.length=0;e();L&&(L.removeEventListener("webglcontextlost",g),L.removeEventListener("webglcontextrestored",d));Q.clear();K.clear();M.clear();A.clear();T.clear();F.clear();B&&B.clear();Z.forEach(function(a){a()})},_gl:k,_refresh:m,poll:function(){t();B&&B.update()},now:y,stats:v});a.onDone(null,h);return h}});
 
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (global){
 module.exports =
   global.performance &&
@@ -8090,2826 +7735,4 @@ module.exports =
   }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],33:[function(require,module,exports){
- /* eslint-env node */
-'use strict';
-
-// SDP helpers.
-var SDPUtils = {};
-
-// Generate an alphanumeric identifier for cname or mids.
-// TODO: use UUIDs instead? https://gist.github.com/jed/982883
-SDPUtils.generateIdentifier = function() {
-  return Math.random().toString(36).substr(2, 10);
-};
-
-// The RTCP CNAME used by all peerconnections from the same JS.
-SDPUtils.localCName = SDPUtils.generateIdentifier();
-
-// Splits SDP into lines, dealing with both CRLF and LF.
-SDPUtils.splitLines = function(blob) {
-  return blob.trim().split('\n').map(function(line) {
-    return line.trim();
-  });
-};
-// Splits SDP into sessionpart and mediasections. Ensures CRLF.
-SDPUtils.splitSections = function(blob) {
-  var parts = blob.split('\nm=');
-  return parts.map(function(part, index) {
-    return (index > 0 ? 'm=' + part : part).trim() + '\r\n';
-  });
-};
-
-// Returns lines that start with a certain prefix.
-SDPUtils.matchPrefix = function(blob, prefix) {
-  return SDPUtils.splitLines(blob).filter(function(line) {
-    return line.indexOf(prefix) === 0;
-  });
-};
-
-// Parses an ICE candidate line. Sample input:
-// candidate:702786350 2 udp 41819902 8.8.8.8 60769 typ relay raddr 8.8.8.8
-// rport 55996"
-SDPUtils.parseCandidate = function(line) {
-  var parts;
-  // Parse both variants.
-  if (line.indexOf('a=candidate:') === 0) {
-    parts = line.substring(12).split(' ');
-  } else {
-    parts = line.substring(10).split(' ');
-  }
-
-  var candidate = {
-    foundation: parts[0],
-    component: parts[1],
-    protocol: parts[2].toLowerCase(),
-    priority: parseInt(parts[3], 10),
-    ip: parts[4],
-    port: parseInt(parts[5], 10),
-    // skip parts[6] == 'typ'
-    type: parts[7]
-  };
-
-  for (var i = 8; i < parts.length; i += 2) {
-    switch (parts[i]) {
-      case 'raddr':
-        candidate.relatedAddress = parts[i + 1];
-        break;
-      case 'rport':
-        candidate.relatedPort = parseInt(parts[i + 1], 10);
-        break;
-      case 'tcptype':
-        candidate.tcpType = parts[i + 1];
-        break;
-      default: // extension handling, in particular ufrag
-        candidate[parts[i]] = parts[i + 1];
-        break;
-    }
-  }
-  return candidate;
-};
-
-// Translates a candidate object into SDP candidate attribute.
-SDPUtils.writeCandidate = function(candidate) {
-  var sdp = [];
-  sdp.push(candidate.foundation);
-  sdp.push(candidate.component);
-  sdp.push(candidate.protocol.toUpperCase());
-  sdp.push(candidate.priority);
-  sdp.push(candidate.ip);
-  sdp.push(candidate.port);
-
-  var type = candidate.type;
-  sdp.push('typ');
-  sdp.push(type);
-  if (type !== 'host' && candidate.relatedAddress &&
-      candidate.relatedPort) {
-    sdp.push('raddr');
-    sdp.push(candidate.relatedAddress); // was: relAddr
-    sdp.push('rport');
-    sdp.push(candidate.relatedPort); // was: relPort
-  }
-  if (candidate.tcpType && candidate.protocol.toLowerCase() === 'tcp') {
-    sdp.push('tcptype');
-    sdp.push(candidate.tcpType);
-  }
-  return 'candidate:' + sdp.join(' ');
-};
-
-// Parses an ice-options line, returns an array of option tags.
-// a=ice-options:foo bar
-SDPUtils.parseIceOptions = function(line) {
-  return line.substr(14).split(' ');
-}
-
-// Parses an rtpmap line, returns RTCRtpCoddecParameters. Sample input:
-// a=rtpmap:111 opus/48000/2
-SDPUtils.parseRtpMap = function(line) {
-  var parts = line.substr(9).split(' ');
-  var parsed = {
-    payloadType: parseInt(parts.shift(), 10) // was: id
-  };
-
-  parts = parts[0].split('/');
-
-  parsed.name = parts[0];
-  parsed.clockRate = parseInt(parts[1], 10); // was: clockrate
-  // was: channels
-  parsed.numChannels = parts.length === 3 ? parseInt(parts[2], 10) : 1;
-  return parsed;
-};
-
-// Generate an a=rtpmap line from RTCRtpCodecCapability or
-// RTCRtpCodecParameters.
-SDPUtils.writeRtpMap = function(codec) {
-  var pt = codec.payloadType;
-  if (codec.preferredPayloadType !== undefined) {
-    pt = codec.preferredPayloadType;
-  }
-  return 'a=rtpmap:' + pt + ' ' + codec.name + '/' + codec.clockRate +
-      (codec.numChannels !== 1 ? '/' + codec.numChannels : '') + '\r\n';
-};
-
-// Parses an a=extmap line (headerextension from RFC 5285). Sample input:
-// a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
-// a=extmap:2/sendonly urn:ietf:params:rtp-hdrext:toffset
-SDPUtils.parseExtmap = function(line) {
-  var parts = line.substr(9).split(' ');
-  return {
-    id: parseInt(parts[0], 10),
-    direction: parts[0].indexOf('/') > 0 ? parts[0].split('/')[1] : 'sendrecv',
-    uri: parts[1]
-  };
-};
-
-// Generates a=extmap line from RTCRtpHeaderExtensionParameters or
-// RTCRtpHeaderExtension.
-SDPUtils.writeExtmap = function(headerExtension) {
-  return 'a=extmap:' + (headerExtension.id || headerExtension.preferredId) +
-      (headerExtension.direction && headerExtension.direction !== 'sendrecv'
-          ? '/' + headerExtension.direction
-          : '') +
-      ' ' + headerExtension.uri + '\r\n';
-};
-
-// Parses an ftmp line, returns dictionary. Sample input:
-// a=fmtp:96 vbr=on;cng=on
-// Also deals with vbr=on; cng=on
-SDPUtils.parseFmtp = function(line) {
-  var parsed = {};
-  var kv;
-  var parts = line.substr(line.indexOf(' ') + 1).split(';');
-  for (var j = 0; j < parts.length; j++) {
-    kv = parts[j].trim().split('=');
-    parsed[kv[0].trim()] = kv[1];
-  }
-  return parsed;
-};
-
-// Generates an a=ftmp line from RTCRtpCodecCapability or RTCRtpCodecParameters.
-SDPUtils.writeFmtp = function(codec) {
-  var line = '';
-  var pt = codec.payloadType;
-  if (codec.preferredPayloadType !== undefined) {
-    pt = codec.preferredPayloadType;
-  }
-  if (codec.parameters && Object.keys(codec.parameters).length) {
-    var params = [];
-    Object.keys(codec.parameters).forEach(function(param) {
-      params.push(param + '=' + codec.parameters[param]);
-    });
-    line += 'a=fmtp:' + pt + ' ' + params.join(';') + '\r\n';
-  }
-  return line;
-};
-
-// Parses an rtcp-fb line, returns RTCPRtcpFeedback object. Sample input:
-// a=rtcp-fb:98 nack rpsi
-SDPUtils.parseRtcpFb = function(line) {
-  var parts = line.substr(line.indexOf(' ') + 1).split(' ');
-  return {
-    type: parts.shift(),
-    parameter: parts.join(' ')
-  };
-};
-// Generate a=rtcp-fb lines from RTCRtpCodecCapability or RTCRtpCodecParameters.
-SDPUtils.writeRtcpFb = function(codec) {
-  var lines = '';
-  var pt = codec.payloadType;
-  if (codec.preferredPayloadType !== undefined) {
-    pt = codec.preferredPayloadType;
-  }
-  if (codec.rtcpFeedback && codec.rtcpFeedback.length) {
-    // FIXME: special handling for trr-int?
-    codec.rtcpFeedback.forEach(function(fb) {
-      lines += 'a=rtcp-fb:' + pt + ' ' + fb.type +
-      (fb.parameter && fb.parameter.length ? ' ' + fb.parameter : '') +
-          '\r\n';
-    });
-  }
-  return lines;
-};
-
-// Parses an RFC 5576 ssrc media attribute. Sample input:
-// a=ssrc:3735928559 cname:something
-SDPUtils.parseSsrcMedia = function(line) {
-  var sp = line.indexOf(' ');
-  var parts = {
-    ssrc: parseInt(line.substr(7, sp - 7), 10)
-  };
-  var colon = line.indexOf(':', sp);
-  if (colon > -1) {
-    parts.attribute = line.substr(sp + 1, colon - sp - 1);
-    parts.value = line.substr(colon + 1);
-  } else {
-    parts.attribute = line.substr(sp + 1);
-  }
-  return parts;
-};
-
-// Extracts the MID (RFC 5888) from a media section.
-// returns the MID or undefined if no mid line was found.
-SDPUtils.getMid = function(mediaSection) {
-  var mid = SDPUtils.matchPrefix(mediaSection, 'a=mid:')[0];
-  if (mid) {
-    return mid.substr(6);
-  }
-}
-
-SDPUtils.parseFingerprint = function(line) {
-  var parts = line.substr(14).split(' ');
-  return {
-    algorithm: parts[0].toLowerCase(), // algorithm is case-sensitive in Edge.
-    value: parts[1]
-  };
-};
-
-// Extracts DTLS parameters from SDP media section or sessionpart.
-// FIXME: for consistency with other functions this should only
-//   get the fingerprint line as input. See also getIceParameters.
-SDPUtils.getDtlsParameters = function(mediaSection, sessionpart) {
-  var lines = SDPUtils.matchPrefix(mediaSection + sessionpart,
-      'a=fingerprint:');
-  // Note: a=setup line is ignored since we use the 'auto' role.
-  // Note2: 'algorithm' is not case sensitive except in Edge.
-  return {
-    role: 'auto',
-    fingerprints: lines.map(SDPUtils.parseFingerprint)
-  };
-};
-
-// Serializes DTLS parameters to SDP.
-SDPUtils.writeDtlsParameters = function(params, setupType) {
-  var sdp = 'a=setup:' + setupType + '\r\n';
-  params.fingerprints.forEach(function(fp) {
-    sdp += 'a=fingerprint:' + fp.algorithm + ' ' + fp.value + '\r\n';
-  });
-  return sdp;
-};
-// Parses ICE information from SDP media section or sessionpart.
-// FIXME: for consistency with other functions this should only
-//   get the ice-ufrag and ice-pwd lines as input.
-SDPUtils.getIceParameters = function(mediaSection, sessionpart) {
-  var lines = SDPUtils.splitLines(mediaSection);
-  // Search in session part, too.
-  lines = lines.concat(SDPUtils.splitLines(sessionpart));
-  var iceParameters = {
-    usernameFragment: lines.filter(function(line) {
-      return line.indexOf('a=ice-ufrag:') === 0;
-    })[0].substr(12),
-    password: lines.filter(function(line) {
-      return line.indexOf('a=ice-pwd:') === 0;
-    })[0].substr(10)
-  };
-  return iceParameters;
-};
-
-// Serializes ICE parameters to SDP.
-SDPUtils.writeIceParameters = function(params) {
-  return 'a=ice-ufrag:' + params.usernameFragment + '\r\n' +
-      'a=ice-pwd:' + params.password + '\r\n';
-};
-
-// Parses the SDP media section and returns RTCRtpParameters.
-SDPUtils.parseRtpParameters = function(mediaSection) {
-  var description = {
-    codecs: [],
-    headerExtensions: [],
-    fecMechanisms: [],
-    rtcp: []
-  };
-  var lines = SDPUtils.splitLines(mediaSection);
-  var mline = lines[0].split(' ');
-  for (var i = 3; i < mline.length; i++) { // find all codecs from mline[3..]
-    var pt = mline[i];
-    var rtpmapline = SDPUtils.matchPrefix(
-        mediaSection, 'a=rtpmap:' + pt + ' ')[0];
-    if (rtpmapline) {
-      var codec = SDPUtils.parseRtpMap(rtpmapline);
-      var fmtps = SDPUtils.matchPrefix(
-          mediaSection, 'a=fmtp:' + pt + ' ');
-      // Only the first a=fmtp:<pt> is considered.
-      codec.parameters = fmtps.length ? SDPUtils.parseFmtp(fmtps[0]) : {};
-      codec.rtcpFeedback = SDPUtils.matchPrefix(
-          mediaSection, 'a=rtcp-fb:' + pt + ' ')
-        .map(SDPUtils.parseRtcpFb);
-      description.codecs.push(codec);
-      // parse FEC mechanisms from rtpmap lines.
-      switch (codec.name.toUpperCase()) {
-        case 'RED':
-        case 'ULPFEC':
-          description.fecMechanisms.push(codec.name.toUpperCase());
-          break;
-        default: // only RED and ULPFEC are recognized as FEC mechanisms.
-          break;
-      }
-    }
-  }
-  SDPUtils.matchPrefix(mediaSection, 'a=extmap:').forEach(function(line) {
-    description.headerExtensions.push(SDPUtils.parseExtmap(line));
-  });
-  // FIXME: parse rtcp.
-  return description;
-};
-
-// Generates parts of the SDP media section describing the capabilities /
-// parameters.
-SDPUtils.writeRtpDescription = function(kind, caps) {
-  var sdp = '';
-
-  // Build the mline.
-  sdp += 'm=' + kind + ' ';
-  sdp += caps.codecs.length > 0 ? '9' : '0'; // reject if no codecs.
-  sdp += ' UDP/TLS/RTP/SAVPF ';
-  sdp += caps.codecs.map(function(codec) {
-    if (codec.preferredPayloadType !== undefined) {
-      return codec.preferredPayloadType;
-    }
-    return codec.payloadType;
-  }).join(' ') + '\r\n';
-
-  sdp += 'c=IN IP4 0.0.0.0\r\n';
-  sdp += 'a=rtcp:9 IN IP4 0.0.0.0\r\n';
-
-  // Add a=rtpmap lines for each codec. Also fmtp and rtcp-fb.
-  caps.codecs.forEach(function(codec) {
-    sdp += SDPUtils.writeRtpMap(codec);
-    sdp += SDPUtils.writeFmtp(codec);
-    sdp += SDPUtils.writeRtcpFb(codec);
-  });
-  var maxptime = 0;
-  caps.codecs.forEach(function(codec) {
-    if (codec.maxptime > maxptime) {
-      maxptime = codec.maxptime;
-    }
-  });
-  if (maxptime > 0) {
-    sdp += 'a=maxptime:' + maxptime + '\r\n';
-  }
-  sdp += 'a=rtcp-mux\r\n';
-
-  caps.headerExtensions.forEach(function(extension) {
-    sdp += SDPUtils.writeExtmap(extension);
-  });
-  // FIXME: write fecMechanisms.
-  return sdp;
-};
-
-// Parses the SDP media section and returns an array of
-// RTCRtpEncodingParameters.
-SDPUtils.parseRtpEncodingParameters = function(mediaSection) {
-  var encodingParameters = [];
-  var description = SDPUtils.parseRtpParameters(mediaSection);
-  var hasRed = description.fecMechanisms.indexOf('RED') !== -1;
-  var hasUlpfec = description.fecMechanisms.indexOf('ULPFEC') !== -1;
-
-  // filter a=ssrc:... cname:, ignore PlanB-msid
-  var ssrcs = SDPUtils.matchPrefix(mediaSection, 'a=ssrc:')
-  .map(function(line) {
-    return SDPUtils.parseSsrcMedia(line);
-  })
-  .filter(function(parts) {
-    return parts.attribute === 'cname';
-  });
-  var primarySsrc = ssrcs.length > 0 && ssrcs[0].ssrc;
-  var secondarySsrc;
-
-  var flows = SDPUtils.matchPrefix(mediaSection, 'a=ssrc-group:FID')
-  .map(function(line) {
-    var parts = line.split(' ');
-    parts.shift();
-    return parts.map(function(part) {
-      return parseInt(part, 10);
-    });
-  });
-  if (flows.length > 0 && flows[0].length > 1 && flows[0][0] === primarySsrc) {
-    secondarySsrc = flows[0][1];
-  }
-
-  description.codecs.forEach(function(codec) {
-    if (codec.name.toUpperCase() === 'RTX' && codec.parameters.apt) {
-      var encParam = {
-        ssrc: primarySsrc,
-        codecPayloadType: parseInt(codec.parameters.apt, 10),
-        rtx: {
-          ssrc: secondarySsrc
-        }
-      };
-      encodingParameters.push(encParam);
-      if (hasRed) {
-        encParam = JSON.parse(JSON.stringify(encParam));
-        encParam.fec = {
-          ssrc: secondarySsrc,
-          mechanism: hasUlpfec ? 'red+ulpfec' : 'red'
-        };
-        encodingParameters.push(encParam);
-      }
-    }
-  });
-  if (encodingParameters.length === 0 && primarySsrc) {
-    encodingParameters.push({
-      ssrc: primarySsrc
-    });
-  }
-
-  // we support both b=AS and b=TIAS but interpret AS as TIAS.
-  var bandwidth = SDPUtils.matchPrefix(mediaSection, 'b=');
-  if (bandwidth.length) {
-    if (bandwidth[0].indexOf('b=TIAS:') === 0) {
-      bandwidth = parseInt(bandwidth[0].substr(7), 10);
-    } else if (bandwidth[0].indexOf('b=AS:') === 0) {
-      bandwidth = parseInt(bandwidth[0].substr(5), 10);
-    }
-    encodingParameters.forEach(function(params) {
-      params.maxBitrate = bandwidth;
-    });
-  }
-  return encodingParameters;
-};
-
-// parses http://draft.ortc.org/#rtcrtcpparameters*
-SDPUtils.parseRtcpParameters = function(mediaSection) {
-  var rtcpParameters = {};
-
-  var cname;
-  // Gets the first SSRC. Note that with RTX there might be multiple
-  // SSRCs.
-  var remoteSsrc = SDPUtils.matchPrefix(mediaSection, 'a=ssrc:')
-      .map(function(line) {
-        return SDPUtils.parseSsrcMedia(line);
-      })
-      .filter(function(obj) {
-        return obj.attribute === 'cname';
-      })[0];
-  if (remoteSsrc) {
-    rtcpParameters.cname = remoteSsrc.value;
-    rtcpParameters.ssrc = remoteSsrc.ssrc;
-  }
-
-  // Edge uses the compound attribute instead of reducedSize
-  // compound is !reducedSize
-  var rsize = SDPUtils.matchPrefix(mediaSection, 'a=rtcp-rsize');
-  rtcpParameters.reducedSize = rsize.length > 0;
-  rtcpParameters.compound = rsize.length === 0;
-
-  // parses the rtcp-mux attrіbute.
-  // Note that Edge does not support unmuxed RTCP.
-  var mux = SDPUtils.matchPrefix(mediaSection, 'a=rtcp-mux');
-  rtcpParameters.mux = mux.length > 0;
-
-  return rtcpParameters;
-};
-
-// parses either a=msid: or a=ssrc:... msid lines and returns
-// the id of the MediaStream and MediaStreamTrack.
-SDPUtils.parseMsid = function(mediaSection) {
-  var parts;
-  var spec = SDPUtils.matchPrefix(mediaSection, 'a=msid:');
-  if (spec.length === 1) {
-    parts = spec[0].substr(7).split(' ');
-    return {stream: parts[0], track: parts[1]};
-  }
-  var planB = SDPUtils.matchPrefix(mediaSection, 'a=ssrc:')
-  .map(function(line) {
-    return SDPUtils.parseSsrcMedia(line);
-  })
-  .filter(function(parts) {
-    return parts.attribute === 'msid';
-  });
-  if (planB.length > 0) {
-    parts = planB[0].value.split(' ');
-    return {stream: parts[0], track: parts[1]};
-  }
-};
-
-SDPUtils.writeSessionBoilerplate = function() {
-  // FIXME: sess-id should be an NTP timestamp.
-  return 'v=0\r\n' +
-      'o=thisisadapterortc 8169639915646943137 2 IN IP4 127.0.0.1\r\n' +
-      's=-\r\n' +
-      't=0 0\r\n';
-};
-
-SDPUtils.writeMediaSection = function(transceiver, caps, type, stream) {
-  var sdp = SDPUtils.writeRtpDescription(transceiver.kind, caps);
-
-  // Map ICE parameters (ufrag, pwd) to SDP.
-  sdp += SDPUtils.writeIceParameters(
-      transceiver.iceGatherer.getLocalParameters());
-
-  // Map DTLS parameters to SDP.
-  sdp += SDPUtils.writeDtlsParameters(
-      transceiver.dtlsTransport.getLocalParameters(),
-      type === 'offer' ? 'actpass' : 'active');
-
-  sdp += 'a=mid:' + transceiver.mid + '\r\n';
-
-  if (transceiver.direction) {
-    sdp += 'a=' + transceiver.direction + '\r\n';
-  } else if (transceiver.rtpSender && transceiver.rtpReceiver) {
-    sdp += 'a=sendrecv\r\n';
-  } else if (transceiver.rtpSender) {
-    sdp += 'a=sendonly\r\n';
-  } else if (transceiver.rtpReceiver) {
-    sdp += 'a=recvonly\r\n';
-  } else {
-    sdp += 'a=inactive\r\n';
-  }
-
-  if (transceiver.rtpSender) {
-    // spec.
-    var msid = 'msid:' + stream.id + ' ' +
-        transceiver.rtpSender.track.id + '\r\n';
-    sdp += 'a=' + msid;
-
-    // for Chrome.
-    sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
-        ' ' + msid;
-    if (transceiver.sendEncodingParameters[0].rtx) {
-      sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].rtx.ssrc +
-          ' ' + msid;
-      sdp += 'a=ssrc-group:FID ' +
-          transceiver.sendEncodingParameters[0].ssrc + ' ' +
-          transceiver.sendEncodingParameters[0].rtx.ssrc +
-          '\r\n';
-    }
-  }
-  // FIXME: this should be written by writeRtpDescription.
-  sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].ssrc +
-      ' cname:' + SDPUtils.localCName + '\r\n';
-  if (transceiver.rtpSender && transceiver.sendEncodingParameters[0].rtx) {
-    sdp += 'a=ssrc:' + transceiver.sendEncodingParameters[0].rtx.ssrc +
-        ' cname:' + SDPUtils.localCName + '\r\n';
-  }
-  return sdp;
-};
-
-// Gets the direction from the mediaSection or the sessionpart.
-SDPUtils.getDirection = function(mediaSection, sessionpart) {
-  // Look for sendrecv, sendonly, recvonly, inactive, default to sendrecv.
-  var lines = SDPUtils.splitLines(mediaSection);
-  for (var i = 0; i < lines.length; i++) {
-    switch (lines[i]) {
-      case 'a=sendrecv':
-      case 'a=sendonly':
-      case 'a=recvonly':
-      case 'a=inactive':
-        return lines[i].substr(2);
-      default:
-        // FIXME: What should happen here?
-    }
-  }
-  if (sessionpart) {
-    return SDPUtils.getDirection(sessionpart);
-  }
-  return 'sendrecv';
-};
-
-SDPUtils.getKind = function(mediaSection) {
-  var lines = SDPUtils.splitLines(mediaSection);
-  var mline = lines[0].split(' ');
-  return mline[0].substr(2);
-};
-
-SDPUtils.isRejected = function(mediaSection) {
-  return mediaSection.split(' ', 2)[1] === '0';
-};
-
-// Expose public methods.
-module.exports = SDPUtils;
-
-},{}],34:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-
-'use strict';
-
-// Shimming starts here.
-(function() {
-  // Utils.
-  var logging = require('./utils').log;
-  var browserDetails = require('./utils').browserDetails;
-  // Export to the adapter global object visible in the browser.
-  module.exports.browserDetails = browserDetails;
-  module.exports.extractVersion = require('./utils').extractVersion;
-  module.exports.disableLog = require('./utils').disableLog;
-
-  // Uncomment the line below if you want logging to occur, including logging
-  // for the switch statement below. Can also be turned on in the browser via
-  // adapter.disableLog(false), but then logging from the switch statement below
-  // will not appear.
-  // require('./utils').disableLog(false);
-
-  // Browser shims.
-  var chromeShim = require('./chrome/chrome_shim') || null;
-  var edgeShim = require('./edge/edge_shim') || null;
-  var firefoxShim = require('./firefox/firefox_shim') || null;
-  var safariShim = require('./safari/safari_shim') || null;
-
-  // Shim browser if found.
-  switch (browserDetails.browser) {
-    case 'opera': // fallthrough as it uses chrome shims
-    case 'chrome':
-      if (!chromeShim || !chromeShim.shimPeerConnection) {
-        logging('Chrome shim is not included in this adapter release.');
-        return;
-      }
-      logging('adapter.js shimming chrome.');
-      // Export to the adapter global object visible in the browser.
-      module.exports.browserShim = chromeShim;
-
-      chromeShim.shimGetUserMedia();
-      chromeShim.shimMediaStream();
-      chromeShim.shimSourceObject();
-      chromeShim.shimPeerConnection();
-      chromeShim.shimOnTrack();
-      break;
-    case 'firefox':
-      if (!firefoxShim || !firefoxShim.shimPeerConnection) {
-        logging('Firefox shim is not included in this adapter release.');
-        return;
-      }
-      logging('adapter.js shimming firefox.');
-      // Export to the adapter global object visible in the browser.
-      module.exports.browserShim = firefoxShim;
-
-      firefoxShim.shimGetUserMedia();
-      firefoxShim.shimSourceObject();
-      firefoxShim.shimPeerConnection();
-      firefoxShim.shimOnTrack();
-      break;
-    case 'edge':
-      if (!edgeShim || !edgeShim.shimPeerConnection) {
-        logging('MS edge shim is not included in this adapter release.');
-        return;
-      }
-      logging('adapter.js shimming edge.');
-      // Export to the adapter global object visible in the browser.
-      module.exports.browserShim = edgeShim;
-
-      edgeShim.shimGetUserMedia();
-      edgeShim.shimPeerConnection();
-      break;
-    case 'safari':
-      if (!safariShim) {
-        logging('Safari shim is not included in this adapter release.');
-        return;
-      }
-      logging('adapter.js shimming safari.');
-      // Export to the adapter global object visible in the browser.
-      module.exports.browserShim = safariShim;
-
-      safariShim.shimGetUserMedia();
-      break;
-    default:
-      logging('Unsupported browser!');
-  }
-})();
-
-},{"./chrome/chrome_shim":35,"./edge/edge_shim":37,"./firefox/firefox_shim":39,"./safari/safari_shim":41,"./utils":42}],35:[function(require,module,exports){
-
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-var logging = require('../utils.js').log;
-var browserDetails = require('../utils.js').browserDetails;
-
-var chromeShim = {
-  shimMediaStream: function() {
-    window.MediaStream = window.MediaStream || window.webkitMediaStream;
-  },
-
-  shimOnTrack: function() {
-    if (typeof window === 'object' && window.RTCPeerConnection && !('ontrack' in
-        window.RTCPeerConnection.prototype)) {
-      Object.defineProperty(window.RTCPeerConnection.prototype, 'ontrack', {
-        get: function() {
-          return this._ontrack;
-        },
-        set: function(f) {
-          var self = this;
-          if (this._ontrack) {
-            this.removeEventListener('track', this._ontrack);
-            this.removeEventListener('addstream', this._ontrackpoly);
-          }
-          this.addEventListener('track', this._ontrack = f);
-          this.addEventListener('addstream', this._ontrackpoly = function(e) {
-            // onaddstream does not fire when a track is added to an existing
-            // stream. But stream.onaddtrack is implemented so we use that.
-            e.stream.addEventListener('addtrack', function(te) {
-              var event = new Event('track');
-              event.track = te.track;
-              event.receiver = {track: te.track};
-              event.streams = [e.stream];
-              self.dispatchEvent(event);
-            });
-            e.stream.getTracks().forEach(function(track) {
-              var event = new Event('track');
-              event.track = track;
-              event.receiver = {track: track};
-              event.streams = [e.stream];
-              this.dispatchEvent(event);
-            }.bind(this));
-          }.bind(this));
-        }
-      });
-    }
-  },
-
-  shimSourceObject: function() {
-    if (typeof window === 'object') {
-      if (window.HTMLMediaElement &&
-        !('srcObject' in window.HTMLMediaElement.prototype)) {
-        // Shim the srcObject property, once, when HTMLMediaElement is found.
-        Object.defineProperty(window.HTMLMediaElement.prototype, 'srcObject', {
-          get: function() {
-            return this._srcObject;
-          },
-          set: function(stream) {
-            var self = this;
-            // Use _srcObject as a private property for this shim
-            this._srcObject = stream;
-            if (this.src) {
-              URL.revokeObjectURL(this.src);
-            }
-
-            if (!stream) {
-              this.src = '';
-              return;
-            }
-            this.src = URL.createObjectURL(stream);
-            // We need to recreate the blob url when a track is added or
-            // removed. Doing it manually since we want to avoid a recursion.
-            stream.addEventListener('addtrack', function() {
-              if (self.src) {
-                URL.revokeObjectURL(self.src);
-              }
-              self.src = URL.createObjectURL(stream);
-            });
-            stream.addEventListener('removetrack', function() {
-              if (self.src) {
-                URL.revokeObjectURL(self.src);
-              }
-              self.src = URL.createObjectURL(stream);
-            });
-          }
-        });
-      }
-    }
-  },
-
-  shimPeerConnection: function() {
-    // The RTCPeerConnection object.
-    window.RTCPeerConnection = function(pcConfig, pcConstraints) {
-      // Translate iceTransportPolicy to iceTransports,
-      // see https://code.google.com/p/webrtc/issues/detail?id=4869
-      logging('PeerConnection');
-      if (pcConfig && pcConfig.iceTransportPolicy) {
-        pcConfig.iceTransports = pcConfig.iceTransportPolicy;
-      }
-
-      var pc = new webkitRTCPeerConnection(pcConfig, pcConstraints);
-      var origGetStats = pc.getStats.bind(pc);
-      pc.getStats = function(selector, successCallback, errorCallback) {
-        var self = this;
-        var args = arguments;
-
-        // If selector is a function then we are in the old style stats so just
-        // pass back the original getStats format to avoid breaking old users.
-        if (arguments.length > 0 && typeof selector === 'function') {
-          return origGetStats(selector, successCallback);
-        }
-
-        var fixChromeStats_ = function(response) {
-          var standardReport = {};
-          var reports = response.result();
-          reports.forEach(function(report) {
-            var standardStats = {
-              id: report.id,
-              timestamp: report.timestamp,
-              type: report.type
-            };
-            report.names().forEach(function(name) {
-              standardStats[name] = report.stat(name);
-            });
-            standardReport[standardStats.id] = standardStats;
-          });
-
-          return standardReport;
-        };
-
-        // shim getStats with maplike support
-        var makeMapStats = function(stats, legacyStats) {
-          var map = new Map(Object.keys(stats).map(function(key) {
-            return[key, stats[key]];
-          }));
-          legacyStats = legacyStats || stats;
-          Object.keys(legacyStats).forEach(function(key) {
-            map[key] = legacyStats[key];
-          });
-          return map;
-        };
-
-        if (arguments.length >= 2) {
-          var successCallbackWrapper_ = function(response) {
-            args[1](makeMapStats(fixChromeStats_(response)));
-          };
-
-          return origGetStats.apply(this, [successCallbackWrapper_,
-              arguments[0]]);
-        }
-
-        // promise-support
-        return new Promise(function(resolve, reject) {
-          if (args.length === 1 && typeof selector === 'object') {
-            origGetStats.apply(self, [
-              function(response) {
-                resolve(makeMapStats(fixChromeStats_(response)));
-              }, reject]);
-          } else {
-            // Preserve legacy chrome stats only on legacy access of stats obj
-            origGetStats.apply(self, [
-              function(response) {
-                resolve(makeMapStats(fixChromeStats_(response),
-                    response.result()));
-              }, reject]);
-          }
-        }).then(successCallback, errorCallback);
-      };
-
-      return pc;
-    };
-    window.RTCPeerConnection.prototype = webkitRTCPeerConnection.prototype;
-
-    // wrap static methods. Currently just generateCertificate.
-    if (webkitRTCPeerConnection.generateCertificate) {
-      Object.defineProperty(window.RTCPeerConnection, 'generateCertificate', {
-        get: function() {
-          return webkitRTCPeerConnection.generateCertificate;
-        }
-      });
-    }
-
-    ['createOffer', 'createAnswer'].forEach(function(method) {
-      var nativeMethod = webkitRTCPeerConnection.prototype[method];
-      webkitRTCPeerConnection.prototype[method] = function() {
-        var self = this;
-        if (arguments.length < 1 || (arguments.length === 1 &&
-            typeof arguments[0] === 'object')) {
-          var opts = arguments.length === 1 ? arguments[0] : undefined;
-          return new Promise(function(resolve, reject) {
-            nativeMethod.apply(self, [resolve, reject, opts]);
-          });
-        }
-        return nativeMethod.apply(this, arguments);
-      };
-    });
-
-    // add promise support -- natively available in Chrome 51
-    if (browserDetails.version < 51) {
-      ['setLocalDescription', 'setRemoteDescription', 'addIceCandidate']
-          .forEach(function(method) {
-            var nativeMethod = webkitRTCPeerConnection.prototype[method];
-            webkitRTCPeerConnection.prototype[method] = function() {
-              var args = arguments;
-              var self = this;
-              var promise = new Promise(function(resolve, reject) {
-                nativeMethod.apply(self, [args[0], resolve, reject]);
-              });
-              if (args.length < 2) {
-                return promise;
-              }
-              return promise.then(function() {
-                args[1].apply(null, []);
-              },
-              function(err) {
-                if (args.length >= 3) {
-                  args[2].apply(null, [err]);
-                }
-              });
-            };
-          });
-    }
-
-    // shim implicit creation of RTCSessionDescription/RTCIceCandidate
-    ['setLocalDescription', 'setRemoteDescription', 'addIceCandidate']
-        .forEach(function(method) {
-          var nativeMethod = webkitRTCPeerConnection.prototype[method];
-          webkitRTCPeerConnection.prototype[method] = function() {
-            arguments[0] = new ((method === 'addIceCandidate') ?
-                RTCIceCandidate : RTCSessionDescription)(arguments[0]);
-            return nativeMethod.apply(this, arguments);
-          };
-        });
-
-    // support for addIceCandidate(null or undefined)
-    var nativeAddIceCandidate =
-        RTCPeerConnection.prototype.addIceCandidate;
-    RTCPeerConnection.prototype.addIceCandidate = function() {
-      if (!arguments[0]) {
-        if (arguments[1]) {
-          arguments[1].apply(null);
-        }
-        return Promise.resolve();
-      }
-      return nativeAddIceCandidate.apply(this, arguments);
-    };
-  }
-};
-
-
-// Expose public methods.
-module.exports = {
-  shimMediaStream: chromeShim.shimMediaStream,
-  shimOnTrack: chromeShim.shimOnTrack,
-  shimSourceObject: chromeShim.shimSourceObject,
-  shimPeerConnection: chromeShim.shimPeerConnection,
-  shimGetUserMedia: require('./getusermedia')
-};
-
-},{"../utils.js":42,"./getusermedia":36}],36:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-var logging = require('../utils.js').log;
-
-// Expose public methods.
-module.exports = function() {
-  var constraintsToChrome_ = function(c) {
-    if (typeof c !== 'object' || c.mandatory || c.optional) {
-      return c;
-    }
-    var cc = {};
-    Object.keys(c).forEach(function(key) {
-      if (key === 'require' || key === 'advanced' || key === 'mediaSource') {
-        return;
-      }
-      var r = (typeof c[key] === 'object') ? c[key] : {ideal: c[key]};
-      if (r.exact !== undefined && typeof r.exact === 'number') {
-        r.min = r.max = r.exact;
-      }
-      var oldname_ = function(prefix, name) {
-        if (prefix) {
-          return prefix + name.charAt(0).toUpperCase() + name.slice(1);
-        }
-        return (name === 'deviceId') ? 'sourceId' : name;
-      };
-      if (r.ideal !== undefined) {
-        cc.optional = cc.optional || [];
-        var oc = {};
-        if (typeof r.ideal === 'number') {
-          oc[oldname_('min', key)] = r.ideal;
-          cc.optional.push(oc);
-          oc = {};
-          oc[oldname_('max', key)] = r.ideal;
-          cc.optional.push(oc);
-        } else {
-          oc[oldname_('', key)] = r.ideal;
-          cc.optional.push(oc);
-        }
-      }
-      if (r.exact !== undefined && typeof r.exact !== 'number') {
-        cc.mandatory = cc.mandatory || {};
-        cc.mandatory[oldname_('', key)] = r.exact;
-      } else {
-        ['min', 'max'].forEach(function(mix) {
-          if (r[mix] !== undefined) {
-            cc.mandatory = cc.mandatory || {};
-            cc.mandatory[oldname_(mix, key)] = r[mix];
-          }
-        });
-      }
-    });
-    if (c.advanced) {
-      cc.optional = (cc.optional || []).concat(c.advanced);
-    }
-    return cc;
-  };
-
-  var shimConstraints_ = function(constraints, func) {
-    constraints = JSON.parse(JSON.stringify(constraints));
-    if (constraints && constraints.audio) {
-      constraints.audio = constraintsToChrome_(constraints.audio);
-    }
-    if (constraints && typeof constraints.video === 'object') {
-      // Shim facingMode for mobile, where it defaults to "user".
-      var face = constraints.video.facingMode;
-      face = face && ((typeof face === 'object') ? face : {ideal: face});
-
-      if ((face && (face.exact === 'user' || face.exact === 'environment' ||
-                    face.ideal === 'user' || face.ideal === 'environment')) &&
-          !(navigator.mediaDevices.getSupportedConstraints &&
-            navigator.mediaDevices.getSupportedConstraints().facingMode)) {
-        delete constraints.video.facingMode;
-        if (face.exact === 'environment' || face.ideal === 'environment') {
-          // Look for "back" in label, or use last cam (typically back cam).
-          return navigator.mediaDevices.enumerateDevices()
-          .then(function(devices) {
-            devices = devices.filter(function(d) {
-              return d.kind === 'videoinput';
-            });
-            var back = devices.find(function(d) {
-              return d.label.toLowerCase().indexOf('back') !== -1;
-            }) || (devices.length && devices[devices.length - 1]);
-            if (back) {
-              constraints.video.deviceId = face.exact ? {exact: back.deviceId} :
-                                                        {ideal: back.deviceId};
-            }
-            constraints.video = constraintsToChrome_(constraints.video);
-            logging('chrome: ' + JSON.stringify(constraints));
-            return func(constraints);
-          });
-        }
-      }
-      constraints.video = constraintsToChrome_(constraints.video);
-    }
-    logging('chrome: ' + JSON.stringify(constraints));
-    return func(constraints);
-  };
-
-  var shimError_ = function(e) {
-    return {
-      name: {
-        PermissionDeniedError: 'NotAllowedError',
-        ConstraintNotSatisfiedError: 'OverconstrainedError'
-      }[e.name] || e.name,
-      message: e.message,
-      constraint: e.constraintName,
-      toString: function() {
-        return this.name + (this.message && ': ') + this.message;
-      }
-    };
-  };
-
-  var getUserMedia_ = function(constraints, onSuccess, onError) {
-    shimConstraints_(constraints, function(c) {
-      navigator.webkitGetUserMedia(c, onSuccess, function(e) {
-        onError(shimError_(e));
-      });
-    });
-  };
-
-  navigator.getUserMedia = getUserMedia_;
-
-  // Returns the result of getUserMedia as a Promise.
-  var getUserMediaPromise_ = function(constraints) {
-    return new Promise(function(resolve, reject) {
-      navigator.getUserMedia(constraints, resolve, reject);
-    });
-  };
-
-  if (!navigator.mediaDevices) {
-    navigator.mediaDevices = {
-      getUserMedia: getUserMediaPromise_,
-      enumerateDevices: function() {
-        return new Promise(function(resolve) {
-          var kinds = {audio: 'audioinput', video: 'videoinput'};
-          return MediaStreamTrack.getSources(function(devices) {
-            resolve(devices.map(function(device) {
-              return {label: device.label,
-                      kind: kinds[device.kind],
-                      deviceId: device.id,
-                      groupId: ''};
-            }));
-          });
-        });
-      }
-    };
-  }
-
-  // A shim for getUserMedia method on the mediaDevices object.
-  // TODO(KaptenJansson) remove once implemented in Chrome stable.
-  if (!navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia = function(constraints) {
-      return getUserMediaPromise_(constraints);
-    };
-  } else {
-    // Even though Chrome 45 has navigator.mediaDevices and a getUserMedia
-    // function which returns a Promise, it does not accept spec-style
-    // constraints.
-    var origGetUserMedia = navigator.mediaDevices.getUserMedia.
-        bind(navigator.mediaDevices);
-    navigator.mediaDevices.getUserMedia = function(cs) {
-      return shimConstraints_(cs, function(c) {
-        return origGetUserMedia(c).then(function(stream) {
-          if (c.audio && !stream.getAudioTracks().length ||
-              c.video && !stream.getVideoTracks().length) {
-            stream.getTracks().forEach(function(track) {
-              track.stop();
-            });
-            throw new DOMException('', 'NotFoundError');
-          }
-          return stream;
-        }, function(e) {
-          return Promise.reject(shimError_(e));
-        });
-      });
-    };
-  }
-
-  // Dummy devicechange event methods.
-  // TODO(KaptenJansson) remove once implemented in Chrome stable.
-  if (typeof navigator.mediaDevices.addEventListener === 'undefined') {
-    navigator.mediaDevices.addEventListener = function() {
-      logging('Dummy mediaDevices.addEventListener called.');
-    };
-  }
-  if (typeof navigator.mediaDevices.removeEventListener === 'undefined') {
-    navigator.mediaDevices.removeEventListener = function() {
-      logging('Dummy mediaDevices.removeEventListener called.');
-    };
-  }
-};
-
-},{"../utils.js":42}],37:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-
-var SDPUtils = require('sdp');
-var browserDetails = require('../utils').browserDetails;
-
-var edgeShim = {
-  shimPeerConnection: function() {
-    if (window.RTCIceGatherer) {
-      // ORTC defines an RTCIceCandidate object but no constructor.
-      // Not implemented in Edge.
-      if (!window.RTCIceCandidate) {
-        window.RTCIceCandidate = function(args) {
-          return args;
-        };
-      }
-      // ORTC does not have a session description object but
-      // other browsers (i.e. Chrome) that will support both PC and ORTC
-      // in the future might have this defined already.
-      if (!window.RTCSessionDescription) {
-        window.RTCSessionDescription = function(args) {
-          return args;
-        };
-      }
-      // this adds an additional event listener to MediaStrackTrack that signals
-      // when a tracks enabled property was changed.
-      var origMSTEnabled = Object.getOwnPropertyDescriptor(
-          MediaStreamTrack.prototype, 'enabled');
-      Object.defineProperty(MediaStreamTrack.prototype, 'enabled', {
-        set: function(value) {
-          origMSTEnabled.set.call(this, value);
-          var ev = new Event('enabled');
-          ev.enabled = value;
-          this.dispatchEvent(ev);
-        }
-      });
-    }
-
-    window.RTCPeerConnection = function(config) {
-      var self = this;
-
-      var _eventTarget = document.createDocumentFragment();
-      ['addEventListener', 'removeEventListener', 'dispatchEvent']
-          .forEach(function(method) {
-            self[method] = _eventTarget[method].bind(_eventTarget);
-          });
-
-      this.onicecandidate = null;
-      this.onaddstream = null;
-      this.ontrack = null;
-      this.onremovestream = null;
-      this.onsignalingstatechange = null;
-      this.oniceconnectionstatechange = null;
-      this.onnegotiationneeded = null;
-      this.ondatachannel = null;
-
-      this.localStreams = [];
-      this.remoteStreams = [];
-      this.getLocalStreams = function() {
-        return self.localStreams;
-      };
-      this.getRemoteStreams = function() {
-        return self.remoteStreams;
-      };
-
-      this.localDescription = new RTCSessionDescription({
-        type: '',
-        sdp: ''
-      });
-      this.remoteDescription = new RTCSessionDescription({
-        type: '',
-        sdp: ''
-      });
-      this.signalingState = 'stable';
-      this.iceConnectionState = 'new';
-      this.iceGatheringState = 'new';
-
-      this.iceOptions = {
-        gatherPolicy: 'all',
-        iceServers: []
-      };
-      if (config && config.iceTransportPolicy) {
-        switch (config.iceTransportPolicy) {
-          case 'all':
-          case 'relay':
-            this.iceOptions.gatherPolicy = config.iceTransportPolicy;
-            break;
-          case 'none':
-            // FIXME: remove once implementation and spec have added this.
-            throw new TypeError('iceTransportPolicy "none" not supported');
-          default:
-            // don't set iceTransportPolicy.
-            break;
-        }
-      }
-      this.usingBundle = config && config.bundlePolicy === 'max-bundle';
-
-      if (config && config.iceServers) {
-        // Edge does not like
-        // 1) stun:
-        // 2) turn: that does not have all of turn:host:port?transport=udp
-        // 3) turn: with ipv6 addresses
-        var iceServers = JSON.parse(JSON.stringify(config.iceServers));
-        this.iceOptions.iceServers = iceServers.filter(function(server) {
-          if (server && server.urls) {
-            var urls = server.urls;
-            if (typeof urls === 'string') {
-              urls = [urls];
-            }
-            urls = urls.filter(function(url) {
-              return (url.indexOf('turn:') === 0 &&
-                  url.indexOf('transport=udp') !== -1 &&
-                  url.indexOf('turn:[') === -1) ||
-                  (url.indexOf('stun:') === 0 &&
-                    browserDetails.version >= 14393);
-            })[0];
-            return !!urls;
-          }
-          return false;
-        });
-      }
-      this._config = config;
-
-      // per-track iceGathers, iceTransports, dtlsTransports, rtpSenders, ...
-      // everything that is needed to describe a SDP m-line.
-      this.transceivers = [];
-
-      // since the iceGatherer is currently created in createOffer but we
-      // must not emit candidates until after setLocalDescription we buffer
-      // them in this array.
-      this._localIceCandidatesBuffer = [];
-    };
-
-    window.RTCPeerConnection.prototype._emitBufferedCandidates = function() {
-      var self = this;
-      var sections = SDPUtils.splitSections(self.localDescription.sdp);
-      // FIXME: need to apply ice candidates in a way which is async but
-      // in-order
-      this._localIceCandidatesBuffer.forEach(function(event) {
-        var end = !event.candidate || Object.keys(event.candidate).length === 0;
-        if (end) {
-          for (var j = 1; j < sections.length; j++) {
-            if (sections[j].indexOf('\r\na=end-of-candidates\r\n') === -1) {
-              sections[j] += 'a=end-of-candidates\r\n';
-            }
-          }
-        } else if (event.candidate.candidate.indexOf('typ endOfCandidates')
-            === -1) {
-          sections[event.candidate.sdpMLineIndex + 1] +=
-              'a=' + event.candidate.candidate + '\r\n';
-        }
-        self.localDescription.sdp = sections.join('');
-        self.dispatchEvent(event);
-        if (self.onicecandidate !== null) {
-          self.onicecandidate(event);
-        }
-        if (!event.candidate && self.iceGatheringState !== 'complete') {
-          var complete = self.transceivers.every(function(transceiver) {
-            return transceiver.iceGatherer &&
-                transceiver.iceGatherer.state === 'completed';
-          });
-          if (complete) {
-            self.iceGatheringState = 'complete';
-          }
-        }
-      });
-      this._localIceCandidatesBuffer = [];
-    };
-
-    window.RTCPeerConnection.prototype.getConfiguration = function() {
-      return this._config;
-    };
-
-    window.RTCPeerConnection.prototype.addStream = function(stream) {
-      // Clone is necessary for local demos mostly, attaching directly
-      // to two different senders does not work (build 10547).
-      var clonedStream = stream.clone();
-      stream.getTracks().forEach(function(track, idx) {
-        var clonedTrack = clonedStream.getTracks()[idx];
-        track.addEventListener('enabled', function(event) {
-          clonedTrack.enabled = event.enabled;
-        });
-      });
-      this.localStreams.push(clonedStream);
-      this._maybeFireNegotiationNeeded();
-    };
-
-    window.RTCPeerConnection.prototype.removeStream = function(stream) {
-      var idx = this.localStreams.indexOf(stream);
-      if (idx > -1) {
-        this.localStreams.splice(idx, 1);
-        this._maybeFireNegotiationNeeded();
-      }
-    };
-
-    window.RTCPeerConnection.prototype.getSenders = function() {
-      return this.transceivers.filter(function(transceiver) {
-        return !!transceiver.rtpSender;
-      })
-      .map(function(transceiver) {
-        return transceiver.rtpSender;
-      });
-    };
-
-    window.RTCPeerConnection.prototype.getReceivers = function() {
-      return this.transceivers.filter(function(transceiver) {
-        return !!transceiver.rtpReceiver;
-      })
-      .map(function(transceiver) {
-        return transceiver.rtpReceiver;
-      });
-    };
-
-    // Determines the intersection of local and remote capabilities.
-    window.RTCPeerConnection.prototype._getCommonCapabilities =
-        function(localCapabilities, remoteCapabilities) {
-          var commonCapabilities = {
-            codecs: [],
-            headerExtensions: [],
-            fecMechanisms: []
-          };
-          localCapabilities.codecs.forEach(function(lCodec) {
-            for (var i = 0; i < remoteCapabilities.codecs.length; i++) {
-              var rCodec = remoteCapabilities.codecs[i];
-              if (lCodec.name.toLowerCase() === rCodec.name.toLowerCase() &&
-                  lCodec.clockRate === rCodec.clockRate) {
-                // number of channels is the highest common number of channels
-                rCodec.numChannels = Math.min(lCodec.numChannels,
-                    rCodec.numChannels);
-                // push rCodec so we reply with offerer payload type
-                commonCapabilities.codecs.push(rCodec);
-
-                // determine common feedback mechanisms
-                rCodec.rtcpFeedback = rCodec.rtcpFeedback.filter(function(fb) {
-                  for (var j = 0; j < lCodec.rtcpFeedback.length; j++) {
-                    if (lCodec.rtcpFeedback[j].type === fb.type &&
-                        lCodec.rtcpFeedback[j].parameter === fb.parameter) {
-                      return true;
-                    }
-                  }
-                  return false;
-                });
-                // FIXME: also need to determine .parameters
-                //  see https://github.com/openpeer/ortc/issues/569
-                break;
-              }
-            }
-          });
-
-          localCapabilities.headerExtensions
-              .forEach(function(lHeaderExtension) {
-                for (var i = 0; i < remoteCapabilities.headerExtensions.length;
-                     i++) {
-                  var rHeaderExtension = remoteCapabilities.headerExtensions[i];
-                  if (lHeaderExtension.uri === rHeaderExtension.uri) {
-                    commonCapabilities.headerExtensions.push(rHeaderExtension);
-                    break;
-                  }
-                }
-              });
-
-          // FIXME: fecMechanisms
-          return commonCapabilities;
-        };
-
-    // Create ICE gatherer, ICE transport and DTLS transport.
-    window.RTCPeerConnection.prototype._createIceAndDtlsTransports =
-        function(mid, sdpMLineIndex) {
-          var self = this;
-          var iceGatherer = new RTCIceGatherer(self.iceOptions);
-          var iceTransport = new RTCIceTransport(iceGatherer);
-          iceGatherer.onlocalcandidate = function(evt) {
-            var event = new Event('icecandidate');
-            event.candidate = {sdpMid: mid, sdpMLineIndex: sdpMLineIndex};
-
-            var cand = evt.candidate;
-            var end = !cand || Object.keys(cand).length === 0;
-            // Edge emits an empty object for RTCIceCandidateComplete‥
-            if (end) {
-              // polyfill since RTCIceGatherer.state is not implemented in
-              // Edge 10547 yet.
-              if (iceGatherer.state === undefined) {
-                iceGatherer.state = 'completed';
-              }
-
-              // Emit a candidate with type endOfCandidates to make the samples
-              // work. Edge requires addIceCandidate with this empty candidate
-              // to start checking. The real solution is to signal
-              // end-of-candidates to the other side when getting the null
-              // candidate but some apps (like the samples) don't do that.
-              event.candidate.candidate =
-                  'candidate:1 1 udp 1 0.0.0.0 9 typ endOfCandidates';
-            } else {
-              // RTCIceCandidate doesn't have a component, needs to be added
-              cand.component = iceTransport.component === 'RTCP' ? 2 : 1;
-              event.candidate.candidate = SDPUtils.writeCandidate(cand);
-            }
-
-            // update local description.
-            var sections = SDPUtils.splitSections(self.localDescription.sdp);
-            if (event.candidate.candidate.indexOf('typ endOfCandidates')
-                === -1) {
-              sections[event.candidate.sdpMLineIndex + 1] +=
-                  'a=' + event.candidate.candidate + '\r\n';
-            } else {
-              sections[event.candidate.sdpMLineIndex + 1] +=
-                  'a=end-of-candidates\r\n';
-            }
-            self.localDescription.sdp = sections.join('');
-
-            var complete = self.transceivers.every(function(transceiver) {
-              return transceiver.iceGatherer &&
-                  transceiver.iceGatherer.state === 'completed';
-            });
-
-            // Emit candidate if localDescription is set.
-            // Also emits null candidate when all gatherers are complete.
-            switch (self.iceGatheringState) {
-              case 'new':
-                self._localIceCandidatesBuffer.push(event);
-                if (end && complete) {
-                  self._localIceCandidatesBuffer.push(
-                      new Event('icecandidate'));
-                }
-                break;
-              case 'gathering':
-                self._emitBufferedCandidates();
-                self.dispatchEvent(event);
-                if (self.onicecandidate !== null) {
-                  self.onicecandidate(event);
-                }
-                if (complete) {
-                  self.dispatchEvent(new Event('icecandidate'));
-                  if (self.onicecandidate !== null) {
-                    self.onicecandidate(new Event('icecandidate'));
-                  }
-                  self.iceGatheringState = 'complete';
-                }
-                break;
-              case 'complete':
-                // should not happen... currently!
-                break;
-              default: // no-op.
-                break;
-            }
-          };
-          iceTransport.onicestatechange = function() {
-            self._updateConnectionState();
-          };
-
-          var dtlsTransport = new RTCDtlsTransport(iceTransport);
-          dtlsTransport.ondtlsstatechange = function() {
-            self._updateConnectionState();
-          };
-          dtlsTransport.onerror = function() {
-            // onerror does not set state to failed by itself.
-            dtlsTransport.state = 'failed';
-            self._updateConnectionState();
-          };
-
-          return {
-            iceGatherer: iceGatherer,
-            iceTransport: iceTransport,
-            dtlsTransport: dtlsTransport
-          };
-        };
-
-    // Start the RTP Sender and Receiver for a transceiver.
-    window.RTCPeerConnection.prototype._transceive = function(transceiver,
-        send, recv) {
-      var params = this._getCommonCapabilities(transceiver.localCapabilities,
-          transceiver.remoteCapabilities);
-      if (send && transceiver.rtpSender) {
-        params.encodings = transceiver.sendEncodingParameters;
-        params.rtcp = {
-          cname: SDPUtils.localCName
-        };
-        if (transceiver.recvEncodingParameters.length) {
-          params.rtcp.ssrc = transceiver.recvEncodingParameters[0].ssrc;
-        }
-        transceiver.rtpSender.send(params);
-      }
-      if (recv && transceiver.rtpReceiver) {
-        // remove RTX field in Edge 14942
-        if (transceiver.kind === 'video'
-            && transceiver.recvEncodingParameters) {
-          transceiver.recvEncodingParameters.forEach(function(p) {
-            delete p.rtx;
-          });
-        }
-        params.encodings = transceiver.recvEncodingParameters;
-        params.rtcp = {
-          cname: transceiver.cname
-        };
-        if (transceiver.sendEncodingParameters.length) {
-          params.rtcp.ssrc = transceiver.sendEncodingParameters[0].ssrc;
-        }
-        transceiver.rtpReceiver.receive(params);
-      }
-    };
-
-    window.RTCPeerConnection.prototype.setLocalDescription =
-        function(description) {
-          var self = this;
-          var sections;
-          var sessionpart;
-          if (description.type === 'offer') {
-            // FIXME: What was the purpose of this empty if statement?
-            // if (!this._pendingOffer) {
-            // } else {
-            if (this._pendingOffer) {
-              // VERY limited support for SDP munging. Limited to:
-              // * changing the order of codecs
-              sections = SDPUtils.splitSections(description.sdp);
-              sessionpart = sections.shift();
-              sections.forEach(function(mediaSection, sdpMLineIndex) {
-                var caps = SDPUtils.parseRtpParameters(mediaSection);
-                self._pendingOffer[sdpMLineIndex].localCapabilities = caps;
-              });
-              this.transceivers = this._pendingOffer;
-              delete this._pendingOffer;
-            }
-          } else if (description.type === 'answer') {
-            sections = SDPUtils.splitSections(self.remoteDescription.sdp);
-            sessionpart = sections.shift();
-            var isIceLite = SDPUtils.matchPrefix(sessionpart,
-                'a=ice-lite').length > 0;
-            sections.forEach(function(mediaSection, sdpMLineIndex) {
-              var transceiver = self.transceivers[sdpMLineIndex];
-              var iceGatherer = transceiver.iceGatherer;
-              var iceTransport = transceiver.iceTransport;
-              var dtlsTransport = transceiver.dtlsTransport;
-              var localCapabilities = transceiver.localCapabilities;
-              var remoteCapabilities = transceiver.remoteCapabilities;
-
-              var rejected = mediaSection.split('\n', 1)[0]
-                  .split(' ', 2)[1] === '0';
-
-              if (!rejected && !transceiver.isDatachannel) {
-                var remoteIceParameters = SDPUtils.getIceParameters(
-                    mediaSection, sessionpart);
-                if (isIceLite) {
-                  var cands = SDPUtils.matchPrefix(mediaSection, 'a=candidate:')
-                  .map(function(cand) {
-                    return SDPUtils.parseCandidate(cand);
-                  })
-                  .filter(function(cand) {
-                    return cand.component === '1';
-                  });
-                  // ice-lite only includes host candidates in the SDP so we can
-                  // use setRemoteCandidates (which implies an
-                  // RTCIceCandidateComplete)
-                  if (cands.length) {
-                    iceTransport.setRemoteCandidates(cands);
-                  }
-                }
-                var remoteDtlsParameters = SDPUtils.getDtlsParameters(
-                    mediaSection, sessionpart);
-                if (isIceLite) {
-                  remoteDtlsParameters.role = 'server';
-                }
-
-                if (!self.usingBundle || sdpMLineIndex === 0) {
-                  iceTransport.start(iceGatherer, remoteIceParameters,
-                      isIceLite ? 'controlling' : 'controlled');
-                  dtlsTransport.start(remoteDtlsParameters);
-                }
-
-                // Calculate intersection of capabilities.
-                var params = self._getCommonCapabilities(localCapabilities,
-                    remoteCapabilities);
-
-                // Start the RTCRtpSender. The RTCRtpReceiver for this
-                // transceiver has already been started in setRemoteDescription.
-                self._transceive(transceiver,
-                    params.codecs.length > 0,
-                    false);
-              }
-            });
-          }
-
-          this.localDescription = {
-            type: description.type,
-            sdp: description.sdp
-          };
-          switch (description.type) {
-            case 'offer':
-              this._updateSignalingState('have-local-offer');
-              break;
-            case 'answer':
-              this._updateSignalingState('stable');
-              break;
-            default:
-              throw new TypeError('unsupported type "' + description.type +
-                  '"');
-          }
-
-          // If a success callback was provided, emit ICE candidates after it
-          // has been executed. Otherwise, emit callback after the Promise is
-          // resolved.
-          var hasCallback = arguments.length > 1 &&
-            typeof arguments[1] === 'function';
-          if (hasCallback) {
-            var cb = arguments[1];
-            window.setTimeout(function() {
-              cb();
-              if (self.iceGatheringState === 'new') {
-                self.iceGatheringState = 'gathering';
-              }
-              self._emitBufferedCandidates();
-            }, 0);
-          }
-          var p = Promise.resolve();
-          p.then(function() {
-            if (!hasCallback) {
-              if (self.iceGatheringState === 'new') {
-                self.iceGatheringState = 'gathering';
-              }
-              // Usually candidates will be emitted earlier.
-              window.setTimeout(self._emitBufferedCandidates.bind(self), 500);
-            }
-          });
-          return p;
-        };
-
-    window.RTCPeerConnection.prototype.setRemoteDescription =
-        function(description) {
-          var self = this;
-          var stream = new MediaStream();
-          var receiverList = [];
-          var sections = SDPUtils.splitSections(description.sdp);
-          var sessionpart = sections.shift();
-          var isIceLite = SDPUtils.matchPrefix(sessionpart,
-              'a=ice-lite').length > 0;
-          this.usingBundle = SDPUtils.matchPrefix(sessionpart,
-              'a=group:BUNDLE ').length > 0;
-          sections.forEach(function(mediaSection, sdpMLineIndex) {
-            var lines = SDPUtils.splitLines(mediaSection);
-            var mline = lines[0].substr(2).split(' ');
-            var kind = mline[0];
-            var rejected = mline[1] === '0';
-            var direction = SDPUtils.getDirection(mediaSection, sessionpart);
-
-            var mid = SDPUtils.matchPrefix(mediaSection, 'a=mid:');
-            if (mid.length) {
-              mid = mid[0].substr(6);
-            } else {
-              mid = SDPUtils.generateIdentifier();
-            }
-
-            // Reject datachannels which are not implemented yet.
-            if (kind === 'application' && mline[2] === 'DTLS/SCTP') {
-              self.transceivers[sdpMLineIndex] = {
-                mid: mid,
-                isDatachannel: true
-              };
-              return;
-            }
-
-            var transceiver;
-            var iceGatherer;
-            var iceTransport;
-            var dtlsTransport;
-            var rtpSender;
-            var rtpReceiver;
-            var sendEncodingParameters;
-            var recvEncodingParameters;
-            var localCapabilities;
-
-            var track;
-            // FIXME: ensure the mediaSection has rtcp-mux set.
-            var remoteCapabilities = SDPUtils.parseRtpParameters(mediaSection);
-            var remoteIceParameters;
-            var remoteDtlsParameters;
-            if (!rejected) {
-              remoteIceParameters = SDPUtils.getIceParameters(mediaSection,
-                  sessionpart);
-              remoteDtlsParameters = SDPUtils.getDtlsParameters(mediaSection,
-                  sessionpart);
-              remoteDtlsParameters.role = 'client';
-            }
-            recvEncodingParameters =
-                SDPUtils.parseRtpEncodingParameters(mediaSection);
-
-            var cname;
-            // Gets the first SSRC. Note that with RTX there might be multiple
-            // SSRCs.
-            var remoteSsrc = SDPUtils.matchPrefix(mediaSection, 'a=ssrc:')
-                .map(function(line) {
-                  return SDPUtils.parseSsrcMedia(line);
-                })
-                .filter(function(obj) {
-                  return obj.attribute === 'cname';
-                })[0];
-            if (remoteSsrc) {
-              cname = remoteSsrc.value;
-            }
-
-            var isComplete = SDPUtils.matchPrefix(mediaSection,
-                'a=end-of-candidates', sessionpart).length > 0;
-            var cands = SDPUtils.matchPrefix(mediaSection, 'a=candidate:')
-                .map(function(cand) {
-                  return SDPUtils.parseCandidate(cand);
-                })
-                .filter(function(cand) {
-                  return cand.component === '1';
-                });
-            if (description.type === 'offer' && !rejected) {
-              var transports = self.usingBundle && sdpMLineIndex > 0 ? {
-                iceGatherer: self.transceivers[0].iceGatherer,
-                iceTransport: self.transceivers[0].iceTransport,
-                dtlsTransport: self.transceivers[0].dtlsTransport
-              } : self._createIceAndDtlsTransports(mid, sdpMLineIndex);
-
-              if (isComplete) {
-                transports.iceTransport.setRemoteCandidates(cands);
-              }
-
-              localCapabilities = RTCRtpReceiver.getCapabilities(kind);
-
-              // filter RTX until additional stuff needed for RTX is implemented
-              // in adapter.js
-              localCapabilities.codecs = localCapabilities.codecs.filter(
-                  function(codec) {
-                    return codec.name !== 'rtx';
-                  });
-
-              sendEncodingParameters = [{
-                ssrc: (2 * sdpMLineIndex + 2) * 1001
-              }];
-
-              rtpReceiver = new RTCRtpReceiver(transports.dtlsTransport, kind);
-
-              track = rtpReceiver.track;
-              receiverList.push([track, rtpReceiver]);
-              // FIXME: not correct when there are multiple streams but that is
-              // not currently supported in this shim.
-              stream.addTrack(track);
-
-              // FIXME: look at direction.
-              if (self.localStreams.length > 0 &&
-                  self.localStreams[0].getTracks().length >= sdpMLineIndex) {
-                var localTrack;
-                if (kind === 'audio') {
-                  localTrack = self.localStreams[0].getAudioTracks()[0];
-                } else if (kind === 'video') {
-                  localTrack = self.localStreams[0].getVideoTracks()[0];
-                }
-                if (localTrack) {
-                  rtpSender = new RTCRtpSender(localTrack,
-                      transports.dtlsTransport);
-                }
-              }
-
-              self.transceivers[sdpMLineIndex] = {
-                iceGatherer: transports.iceGatherer,
-                iceTransport: transports.iceTransport,
-                dtlsTransport: transports.dtlsTransport,
-                localCapabilities: localCapabilities,
-                remoteCapabilities: remoteCapabilities,
-                rtpSender: rtpSender,
-                rtpReceiver: rtpReceiver,
-                kind: kind,
-                mid: mid,
-                cname: cname,
-                sendEncodingParameters: sendEncodingParameters,
-                recvEncodingParameters: recvEncodingParameters
-              };
-              // Start the RTCRtpReceiver now. The RTPSender is started in
-              // setLocalDescription.
-              self._transceive(self.transceivers[sdpMLineIndex],
-                  false,
-                  direction === 'sendrecv' || direction === 'sendonly');
-            } else if (description.type === 'answer' && !rejected) {
-              transceiver = self.transceivers[sdpMLineIndex];
-              iceGatherer = transceiver.iceGatherer;
-              iceTransport = transceiver.iceTransport;
-              dtlsTransport = transceiver.dtlsTransport;
-              rtpSender = transceiver.rtpSender;
-              rtpReceiver = transceiver.rtpReceiver;
-              sendEncodingParameters = transceiver.sendEncodingParameters;
-              localCapabilities = transceiver.localCapabilities;
-
-              self.transceivers[sdpMLineIndex].recvEncodingParameters =
-                  recvEncodingParameters;
-              self.transceivers[sdpMLineIndex].remoteCapabilities =
-                  remoteCapabilities;
-              self.transceivers[sdpMLineIndex].cname = cname;
-
-              if ((isIceLite || isComplete) && cands.length) {
-                iceTransport.setRemoteCandidates(cands);
-              }
-              if (!self.usingBundle || sdpMLineIndex === 0) {
-                iceTransport.start(iceGatherer, remoteIceParameters,
-                    'controlling');
-                dtlsTransport.start(remoteDtlsParameters);
-              }
-
-              self._transceive(transceiver,
-                  direction === 'sendrecv' || direction === 'recvonly',
-                  direction === 'sendrecv' || direction === 'sendonly');
-
-              if (rtpReceiver &&
-                  (direction === 'sendrecv' || direction === 'sendonly')) {
-                track = rtpReceiver.track;
-                receiverList.push([track, rtpReceiver]);
-                stream.addTrack(track);
-              } else {
-                // FIXME: actually the receiver should be created later.
-                delete transceiver.rtpReceiver;
-              }
-            }
-          });
-
-          this.remoteDescription = {
-            type: description.type,
-            sdp: description.sdp
-          };
-          switch (description.type) {
-            case 'offer':
-              this._updateSignalingState('have-remote-offer');
-              break;
-            case 'answer':
-              this._updateSignalingState('stable');
-              break;
-            default:
-              throw new TypeError('unsupported type "' + description.type +
-                  '"');
-          }
-          if (stream.getTracks().length) {
-            self.remoteStreams.push(stream);
-            window.setTimeout(function() {
-              var event = new Event('addstream');
-              event.stream = stream;
-              self.dispatchEvent(event);
-              if (self.onaddstream !== null) {
-                window.setTimeout(function() {
-                  self.onaddstream(event);
-                }, 0);
-              }
-
-              receiverList.forEach(function(item) {
-                var track = item[0];
-                var receiver = item[1];
-                var trackEvent = new Event('track');
-                trackEvent.track = track;
-                trackEvent.receiver = receiver;
-                trackEvent.streams = [stream];
-                self.dispatchEvent(event);
-                if (self.ontrack !== null) {
-                  window.setTimeout(function() {
-                    self.ontrack(trackEvent);
-                  }, 0);
-                }
-              });
-            }, 0);
-          }
-          if (arguments.length > 1 && typeof arguments[1] === 'function') {
-            window.setTimeout(arguments[1], 0);
-          }
-          return Promise.resolve();
-        };
-
-    window.RTCPeerConnection.prototype.close = function() {
-      this.transceivers.forEach(function(transceiver) {
-        /* not yet
-        if (transceiver.iceGatherer) {
-          transceiver.iceGatherer.close();
-        }
-        */
-        if (transceiver.iceTransport) {
-          transceiver.iceTransport.stop();
-        }
-        if (transceiver.dtlsTransport) {
-          transceiver.dtlsTransport.stop();
-        }
-        if (transceiver.rtpSender) {
-          transceiver.rtpSender.stop();
-        }
-        if (transceiver.rtpReceiver) {
-          transceiver.rtpReceiver.stop();
-        }
-      });
-      // FIXME: clean up tracks, local streams, remote streams, etc
-      this._updateSignalingState('closed');
-    };
-
-    // Update the signaling state.
-    window.RTCPeerConnection.prototype._updateSignalingState =
-        function(newState) {
-          this.signalingState = newState;
-          var event = new Event('signalingstatechange');
-          this.dispatchEvent(event);
-          if (this.onsignalingstatechange !== null) {
-            this.onsignalingstatechange(event);
-          }
-        };
-
-    // Determine whether to fire the negotiationneeded event.
-    window.RTCPeerConnection.prototype._maybeFireNegotiationNeeded =
-        function() {
-          // Fire away (for now).
-          var event = new Event('negotiationneeded');
-          this.dispatchEvent(event);
-          if (this.onnegotiationneeded !== null) {
-            this.onnegotiationneeded(event);
-          }
-        };
-
-    // Update the connection state.
-    window.RTCPeerConnection.prototype._updateConnectionState = function() {
-      var self = this;
-      var newState;
-      var states = {
-        'new': 0,
-        closed: 0,
-        connecting: 0,
-        checking: 0,
-        connected: 0,
-        completed: 0,
-        failed: 0
-      };
-      this.transceivers.forEach(function(transceiver) {
-        states[transceiver.iceTransport.state]++;
-        states[transceiver.dtlsTransport.state]++;
-      });
-      // ICETransport.completed and connected are the same for this purpose.
-      states.connected += states.completed;
-
-      newState = 'new';
-      if (states.failed > 0) {
-        newState = 'failed';
-      } else if (states.connecting > 0 || states.checking > 0) {
-        newState = 'connecting';
-      } else if (states.disconnected > 0) {
-        newState = 'disconnected';
-      } else if (states.new > 0) {
-        newState = 'new';
-      } else if (states.connected > 0 || states.completed > 0) {
-        newState = 'connected';
-      }
-
-      if (newState !== self.iceConnectionState) {
-        self.iceConnectionState = newState;
-        var event = new Event('iceconnectionstatechange');
-        this.dispatchEvent(event);
-        if (this.oniceconnectionstatechange !== null) {
-          this.oniceconnectionstatechange(event);
-        }
-      }
-    };
-
-    window.RTCPeerConnection.prototype.createOffer = function() {
-      var self = this;
-      if (this._pendingOffer) {
-        throw new Error('createOffer called while there is a pending offer.');
-      }
-      var offerOptions;
-      if (arguments.length === 1 && typeof arguments[0] !== 'function') {
-        offerOptions = arguments[0];
-      } else if (arguments.length === 3) {
-        offerOptions = arguments[2];
-      }
-
-      var tracks = [];
-      var numAudioTracks = 0;
-      var numVideoTracks = 0;
-      // Default to sendrecv.
-      if (this.localStreams.length) {
-        numAudioTracks = this.localStreams[0].getAudioTracks().length;
-        numVideoTracks = this.localStreams[0].getVideoTracks().length;
-      }
-      // Determine number of audio and video tracks we need to send/recv.
-      if (offerOptions) {
-        // Reject Chrome legacy constraints.
-        if (offerOptions.mandatory || offerOptions.optional) {
-          throw new TypeError(
-              'Legacy mandatory/optional constraints not supported.');
-        }
-        if (offerOptions.offerToReceiveAudio !== undefined) {
-          numAudioTracks = offerOptions.offerToReceiveAudio;
-        }
-        if (offerOptions.offerToReceiveVideo !== undefined) {
-          numVideoTracks = offerOptions.offerToReceiveVideo;
-        }
-      }
-      if (this.localStreams.length) {
-        // Push local streams.
-        this.localStreams[0].getTracks().forEach(function(track) {
-          tracks.push({
-            kind: track.kind,
-            track: track,
-            wantReceive: track.kind === 'audio' ?
-                numAudioTracks > 0 : numVideoTracks > 0
-          });
-          if (track.kind === 'audio') {
-            numAudioTracks--;
-          } else if (track.kind === 'video') {
-            numVideoTracks--;
-          }
-        });
-      }
-      // Create M-lines for recvonly streams.
-      while (numAudioTracks > 0 || numVideoTracks > 0) {
-        if (numAudioTracks > 0) {
-          tracks.push({
-            kind: 'audio',
-            wantReceive: true
-          });
-          numAudioTracks--;
-        }
-        if (numVideoTracks > 0) {
-          tracks.push({
-            kind: 'video',
-            wantReceive: true
-          });
-          numVideoTracks--;
-        }
-      }
-
-      var sdp = SDPUtils.writeSessionBoilerplate();
-      var transceivers = [];
-      tracks.forEach(function(mline, sdpMLineIndex) {
-        // For each track, create an ice gatherer, ice transport,
-        // dtls transport, potentially rtpsender and rtpreceiver.
-        var track = mline.track;
-        var kind = mline.kind;
-        var mid = SDPUtils.generateIdentifier();
-
-        var transports = self.usingBundle && sdpMLineIndex > 0 ? {
-          iceGatherer: transceivers[0].iceGatherer,
-          iceTransport: transceivers[0].iceTransport,
-          dtlsTransport: transceivers[0].dtlsTransport
-        } : self._createIceAndDtlsTransports(mid, sdpMLineIndex);
-
-        var localCapabilities = RTCRtpSender.getCapabilities(kind);
-        // filter RTX until additional stuff needed for RTX is implemented
-        // in adapter.js
-        localCapabilities.codecs = localCapabilities.codecs.filter(
-            function(codec) {
-              return codec.name !== 'rtx';
-            });
-        localCapabilities.codecs.forEach(function(codec) {
-          // work around https://bugs.chromium.org/p/webrtc/issues/detail?id=6552
-          // by adding level-asymmetry-allowed=1
-          if (codec.name === 'H264' &&
-              codec.parameters['level-asymmetry-allowed'] === undefined) {
-            codec.parameters['level-asymmetry-allowed'] = '1';
-          }
-        });
-
-        var rtpSender;
-        var rtpReceiver;
-
-        // generate an ssrc now, to be used later in rtpSender.send
-        var sendEncodingParameters = [{
-          ssrc: (2 * sdpMLineIndex + 1) * 1001
-        }];
-        if (track) {
-          rtpSender = new RTCRtpSender(track, transports.dtlsTransport);
-        }
-
-        if (mline.wantReceive) {
-          rtpReceiver = new RTCRtpReceiver(transports.dtlsTransport, kind);
-        }
-
-        transceivers[sdpMLineIndex] = {
-          iceGatherer: transports.iceGatherer,
-          iceTransport: transports.iceTransport,
-          dtlsTransport: transports.dtlsTransport,
-          localCapabilities: localCapabilities,
-          remoteCapabilities: null,
-          rtpSender: rtpSender,
-          rtpReceiver: rtpReceiver,
-          kind: kind,
-          mid: mid,
-          sendEncodingParameters: sendEncodingParameters,
-          recvEncodingParameters: null
-        };
-      });
-      if (this.usingBundle) {
-        sdp += 'a=group:BUNDLE ' + transceivers.map(function(t) {
-          return t.mid;
-        }).join(' ') + '\r\n';
-      }
-      tracks.forEach(function(mline, sdpMLineIndex) {
-        var transceiver = transceivers[sdpMLineIndex];
-        sdp += SDPUtils.writeMediaSection(transceiver,
-            transceiver.localCapabilities, 'offer', self.localStreams[0]);
-      });
-
-      this._pendingOffer = transceivers;
-      var desc = new RTCSessionDescription({
-        type: 'offer',
-        sdp: sdp
-      });
-      if (arguments.length && typeof arguments[0] === 'function') {
-        window.setTimeout(arguments[0], 0, desc);
-      }
-      return Promise.resolve(desc);
-    };
-
-    window.RTCPeerConnection.prototype.createAnswer = function() {
-      var self = this;
-
-      var sdp = SDPUtils.writeSessionBoilerplate();
-      if (this.usingBundle) {
-        sdp += 'a=group:BUNDLE ' + this.transceivers.map(function(t) {
-          return t.mid;
-        }).join(' ') + '\r\n';
-      }
-      this.transceivers.forEach(function(transceiver) {
-        if (transceiver.isDatachannel) {
-          sdp += 'm=application 0 DTLS/SCTP 5000\r\n' +
-              'c=IN IP4 0.0.0.0\r\n' +
-              'a=mid:' + transceiver.mid + '\r\n';
-          return;
-        }
-        // Calculate intersection of capabilities.
-        var commonCapabilities = self._getCommonCapabilities(
-            transceiver.localCapabilities,
-            transceiver.remoteCapabilities);
-
-        sdp += SDPUtils.writeMediaSection(transceiver, commonCapabilities,
-            'answer', self.localStreams[0]);
-      });
-
-      var desc = new RTCSessionDescription({
-        type: 'answer',
-        sdp: sdp
-      });
-      if (arguments.length && typeof arguments[0] === 'function') {
-        window.setTimeout(arguments[0], 0, desc);
-      }
-      return Promise.resolve(desc);
-    };
-
-    window.RTCPeerConnection.prototype.addIceCandidate = function(candidate) {
-      if (!candidate) {
-        this.transceivers.forEach(function(transceiver) {
-          transceiver.iceTransport.addRemoteCandidate({});
-        });
-      } else {
-        var mLineIndex = candidate.sdpMLineIndex;
-        if (candidate.sdpMid) {
-          for (var i = 0; i < this.transceivers.length; i++) {
-            if (this.transceivers[i].mid === candidate.sdpMid) {
-              mLineIndex = i;
-              break;
-            }
-          }
-        }
-        var transceiver = this.transceivers[mLineIndex];
-        if (transceiver) {
-          var cand = Object.keys(candidate.candidate).length > 0 ?
-              SDPUtils.parseCandidate(candidate.candidate) : {};
-          // Ignore Chrome's invalid candidates since Edge does not like them.
-          if (cand.protocol === 'tcp' && (cand.port === 0 || cand.port === 9)) {
-            return;
-          }
-          // Ignore RTCP candidates, we assume RTCP-MUX.
-          if (cand.component !== '1') {
-            return;
-          }
-          // A dirty hack to make samples work.
-          if (cand.type === 'endOfCandidates') {
-            cand = {};
-          }
-          transceiver.iceTransport.addRemoteCandidate(cand);
-
-          // update the remoteDescription.
-          var sections = SDPUtils.splitSections(this.remoteDescription.sdp);
-          sections[mLineIndex + 1] += (cand.type ? candidate.candidate.trim()
-              : 'a=end-of-candidates') + '\r\n';
-          this.remoteDescription.sdp = sections.join('');
-        }
-      }
-      if (arguments.length > 1 && typeof arguments[1] === 'function') {
-        window.setTimeout(arguments[1], 0);
-      }
-      return Promise.resolve();
-    };
-
-    window.RTCPeerConnection.prototype.getStats = function() {
-      var promises = [];
-      this.transceivers.forEach(function(transceiver) {
-        ['rtpSender', 'rtpReceiver', 'iceGatherer', 'iceTransport',
-            'dtlsTransport'].forEach(function(method) {
-              if (transceiver[method]) {
-                promises.push(transceiver[method].getStats());
-              }
-            });
-      });
-      var cb = arguments.length > 1 && typeof arguments[1] === 'function' &&
-          arguments[1];
-      return new Promise(function(resolve) {
-        // shim getStats with maplike support
-        var results = new Map();
-        Promise.all(promises).then(function(res) {
-          res.forEach(function(result) {
-            Object.keys(result).forEach(function(id) {
-              results.set(id, result[id]);
-              results[id] = result[id];
-            });
-          });
-          if (cb) {
-            window.setTimeout(cb, 0, results);
-          }
-          resolve(results);
-        });
-      });
-    };
-  }
-};
-
-// Expose public methods.
-module.exports = {
-  shimPeerConnection: edgeShim.shimPeerConnection,
-  shimGetUserMedia: require('./getusermedia')
-};
-
-},{"../utils":42,"./getusermedia":38,"sdp":33}],38:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-
-// Expose public methods.
-module.exports = function() {
-  var shimError_ = function(e) {
-    return {
-      name: {PermissionDeniedError: 'NotAllowedError'}[e.name] || e.name,
-      message: e.message,
-      constraint: e.constraint,
-      toString: function() {
-        return this.name;
-      }
-    };
-  };
-
-  // getUserMedia error shim.
-  var origGetUserMedia = navigator.mediaDevices.getUserMedia.
-      bind(navigator.mediaDevices);
-  navigator.mediaDevices.getUserMedia = function(c) {
-    return origGetUserMedia(c).catch(function(e) {
-      return Promise.reject(shimError_(e));
-    });
-  };
-};
-
-},{}],39:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-
-var browserDetails = require('../utils').browserDetails;
-
-var firefoxShim = {
-  shimOnTrack: function() {
-    if (typeof window === 'object' && window.RTCPeerConnection && !('ontrack' in
-        window.RTCPeerConnection.prototype)) {
-      Object.defineProperty(window.RTCPeerConnection.prototype, 'ontrack', {
-        get: function() {
-          return this._ontrack;
-        },
-        set: function(f) {
-          if (this._ontrack) {
-            this.removeEventListener('track', this._ontrack);
-            this.removeEventListener('addstream', this._ontrackpoly);
-          }
-          this.addEventListener('track', this._ontrack = f);
-          this.addEventListener('addstream', this._ontrackpoly = function(e) {
-            e.stream.getTracks().forEach(function(track) {
-              var event = new Event('track');
-              event.track = track;
-              event.receiver = {track: track};
-              event.streams = [e.stream];
-              this.dispatchEvent(event);
-            }.bind(this));
-          }.bind(this));
-        }
-      });
-    }
-  },
-
-  shimSourceObject: function() {
-    // Firefox has supported mozSrcObject since FF22, unprefixed in 42.
-    if (typeof window === 'object') {
-      if (window.HTMLMediaElement &&
-        !('srcObject' in window.HTMLMediaElement.prototype)) {
-        // Shim the srcObject property, once, when HTMLMediaElement is found.
-        Object.defineProperty(window.HTMLMediaElement.prototype, 'srcObject', {
-          get: function() {
-            return this.mozSrcObject;
-          },
-          set: function(stream) {
-            this.mozSrcObject = stream;
-          }
-        });
-      }
-    }
-  },
-
-  shimPeerConnection: function() {
-    if (typeof window !== 'object' || !(window.RTCPeerConnection ||
-        window.mozRTCPeerConnection)) {
-      return; // probably media.peerconnection.enabled=false in about:config
-    }
-    // The RTCPeerConnection object.
-    if (!window.RTCPeerConnection) {
-      window.RTCPeerConnection = function(pcConfig, pcConstraints) {
-        if (browserDetails.version < 38) {
-          // .urls is not supported in FF < 38.
-          // create RTCIceServers with a single url.
-          if (pcConfig && pcConfig.iceServers) {
-            var newIceServers = [];
-            for (var i = 0; i < pcConfig.iceServers.length; i++) {
-              var server = pcConfig.iceServers[i];
-              if (server.hasOwnProperty('urls')) {
-                for (var j = 0; j < server.urls.length; j++) {
-                  var newServer = {
-                    url: server.urls[j]
-                  };
-                  if (server.urls[j].indexOf('turn') === 0) {
-                    newServer.username = server.username;
-                    newServer.credential = server.credential;
-                  }
-                  newIceServers.push(newServer);
-                }
-              } else {
-                newIceServers.push(pcConfig.iceServers[i]);
-              }
-            }
-            pcConfig.iceServers = newIceServers;
-          }
-        }
-        return new mozRTCPeerConnection(pcConfig, pcConstraints);
-      };
-      window.RTCPeerConnection.prototype = mozRTCPeerConnection.prototype;
-
-      // wrap static methods. Currently just generateCertificate.
-      if (mozRTCPeerConnection.generateCertificate) {
-        Object.defineProperty(window.RTCPeerConnection, 'generateCertificate', {
-          get: function() {
-            return mozRTCPeerConnection.generateCertificate;
-          }
-        });
-      }
-
-      window.RTCSessionDescription = mozRTCSessionDescription;
-      window.RTCIceCandidate = mozRTCIceCandidate;
-    }
-
-    // shim away need for obsolete RTCIceCandidate/RTCSessionDescription.
-    ['setLocalDescription', 'setRemoteDescription', 'addIceCandidate']
-        .forEach(function(method) {
-          var nativeMethod = RTCPeerConnection.prototype[method];
-          RTCPeerConnection.prototype[method] = function() {
-            arguments[0] = new ((method === 'addIceCandidate') ?
-                RTCIceCandidate : RTCSessionDescription)(arguments[0]);
-            return nativeMethod.apply(this, arguments);
-          };
-        });
-
-    // support for addIceCandidate(null or undefined)
-    var nativeAddIceCandidate =
-        RTCPeerConnection.prototype.addIceCandidate;
-    RTCPeerConnection.prototype.addIceCandidate = function() {
-      if (!arguments[0]) {
-        if (arguments[1]) {
-          arguments[1].apply(null);
-        }
-        return Promise.resolve();
-      }
-      return nativeAddIceCandidate.apply(this, arguments);
-    };
-
-    if (browserDetails.version < 48) {
-      // shim getStats with maplike support
-      var makeMapStats = function(stats) {
-        var map = new Map();
-        Object.keys(stats).forEach(function(key) {
-          map.set(key, stats[key]);
-          map[key] = stats[key];
-        });
-        return map;
-      };
-
-      var nativeGetStats = RTCPeerConnection.prototype.getStats;
-      RTCPeerConnection.prototype.getStats = function(selector, onSucc, onErr) {
-        return nativeGetStats.apply(this, [selector || null])
-          .then(function(stats) {
-            return makeMapStats(stats);
-          })
-          .then(onSucc, onErr);
-      };
-    }
-  }
-};
-
-// Expose public methods.
-module.exports = {
-  shimOnTrack: firefoxShim.shimOnTrack,
-  shimSourceObject: firefoxShim.shimSourceObject,
-  shimPeerConnection: firefoxShim.shimPeerConnection,
-  shimGetUserMedia: require('./getusermedia')
-};
-
-},{"../utils":42,"./getusermedia":40}],40:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-
-var logging = require('../utils').log;
-var browserDetails = require('../utils').browserDetails;
-
-// Expose public methods.
-module.exports = function() {
-  var shimError_ = function(e) {
-    return {
-      name: {
-        SecurityError: 'NotAllowedError',
-        PermissionDeniedError: 'NotAllowedError'
-      }[e.name] || e.name,
-      message: {
-        'The operation is insecure.': 'The request is not allowed by the ' +
-        'user agent or the platform in the current context.'
-      }[e.message] || e.message,
-      constraint: e.constraint,
-      toString: function() {
-        return this.name + (this.message && ': ') + this.message;
-      }
-    };
-  };
-
-  // getUserMedia constraints shim.
-  var getUserMedia_ = function(constraints, onSuccess, onError) {
-    var constraintsToFF37_ = function(c) {
-      if (typeof c !== 'object' || c.require) {
-        return c;
-      }
-      var require = [];
-      Object.keys(c).forEach(function(key) {
-        if (key === 'require' || key === 'advanced' || key === 'mediaSource') {
-          return;
-        }
-        var r = c[key] = (typeof c[key] === 'object') ?
-            c[key] : {ideal: c[key]};
-        if (r.min !== undefined ||
-            r.max !== undefined || r.exact !== undefined) {
-          require.push(key);
-        }
-        if (r.exact !== undefined) {
-          if (typeof r.exact === 'number') {
-            r. min = r.max = r.exact;
-          } else {
-            c[key] = r.exact;
-          }
-          delete r.exact;
-        }
-        if (r.ideal !== undefined) {
-          c.advanced = c.advanced || [];
-          var oc = {};
-          if (typeof r.ideal === 'number') {
-            oc[key] = {min: r.ideal, max: r.ideal};
-          } else {
-            oc[key] = r.ideal;
-          }
-          c.advanced.push(oc);
-          delete r.ideal;
-          if (!Object.keys(r).length) {
-            delete c[key];
-          }
-        }
-      });
-      if (require.length) {
-        c.require = require;
-      }
-      return c;
-    };
-    constraints = JSON.parse(JSON.stringify(constraints));
-    if (browserDetails.version < 38) {
-      logging('spec: ' + JSON.stringify(constraints));
-      if (constraints.audio) {
-        constraints.audio = constraintsToFF37_(constraints.audio);
-      }
-      if (constraints.video) {
-        constraints.video = constraintsToFF37_(constraints.video);
-      }
-      logging('ff37: ' + JSON.stringify(constraints));
-    }
-    return navigator.mozGetUserMedia(constraints, onSuccess, function(e) {
-      onError(shimError_(e));
-    });
-  };
-
-  // Returns the result of getUserMedia as a Promise.
-  var getUserMediaPromise_ = function(constraints) {
-    return new Promise(function(resolve, reject) {
-      getUserMedia_(constraints, resolve, reject);
-    });
-  };
-
-  // Shim for mediaDevices on older versions.
-  if (!navigator.mediaDevices) {
-    navigator.mediaDevices = {getUserMedia: getUserMediaPromise_,
-      addEventListener: function() { },
-      removeEventListener: function() { }
-    };
-  }
-  navigator.mediaDevices.enumerateDevices =
-      navigator.mediaDevices.enumerateDevices || function() {
-        return new Promise(function(resolve) {
-          var infos = [
-            {kind: 'audioinput', deviceId: 'default', label: '', groupId: ''},
-            {kind: 'videoinput', deviceId: 'default', label: '', groupId: ''}
-          ];
-          resolve(infos);
-        });
-      };
-
-  if (browserDetails.version < 41) {
-    // Work around http://bugzil.la/1169665
-    var orgEnumerateDevices =
-        navigator.mediaDevices.enumerateDevices.bind(navigator.mediaDevices);
-    navigator.mediaDevices.enumerateDevices = function() {
-      return orgEnumerateDevices().then(undefined, function(e) {
-        if (e.name === 'NotFoundError') {
-          return [];
-        }
-        throw e;
-      });
-    };
-  }
-  if (browserDetails.version < 49) {
-    var origGetUserMedia = navigator.mediaDevices.getUserMedia.
-        bind(navigator.mediaDevices);
-    navigator.mediaDevices.getUserMedia = function(c) {
-      return origGetUserMedia(c).then(function(stream) {
-        // Work around https://bugzil.la/802326
-        if (c.audio && !stream.getAudioTracks().length ||
-            c.video && !stream.getVideoTracks().length) {
-          stream.getTracks().forEach(function(track) {
-            track.stop();
-          });
-          throw new DOMException('The object can not be found here.',
-                                 'NotFoundError');
-        }
-        return stream;
-      }, function(e) {
-        return Promise.reject(shimError_(e));
-      });
-    };
-  }
-  navigator.getUserMedia = function(constraints, onSuccess, onError) {
-    if (browserDetails.version < 44) {
-      return getUserMedia_(constraints, onSuccess, onError);
-    }
-    // Replace Firefox 44+'s deprecation warning with unprefixed version.
-    console.warn('navigator.getUserMedia has been replaced by ' +
-                 'navigator.mediaDevices.getUserMedia');
-    navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
-  };
-};
-
-},{"../utils":42}],41:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
-'use strict';
-var safariShim = {
-  // TODO: DrAlex, should be here, double check against LayoutTests
-  // shimOnTrack: function() { },
-
-  // TODO: once the back-end for the mac port is done, add.
-  // TODO: check for webkitGTK+
-  // shimPeerConnection: function() { },
-
-  shimGetUserMedia: function() {
-    navigator.getUserMedia = navigator.webkitGetUserMedia;
-  }
-};
-
-// Expose public methods.
-module.exports = {
-  shimGetUserMedia: safariShim.shimGetUserMedia
-  // TODO
-  // shimOnTrack: safariShim.shimOnTrack,
-  // shimPeerConnection: safariShim.shimPeerConnection
-};
-
-},{}],42:[function(require,module,exports){
-/*
- *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree.
- */
- /* eslint-env node */
-'use strict';
-
-var logDisabled_ = true;
-
-// Utility methods.
-var utils = {
-  disableLog: function(bool) {
-    if (typeof bool !== 'boolean') {
-      return new Error('Argument type: ' + typeof bool +
-          '. Please use a boolean.');
-    }
-    logDisabled_ = bool;
-    return (bool) ? 'adapter.js logging disabled' :
-        'adapter.js logging enabled';
-  },
-
-  log: function() {
-    if (typeof window === 'object') {
-      if (logDisabled_) {
-        return;
-      }
-      if (typeof console !== 'undefined' && typeof console.log === 'function') {
-        console.log.apply(console, arguments);
-      }
-    }
-  },
-
-  /**
-   * Extract browser version out of the provided user agent string.
-   *
-   * @param {!string} uastring userAgent string.
-   * @param {!string} expr Regular expression used as match criteria.
-   * @param {!number} pos position in the version string to be returned.
-   * @return {!number} browser version.
-   */
-  extractVersion: function(uastring, expr, pos) {
-    var match = uastring.match(expr);
-    return match && match.length >= pos && parseInt(match[pos], 10);
-  },
-
-  /**
-   * Browser detector.
-   *
-   * @return {object} result containing browser and version
-   *     properties.
-   */
-  detectBrowser: function() {
-    // Returned result object.
-    var result = {};
-    result.browser = null;
-    result.version = null;
-
-    // Fail early if it's not a browser
-    if (typeof window === 'undefined' || !window.navigator) {
-      result.browser = 'Not a browser.';
-      return result;
-    }
-
-    // Firefox.
-    if (navigator.mozGetUserMedia) {
-      result.browser = 'firefox';
-      result.version = this.extractVersion(navigator.userAgent,
-          /Firefox\/([0-9]+)\./, 1);
-
-    // all webkit-based browsers
-    } else if (navigator.webkitGetUserMedia) {
-      // Chrome, Chromium, Webview, Opera, all use the chrome shim for now
-      if (window.webkitRTCPeerConnection) {
-        result.browser = 'chrome';
-        result.version = this.extractVersion(navigator.userAgent,
-          /Chrom(e|ium)\/([0-9]+)\./, 2);
-
-      // Safari or unknown webkit-based
-      // for the time being Safari has support for MediaStreams but not webRTC
-      } else {
-        // Safari UA substrings of interest for reference:
-        // - webkit version:           AppleWebKit/602.1.25 (also used in Op,Cr)
-        // - safari UI version:        Version/9.0.3 (unique to Safari)
-        // - safari UI webkit version: Safari/601.4.4 (also used in Op,Cr)
-        //
-        // if the webkit version and safari UI webkit versions are equals,
-        // ... this is a stable version.
-        //
-        // only the internal webkit version is important today to know if
-        // media streams are supported
-        //
-        if (navigator.userAgent.match(/Version\/(\d+).(\d+)/)) {
-          result.browser = 'safari';
-          result.version = this.extractVersion(navigator.userAgent,
-            /AppleWebKit\/([0-9]+)\./, 1);
-
-        // unknown webkit-based browser
-        } else {
-          result.browser = 'Unsupported webkit-based browser ' +
-              'with GUM support but no WebRTC support.';
-          return result;
-        }
-      }
-
-    // Edge.
-    } else if (navigator.mediaDevices &&
-        navigator.userAgent.match(/Edge\/(\d+).(\d+)$/)) {
-      result.browser = 'edge';
-      result.version = this.extractVersion(navigator.userAgent,
-          /Edge\/(\d+).(\d+)$/, 2);
-
-    // Default fallthrough: not supported.
-    } else {
-      result.browser = 'Not a supported browser.';
-      return result;
-    }
-
-    return result;
-  }
-};
-
-// Export.
-module.exports = {
-  log: utils.log,
-  disableLog: utils.disableLog,
-  browserDetails: utils.detectBrowser(),
-  extractVersion: utils.extractVersion
-};
-
 },{}]},{},[3]);
