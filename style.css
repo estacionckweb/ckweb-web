@@ -124,7 +124,8 @@ html {
 }
 
 #logo-alcaldia img {
-  width: 80px;
+  position: relative;
+  width: 100%;
   height: auto;
 }
 
@@ -132,10 +133,11 @@ html {
   position: absolute;
   z-index: 2;
   top: 50%;
-  left: 130px;
+  left: 120px;
   text-transform: lowercase;
   font-family: 'Inconsolata', monospace;
   transform: translateY(-50%);
+  font-size: 0.95em;
 }
 
 #facebook {
