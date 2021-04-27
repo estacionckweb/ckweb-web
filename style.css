@@ -103,6 +103,14 @@ html {
   display: block;
 }
 
+.descripcion-item a {
+  color: rgb(225, 0, 255);
+}
+
+.descripcion-item a:visited {
+  color: rgb(225, 0, 255);
+}
+
 /* Styles for bottom bar */
 
 #bottom-bar {
@@ -125,19 +133,20 @@ html {
 
 #logo-alcaldia img {
   position: relative;
-  width: 100%;
+  width: 80%;
   height: auto;
 }
 
 #myData {
   position: absolute;
   z-index: 2;
-  top: 50%;
+  top: 30%;
   left: 120px;
+  max-width: 10em;
   text-transform: lowercase;
   font-family: 'Inconsolata', monospace;
-  transform: translateY(-50%);
-  font-size: 0.95em;
+  transform: translateY(-20%);
+  font-size: 0.90em;
 }
 
 #facebook {
