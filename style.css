@@ -127,13 +127,14 @@ html {
   bottom: 28px;
   right: 15px;
   height: 40px;
-  width: 230px;
+  width: 350px;
   text-align: right;
+  padding-right: 10vh;
 }
 
 #logo-alcaldia img {
   position: relative;
-  width: 80%;
+  width: 100%;
   height: auto;
 }
 
@@ -141,12 +142,10 @@ html {
   position: absolute;
   z-index: 2;
   top: 30%;
-  left: 120px;
-  max-width: 10em;
+  left: 150px;
   text-transform: lowercase;
   font-family: 'Inconsolata', monospace;
-  transform: translateY(-20%);
-  font-size: 0.90em;
+  transform: translateY(-50%);
 }
 
 #facebook {
@@ -559,5 +558,30 @@ iframe {
     -webkit-transform: translateX(-50%);
     /* Browser bug fix */
     transform: translateX(-50%);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+
+  #myData {
+    position: absolute;
+    z-index: 2;
+    top: 30%;
+    left: 120px;
+    max-width: 10em;
+    text-transform: lowercase;
+    font-family: 'Inconsolata', monospace;
+    transform: translateY(-20%);
+    font-size: 0.90em;
+  }
+  
+  #logo-alcaldia {
+    position: fixed;
+    bottom: 28px;
+    right: 15px;
+    height: 40px;
+    width: 190px;
+    text-align: right;
+    padding-right: 0.5vh;
   }
 }
