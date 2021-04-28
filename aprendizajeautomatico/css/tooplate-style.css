@@ -244,7 +244,6 @@ footer {
 
 #about .pa p {
   padding-left: 0px;
-  padding-bottom: 20px;
 }
 
 #about .tit {
@@ -266,7 +265,7 @@ footer {
   color: #000000;
   padding: 12px 12px;
   display: inline-block;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 #about .col-md-4 a:hover {
@@ -279,8 +278,6 @@ footer {
   border-radius: 5px;
   padding: 42px 32px;
 }
-
-
 
 /*---------------------------------------
   Work section              
