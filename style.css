@@ -103,6 +103,14 @@ html {
   display: block;
 }
 
+.descripcion-item a {
+  color: rgb(225, 0, 255);
+}
+
+.descripcion-item a:visited {
+  color: rgb(225, 0, 255);
+}
+
 /* Styles for bottom bar */
 
 #bottom-bar {
@@ -124,18 +132,20 @@ html {
 }
 
 #logo-alcaldia img {
-  width: 80px;
+  width: 80%;
   height: auto;
 }
 
 #myData {
   position: absolute;
   z-index: 2;
-  top: 50%;
-  left: 130px;
+  top: 30%;
+  left: 120px;
   text-transform: lowercase;
   font-family: 'Inconsolata', monospace;
-  transform: translateY(-50%);
+  max-width: 10em;
+  transform: translateY(-30%);
+  font-size: 0.90em;
 }
 
 #facebook {
@@ -261,10 +271,11 @@ iframe {
   background-position: left center;
   background-repeat: no-repeat;
   position: absolute;
-  top: 0px;
+  top: -55px;
   left: 0px;
   margin-left: 10px;
   margin-right: auto;
+  
 }
 
 .sociales {
