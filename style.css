@@ -139,7 +139,7 @@ html {
 #myData {
   position: absolute;
   z-index: 2;
-  top: 30%;
+  top: 50%;
   left: 130px;
   text-transform: lowercase;
   font-family: 'Inconsolata', monospace;
@@ -566,12 +566,12 @@ iframe {
   #myData {
     position: absolute;
     z-index: 2;
-    top: 30%;
-    left: 120px;
+    top: 50%;
+    left: 110px;
     text-transform: lowercase;
     font-family: 'Inconsolata', monospace;
-    max-width: 10em;
+    max-width: 12em;
     transform: translateY(-50%);
-    font-size: 0.70em;
+    font-size: 0.65em;
   }
 }
