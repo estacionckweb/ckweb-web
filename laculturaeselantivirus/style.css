@@ -303,7 +303,7 @@ a {
 }
 
 
-@media (max-width: 1630px) {
+@media (max-width: 600px) {
   .right {
    overflow: scroll;
   }
