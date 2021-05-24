@@ -6,8 +6,37 @@
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
-      content="Reproductor multimedia de CKWEB"
+      content="La cultura es el antivirus :: Pensar en imágenes."
     />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ckweb.gov.co/laculturaeselantivirus" />
+    <meta property="og:title" content="La cultura es el antivirus :: Pensar en imágenes" />
+    <meta
+      property="og:description"
+      content="Conversaciones sin libreto de Omar Rincón con artistas y pensadores."
+    />
+    <meta
+      property="og:image"
+      content="https://ckweb.gov.co/laculturaeselantivirus/img_tw.png"
+    />
+    <meta property="og:image:width" content="556" />
+    <meta property="og:image:height" content="220" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://ckweb.gov.co/laculturaeselantivirus" />
+    <meta property="twitter:title" content="La cultura es el antivirus :: Pensar en imágenes" />
+    <meta
+      property="twitter:description"
+      content="Conversaciones sin libreto de Omar Rincón con artistas y pensadores."
+    />
+    <meta
+      property="twitter:image"
+      content="https://ckweb.gov.co/laculturaeselantivirus/img_tw.png"
+    />
+
     <link rel='stylesheet' href='./style.css' media='all' />
 
     <script type='text/javascript' src='./js/p5.js'></script>
@@ -41,7 +70,7 @@
             <div class="top">Pere Ortin</div>
             <div class="item">
                 <div class="top">
-                    <div class="icon" data-img="./background.gif" data-url="https://archive.org/download/la_cultura_es_el_antivirus/pereOrtinEditado.mp3" data-id="0" data-json="#"></div>
+                    <div class="icon" data-img="./back_pere.png" data-url="https://archive.org/download/la_cultura_es_el_antivirus/pereOrtinEditado.mp3" data-id="0" data-json="#"></div>
                     <div class="name">Audio<br>
                      </div>
                 </div>
@@ -58,7 +87,7 @@
             <div class="top">Bárbara Santos</div>
             <div class="item">
                 <div class="top">
-                    <div class="icon" data-img="./background.gif" data-url="https://archive.org/download/la_cultura_es_el_antivirus/BarbaraSantosEditado2.mp3" data-id="2" data-json=#></div>
+                    <div class="icon" data-img="./back_barbara.png" data-url="https://archive.org/download/la_cultura_es_el_antivirus/BarbaraSantosEditado2.mp3" data-id="2" data-json=#></div>
                     <div class="name">Audio<br>
                         </div>     
                 </div>
@@ -75,7 +104,7 @@
             <div class="top">Tania Aedo</div>
             <div class="item">
                 <div class="top">
-                    <div class="icon" data-img="./background.gif" data-url="https://archive.org/download/la_cultura_es_el_antivirus/TaniaAedoEditado.mp3" data-id="1" data-json=#></div>
+                    <div class="icon" data-img="./back_tania.png" data-url="https://archive.org/download/la_cultura_es_el_antivirus/TaniaAedoEditado.mp3" data-id="1" data-json=#></div>
                     <div class="name">Audio<br>
                         </div>
                 </div>
@@ -92,7 +121,7 @@
             <div class="top">Clemencia Echeverri</div>
             <div class="item">
                 <div class="top">
-                    <div class="icon" data-img="./background.gif" data-url="https://archive.org/download/la_cultura_es_el_antivirus/Clemencia_EcheverriEditado.mp3" data-id="3" data-json=#></div>
+                    <div class="icon" data-img="./back_clemencia.png" data-url="https://archive.org/download/la_cultura_es_el_antivirus/Clemencia_EcheverriEditado.mp3" data-id="3" data-json=#></div>
                     <div class="name">Audio<br>
                         </div>
                 </div>
@@ -109,7 +138,7 @@
             <div class="top">Laura Mora</div>
             <div class="item">
                 <div class="top">
-                    <div class="icon" data-img="./background.gif" data-url="https://archive.org/download/la_cultura_es_el_antivirus/LauraMora_Editado.mp3" data-id="3" data-json=#></div>
+                    <div class="icon" data-img="./back_laura.png" data-url="https://archive.org/download/la_cultura_es_el_antivirus/LauraMora_Editado.mp3" data-id="3" data-json=#></div>
                     <div class="name">Audio<br>
                      </div>  
                 </div>
@@ -122,10 +151,9 @@
                      </div>
                 </div>
                 <div class="des"></div>
-                
-            </div> <br> Edición de video: Julián García
-                    <br><a href="ckweb.gov.co">ckweb.gov.co</a></div>
-              
+            </div>
+            <div class="subtitle"> Edición de video: Julián García.
+                    <br><a href="https://ckweb.gov.co/">ckweb.gov.co</a></div>   
             </div>
         </div>
         <div class="right">
@@ -134,6 +162,13 @@
             </div>
             <audio autoplay id="audioPlayer" crossorigin="anonymous">
             </audio>
+
+            <div class="info" id="info">Un proyecto CKweb <br>(audio-collage, video-collage, texto-collage)
+                <br>Una idea de Omar Rincón
+                <br><br> En esta época cuando nos habita el miedo y la indolencia… cuando todo se convierte en muerte, salud y economía… cuando convertimos al otro en enemigo o peligro… en esta época, CKWEB, la estación de radio para la experimentación de contenidos culturales de Idartes… imaginó LA CULTURA ES EL ANTIVIRUS.  Una serie de conversaciones sobre CULTURA y el PENSAR EN IMÁGENES. ¿Imágenes? Si, para hacerle eco a ese lugar común de que estamos en la cultura de las imágenes… porque sentimos que las imágenes están por todo lado, se dice que es lo que más gusta, peor aún, que hemos devino lo que nuestras imágenes dicen de nosotros, que somos apenas un selfie. Una selfie culture.  
+                Conversaciones sin libreto. Conversaciones con artistas y pensadores a quienes admiramos y en quienes creemos: el periodista dadá y narrador collage, el español PERE ORTÍN; la mexicana TANIA AEDO que articula y juega entre arte, ciencia, literatura y tecnología y se define como productora cultural; la artista en imágenes CLEMENCIA ECHEVERRI, quien no quería ser pintora ni escultora ni videoartista, sino trabajar en el arte para tratar de hacer que el espectador tensione sus propios miedos y, por eso, tal vez, termino creando desde los sonidos; la artista, creadora y trabajadora de las imágenes, saberes y tecnologías indígenas BÁRBARA SANTOS; la directora de cine LAURA MORA que con “Matar a Jesús” y sus obras audiovisuales nos propone exploraciones afectivas de nuestra identidad.
+                Y esto fue lo que me dejaron estas conversas en un texto collage: fragmentos de oídas, pegados sin buscar crear una unidad para que nos perdamos en las ideas.
+                </div>
             
             <img class="relative" id="background" src="./background.gif" alt="">
             <img class="ckweb" src="./logo-ckweb.png" alt="logo ckweb">

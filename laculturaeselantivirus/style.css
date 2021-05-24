@@ -13,7 +13,7 @@
 }
 
 body {
-  background: rgb(28, 228, 78);
+  background: #45eb4d;
   position: relative;
   font-family: 'Roboto Condensed', sans-serif;
   margin: 0;
@@ -159,14 +159,23 @@ a {
   position: absolute;
   width: 15vw;
   margin-left: 45%;
-  margin-top: 50%;
+  margin-top: 55%;
 }
 
 .right .ckweb {
   position: absolute;
   width: 10vw;
   margin-left: -50%;
-  margin-top: 50%;
+  margin-top: 55%;
+}
+
+.right .info {
+  position: absolute;
+  margin-top: 8%;
+  text-align: center;
+  font-size: 0.8em;
+  margin: 150px 40px 40px 40px;
+
 }
 
 /* PLAYLIST */
@@ -291,4 +300,17 @@ a {
 
 .left .item.active .top .iconV:not(.playing)::before {
   content: '\E800';
+}
+
+
+@media (max-width: 1630px) {
+  .right {
+   overflow: scroll;
+  }
+  .right .info {
+    visibility: hidden;
+  }
+  .right .backImg {
+    visibility: hidden;
+  }
 }

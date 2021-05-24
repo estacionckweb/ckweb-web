@@ -43,6 +43,7 @@ var s = (sketch) => {
 var audio = document.getElementById('audioPlayer');
 var video = document.getElementById('videoPlayer');
 var fondo = document.getElementById('background');
+var info = document.getElementById('info');
 var timeTotal = 0;
 var timeCurrent = 0;
 var json;
@@ -58,6 +59,9 @@ if (
 
 $('.left .item .icon').on('click', (e) => {
   var $parent = $(e.target).parent().parent();
+  
+  info.style.visibility = 'hidden';
+  background.style.visibility = 'hidden';
   if (!$(e.target).hasClass('playing') && !$parent.hasClass('active')) {
     $('.left .item.active').removeClass('active');
     $parent.addClass('active');
@@ -67,6 +71,8 @@ $('.left .item .icon').on('click', (e) => {
     json = $(e.target).attr('data-json');
     if (img) {
       $('.backImg').css({ 'background-image': 'url("' + img + '")' });
+      $('.backImg').css({ 'height' : window.innerHeight });
+       
     }
 
     $('.playerContainer').hide();
@@ -146,6 +152,7 @@ audio.oncanplaythrough = () => {
   } else {
     // canvas_player.resize(width, height);
   }
+  
 };
 
 audio.ontimeupdate = () => {
