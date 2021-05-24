@@ -61,7 +61,7 @@ $('.left .item .icon').on('click', (e) => {
   var $parent = $(e.target).parent().parent();
   
   info.style.visibility = 'hidden';
-  background.style.visibility = 'hidden';
+  //background.style.visibility = 'hidden';
   if (!$(e.target).hasClass('playing') && !$parent.hasClass('active')) {
     $('.left .item.active').removeClass('active');
     $parent.addClass('active');
